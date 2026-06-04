@@ -176,12 +176,38 @@ function LogoBanner() {
   );
 }
 
+const tickerPhrases = [
+  "Fresh Sourdough Drops",
+  "Fri · Sat · Sun",
+  "Text to Order",
+  "Handmade in Austin",
+  "72-Hour Cold Ferment",
+  "Leopard-Spotted Char",
+];
+
+function TextMarquee() {
+  const items = [...tickerPhrases, ...tickerPhrases];
+  return (
+    <div className="text-marquee" aria-hidden="true">
+      <div className="text-marquee-track">
+        {items.map((phrase, i) => (
+          <span key={i} className="text-marquee-item">
+            {phrase}
+            <span className="text-marquee-star">✦</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function App() {
   return (
     <main className="min-h-screen overflow-hidden bg-cream text-ink">
       <LogoBanner />
       <Header />
       <Hero />
+      <TextMarquee />
       <About />
       <Menu />
       <OurPies />
@@ -221,7 +247,8 @@ function Hero() {
       <div className="absolute inset-0 grain opacity-70" />
       <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-8 px-4 pb-12 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-center text-center">
-          <div className="mb-5 flex flex-wrap items-center justify-center gap-3 text-xs font-black uppercase tracking-[0.22em] text-tomato">
+          <img src={mirrorBall} alt="" aria-hidden="true" className="hero-disco" />
+          <div className="relative z-10 mb-2 flex flex-wrap items-center justify-center gap-3 text-xs font-black uppercase tracking-[0.22em] text-tomato">
             <span>Disco Dough Pizza Co.</span>
             <Star />
             <span>Austin, Texas</span>
@@ -259,12 +286,22 @@ function About() {
         <div className="about-copy">
           <SectionLabel>About Disco Dough Pizza Co.</SectionLabel>
           <h2 className="section-title section-title--editorial">Built from family nights and a hot pizza on the table.</h2>
-          <p className="copy mt-6">
+          <p className="copy copy-lead mt-6">
             For Cayla and Branden, some of the best childhood memories started when Mom or Dad came home with pizza. The oven got preheated, everyone waited for the pie to crisp up, cartoons played, and somebody was always sneaking cookie dough before dinner was ready.
           </p>
           <p className="copy mt-5">
             Disco Dough Pizza Co. grew out of their Austin apartment from a genuine obsession with fermentation, dough craft, hospitality, and creating something meaningful together for the city that treated them like home.
           </p>
+        </div>
+        <div className="about-side">
+          <div className="about-photos" aria-label="Cayla and Branden with Disco Dough pizzas in Austin">
+            <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-card-lift photo-tile photo-contain contained-image-zoom about-photo about-photo--primary">
+              <img src={images[1].src} alt={images[1].alt} />
+            </figure>
+            <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-card-lift photo-tile photo-contain contained-image-zoom about-photo about-photo--secondary">
+              <img src={images[2].src} alt={images[2].alt} />
+            </figure>
+          </div>
           <div className="interactive-lift interactive-box-zoom unified-premium-glow community-card">
             <div className="community-card__rule" aria-hidden="true">
               <Star />
@@ -276,14 +313,6 @@ function About() {
               Disco Dough was built to give back to the city that welcomed us. We believe pizza can be a bridge, a way to bring people together, create memorable moments, and make everyone feel like they have a seat at the table. As we grow, our goal is to support Austin through community pizza nights, food bank partnerships, and repurposing excess food so great pies never go to waste.
             </p>
           </div>
-        </div>
-        <div className="about-photos" aria-label="Cayla and Branden with Disco Dough pizzas in Austin">
-          <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-card-lift photo-tile photo-contain contained-image-zoom about-photo about-photo--primary">
-            <img src={images[1].src} alt={images[1].alt} />
-          </figure>
-          <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-card-lift photo-tile photo-contain contained-image-zoom about-photo about-photo--secondary">
-            <img src={images[2].src} alt={images[2].alt} />
-          </figure>
         </div>
       </div>
     </section>
@@ -343,16 +372,12 @@ function OurPies() {
   return (
     <section id="our-pies" className="section">
       <SectionLabel>Our pies</SectionLabel>
-      <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+      <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:items-start">
         <div>
-          <h2 className="section-title">A sourdough hybrid with New York structure and Neapolitan soul.</h2>
-          <p className="copy mt-6">
+          <h2 className="section-title section-title--small">A sourdough hybrid with New York structure and Neapolitan soul.</h2>
+          <p className="copy copy-lead mt-6">
             Every dough batch starts with a three-flour blend designed for crispness, chew, airy structure, browning, strength, and no-flop slices. The result is a pie that folds when you want it to, holds when you need it to, and eats like something made by hand.
           </p>
-          <div className="interactive-lift interactive-card-lift interactive-box-zoom unified-premium-glow motion-box ferment-card">
-            <p>3 flour blend</p>
-            <span>00 flour, bolted flour, and whole wheat come together to build deeper flavor, stronger structure, better browning, and a more mature dough with crisp edges, airy chew, and real slice support.</span>
-          </div>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
           {details.map((detail) => (
@@ -361,6 +386,10 @@ function OurPies() {
               {detail.copy ? <span className="feature-card-copy">{detail.copy}</span> : null}
             </div>
           ))}
+          <div className="interactive-lift interactive-card-lift interactive-box-zoom unified-premium-glow motion-box ferment-card sm:col-span-2">
+            <p>3 flour blend</p>
+            <span>00 flour, bolted flour, and whole wheat come together to build deeper flavor, stronger structure, better browning, and a more mature dough with crisp edges, airy chew, and real slice support.</span>
+          </div>
         </div>
       </div>
     </section>
