@@ -1,0 +1,21 @@
+{
+  "name": "disco-dough-pizza-co",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@rolldown/binding-darwin-arm64": "^1.1.0",
+    "@tailwindcss/postcss": "latest",
+    "@vitejs/plugin-react": "latest",
+    "postcss": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "tailwindcss": "latest",
+    "vite": "latest"
+  }
+}
