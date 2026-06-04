@@ -63,18 +63,18 @@ const menuSections = [
   {
     title: "Pies",
     items: [
-      { name: "Spicy Vodka Calabrian Pie", prices: ["Full pie: $26", "Slice: $7"] },
-      { name: "Hot Honey Pep Pie", prices: ["Full pie: $22", "Slice: $6.50"] },
-      { name: "Tomato Stracciatella Pie", prices: ["Full pie: $18", "Slice: $5.50"] },
-      { name: "Cheese Pie", prices: ["Full pie: $16", "Slice: $5"] },
+      { name: "Cheese Pie", prices: ["$16 / $5"] },
+      { name: "Tomato Stracciatella Pie", prices: ["$18 / $5.50"] },
+      { name: "Hot Honey Pep Pie", prices: ["$22 / $6.50"] },
+      { name: "Spicy Vodka Calabrian Pie", prices: ["$26 / $7"] },
     ],
   },
   {
     title: "Desserts",
     items: [
-      { name: "Dubai Chocolate Chip Cookie Pie", prices: ["Whole pie: $17", "Scoop: $5.50"] },
-      { name: "German Chocolate Cookie Pie", prices: ["Whole pie: $16", "Scoop: $5"] },
-      { name: "Chocolate Chip Cookie Pie", prices: ["Whole pie: $14", "Scoop: $3.50"] },
+      { name: "Chocolate Chip Cookie Pie", prices: ["$14 / $3.50"] },
+      { name: "German Chocolate Cookie Pie", prices: ["$16 / $5"] },
+      { name: "Dubai Chocolate Chip Cookie Pie", prices: ["$17 / $5.50"] },
     ],
   },
   {
@@ -382,7 +382,8 @@ function OurPies() {
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
           {details.map((detail) => (
-            <div key={detail.title} className="interactive-lift interactive-card-lift interactive-box-zoom unified-premium-glow feature-card rounded-3xl border border-tomato/15 bg-[#fffaf0] p-6 shadow-soft">
+            <div key={detail.title} className="interactive-lift interactive-card-lift interactive-box-zoom unified-premium-glow feature-card rounded-3xl border border-tomato/15 bg-[#fffaf0] px-5 py-4 shadow-soft">
+              <span className="feature-card-mark" aria-hidden="true" />
               <p className="feature-card-title">{detail.title}</p>
               {detail.copy ? <span className="feature-card-copy">{detail.copy}</span> : null}
             </div>
