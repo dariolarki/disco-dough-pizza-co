@@ -76,15 +76,15 @@ body::before {
 }
 
 @keyframes disco-spin {
-  from { transform: perspective(700px) rotateY(-52deg); }
-  to { transform: perspective(700px) rotateY(52deg); }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .hero-disco {
   width: clamp(58px, 7vw, 86px);
   height: auto;
-  margin-bottom: clamp(0.15rem, 0.6vw, 0.4rem);
-  animation: disco-spin 4.5s ease-in-out infinite alternate;
+  margin-bottom: clamp(0.4rem, 1vw, 0.7rem);
+  animation: disco-spin 12s linear infinite;
 }
 
 .section {
@@ -333,19 +333,11 @@ a.rounded-full[href^="sms"]:hover {
 }
 
 .brand-asset-image {
-  width: min(100%, 50rem);
-  position: relative;
-  z-index: 1;
-  /* Pull up to absorb the ~20% blank space baked into the logo PNG's top,
-     tightening the gap to the eyebrow above (which sits at a higher z-index). */
-  margin-top: clamp(-5.25rem, -10vw, -1.5rem);
+  width: min(100%, 44rem);
 }
 
 .hero-intro-copy {
-  /* Negative margin offsets the ~21% blank space baked into the logo PNG's
-     bottom, pulling the tagline up close to the visible artwork. Scales with
-     the image: tracks viewport below 800px, caps once the logo hits its max size. */
-  margin-top: clamp(-4rem, -8vw, -1.25rem);
+  margin-top: clamp(0.85rem, 2vw, 1.4rem);
   max-width: 46rem;
 }
 

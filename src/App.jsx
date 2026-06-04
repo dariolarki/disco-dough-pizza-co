@@ -22,9 +22,10 @@ import img6364 from "../images/IMG_6364.jpeg";
 import img6722 from "../images/IMG_6722.jpg";
 import imgProcess from "../images/IMG_E6D657F1-1E7C-4350-9B2A-81AB8E046D75.JPEG";
 import grandmaCheesePie from "../images/Disco Dough Grandma Cheese Pie.jpeg";
-import brandAsset from "../images/Brand Asset Name (Disco Dough est...).png";
+import brandAsset from "../images/disco-logo.png";
 import pizzaAsset from "../images/Disco Dough Pizza Asset.png";
 import mirrorBall from "../images/Disco Dough Mirror Ball.png";
+import discoBall from "../images/disco-ball-spin.png";
 import bridgeAsset from "../images/Disco Dough Bridge.png";
 import pizzaBox from "../images/Disco Dough Pizza Box.png";
 import privateEventsPhoto from "../images/Capital Peel and Pizza photo.jpeg";
@@ -247,8 +248,8 @@ function Hero() {
       <div className="absolute inset-0 grain opacity-70" />
       <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-8 px-4 pb-12 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-center text-center">
-          <img src={mirrorBall} alt="" aria-hidden="true" className="hero-disco" />
-          <div className="relative z-10 mb-2 flex flex-wrap items-center justify-center gap-3 text-xs font-black uppercase tracking-[0.22em] text-tomato">
+          <img src={discoBall} alt="" aria-hidden="true" className="hero-disco" />
+          <div className="mb-3 flex flex-wrap items-center justify-center gap-3 text-xs font-black uppercase tracking-[0.22em] text-tomato">
             <span>Disco Dough Pizza Co.</span>
             <Star />
             <span>Austin, Texas</span>
