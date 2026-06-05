@@ -273,7 +273,7 @@ function Hero() {
     <section id="hero" className="relative min-h-[92vh] border-b-2 border-tomato/25 pt-[10.5rem]">
       <div className="absolute inset-0 grain opacity-70" />
       <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-8 px-4 pb-12 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center justify-center text-center">
+        <div className="flex w-full min-w-0 max-w-full flex-col items-center justify-center text-center">
           <TextMarquee phrases={eyebrowPhrases} durationSec={26} variant="eyebrow" />
           <div className="hero-logo">
             <img className="hero-logo-img" src={logoNoO} alt="Disco Dough Pizza Co. est. 2026" />
@@ -495,7 +495,7 @@ function Gallery() {
 function PrivateEvents() {
   return (
     <section id="private-events" className="section bg-blush">
-      <div className="grid gap-10 lg:grid-cols-[1.18fr_0.82fr] lg:items-start lg:gap-16">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)] lg:items-start lg:gap-16">
         <div className="event-media order-2 lg:order-1">
           <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-frame photo-contain photo-top contained-image-zoom aspect-[5/4]">
             <div className="ph-media"><img src={privateEventsPhoto} alt="Pizza peel and Disco Dough pizza in front of the Austin Capitol" /></div>

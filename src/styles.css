@@ -666,6 +666,7 @@ a.rounded-full[href^="sms"]:hover {
 .event-content {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .event-content .copy {
@@ -735,6 +736,8 @@ a.rounded-full[href^="sms"]:hover {
   align-items: center;
   justify-content: center;
   min-width: min(100%, 15rem);
+  max-width: 100%;
+  overflow-wrap: anywhere;
   border: 2px solid #c22b1a;
   border-radius: 999px;
   background: #fcf0df;
