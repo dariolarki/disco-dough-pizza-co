@@ -25,9 +25,16 @@ import grandmaCheesePie from "../images/Disco Dough Grandma Cheese Pie.jpeg";
 import brandAsset from "../images/disco-logo.png";
 import pizzaAsset from "../images/Disco Dough Pizza Asset.png";
 import mirrorBall from "../images/Disco Dough Mirror Ball.png";
-import discoBall from "../images/disco-ball-spin.png";
 import bridgeAsset from "../images/Disco Dough Bridge.png";
 import pizzaBox from "../images/Disco Dough Pizza Box.png";
+import illDough from "../images/ill-dough.png";
+import illChar from "../images/ill-char.png";
+import illTomato from "../images/ill-tomato.png";
+import illSlice from "../images/ill-slice.png";
+import illFerment from "../images/ill-ferment.png";
+import illCrumb from "../images/ill-crumb.png";
+import logoNoO from "../images/logo-no-o.png";
+import logoOBall from "../images/logo-o-ball.png";
 import privateEventsPhoto from "../images/Capital Peel and Pizza photo.jpeg";
 
 const images = [
@@ -62,27 +69,31 @@ const navItems = ["About", "Menu", "Our Pies", "Pizza Drops", "Gallery", "Privat
 const menuSections = [
   {
     title: "Pies",
+    icon: pizzaAsset,
     items: [
-      { name: "Spicy Vodka Calabrian Pie", prices: ["Full pie: $26", "Slice: $7"] },
-      { name: "Hot Honey Pep Pie", prices: ["Full pie: $22", "Slice: $6.50"] },
-      { name: "Tomato Stracciatella Pie", prices: ["Full pie: $18", "Slice: $5.50"] },
-      { name: "Cheese Pie", prices: ["Full pie: $16", "Slice: $5"] },
+      { name: "Cheese Pie", prices: ["$16 / $5"] },
+      { name: "Tomato Stracciatella Pie", prices: ["$18 / $5.50"] },
+      { name: "Hot Honey Pep Pie", prices: ["$22 / $6.50"] },
+      { name: "Spicy Vodka Calabrian Pie", prices: ["$26 / $7"] },
     ],
   },
   {
     title: "Desserts",
+    icon: mirrorBall,
     items: [
-      { name: "Dubai Chocolate Chip Cookie Pie", prices: ["Whole pie: $17", "Scoop: $5.50"] },
-      { name: "German Chocolate Cookie Pie", prices: ["Whole pie: $16", "Scoop: $5"] },
-      { name: "Chocolate Chip Cookie Pie", prices: ["Whole pie: $14", "Scoop: $3.50"] },
+      { name: "Chocolate Chip Cookie Pie", prices: ["$14 / $3.50"] },
+      { name: "German Chocolate Cookie Pie", prices: ["$16 / $5"] },
+      { name: "Dubai Chocolate Chip Cookie Pie", prices: ["$17 / $5.50"] },
     ],
   },
   {
     title: "Sides",
+    icon: pizzaBox,
     items: [{ name: "Garlic Knots", prices: ["$11"] }],
   },
   {
     title: "Drinks",
+    icon: bridgeAsset,
     items: [{ name: "Strawberry Basil Lemonade", prices: ["$6"] }],
   },
 ];
@@ -161,6 +172,10 @@ const bannerAssets = [
   { src: pizzaAsset, alt: "Disco Dough pizza slices" },
 ];
 
+function CheckerBanner() {
+  return <div className="checker-banner" aria-hidden="true" />;
+}
+
 function LogoBanner() {
   const items = [...bannerAssets, ...bannerAssets];
   return (
@@ -186,11 +201,21 @@ const tickerPhrases = [
   "Leopard-Spotted Char",
 ];
 
-function TextMarquee() {
-  const items = [...tickerPhrases, ...tickerPhrases];
+const eyebrowPhrases = [
+  "Disco Dough Pizza Co.",
+  "Austin, Texas",
+  "Disco Dough Pizza Co.",
+  "Austin, Texas",
+];
+
+function TextMarquee({ phrases = tickerPhrases, durationSec = 38, rounded = false, variant }) {
+  const items = [...phrases, ...phrases];
+  const cls = ["text-marquee", rounded && "text-marquee--rounded", variant && `text-marquee--${variant}`]
+    .filter(Boolean)
+    .join(" ");
   return (
-    <div className="text-marquee" aria-hidden="true">
-      <div className="text-marquee-track">
+    <div className={cls} aria-hidden="true">
+      <div className="text-marquee-track" style={{ animationDuration: `${durationSec}s` }}>
         {items.map((phrase, i) => (
           <span key={i} className="text-marquee-item">
             {phrase}
@@ -205,7 +230,7 @@ function TextMarquee() {
 function App() {
   return (
     <main className="min-h-screen overflow-hidden bg-cream text-ink">
-      <LogoBanner />
+      <CheckerBanner />
       <Header />
       <Hero />
       <TextMarquee />
@@ -215,6 +240,7 @@ function App() {
       <PizzaDrops />
       <Gallery />
       <PrivateEvents />
+      <LogoBanner />
       <Contact />
     </main>
   );
@@ -248,16 +274,15 @@ function Hero() {
       <div className="absolute inset-0 grain opacity-70" />
       <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-8 px-4 pb-12 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-center text-center">
-          <img src={discoBall} alt="" aria-hidden="true" className="hero-disco" />
-          <div className="mb-3 flex flex-wrap items-center justify-center gap-3 text-xs font-black uppercase tracking-[0.22em] text-tomato">
-            <span>Disco Dough Pizza Co.</span>
-            <Star />
-            <span>Austin, Texas</span>
+          <TextMarquee phrases={eyebrowPhrases} durationSec={26} variant="eyebrow" />
+          <div className="hero-logo">
+            <img className="hero-logo-img" src={logoNoO} alt="Disco Dough Pizza Co. est. 2026" />
+            <img className="hero-logo-ball" src={logoOBall} alt="" aria-hidden="true" />
           </div>
-          <img className="brand-asset-image" src={brandAsset} alt="Disco Dough Pizza Co. est. 2026" />
-          <p className="hero-intro-copy mx-auto max-w-2xl font-serif text-2xl font-medium leading-[1.4] text-tomato sm:text-[1.75rem] sm:leading-[1.45]">
-            Authentic hand made NY Neapolitan hybrid style pies made with a 3 flour blend, crispy airy crumb, leopard-spotted charred bottom, well done crust, and Austin pop-up soul.
-          </p>
+          <div className="hero-intro-copy mx-auto max-w-2xl text-center">
+            <p className="hero-lede">NY Structure.<br />Neapolitan Soul.</p>
+            <p className="hero-subcopy">72-hour sourdough fermentation. Handmade in Austin, TX.</p>
+          </div>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a href="sms:5035167759" className="hero-text-cta cta-button cta-button--filled rounded-full px-7 py-4 text-center font-serif text-lg font-semibold tracking-normal shadow-soft">
               Text 503-516-7759
@@ -297,10 +322,10 @@ function About() {
         <div className="about-side">
           <div className="about-photos" aria-label="Cayla and Branden with Disco Dough pizzas in Austin">
             <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-card-lift photo-tile photo-contain contained-image-zoom about-photo about-photo--primary">
-              <img src={images[1].src} alt={images[1].alt} />
+              <div className="ph-media"><img src={images[1].src} alt={images[1].alt} /></div>
             </figure>
             <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-card-lift photo-tile photo-contain contained-image-zoom about-photo about-photo--secondary">
-              <img src={images[2].src} alt={images[2].alt} />
+              <div className="ph-media"><img src={images[2].src} alt={images[2].alt} /></div>
             </figure>
           </div>
           <div className="interactive-lift interactive-box-zoom unified-premium-glow community-card">
@@ -327,14 +352,17 @@ function Menu() {
         <SectionLabel>Menu</SectionLabel>
         <div className="menu-card">
           <div className="menu-header">
-            <p>Disco Dough Pizza Co.</p>
+            <p><span className="menu-kicker-star" aria-hidden="true">✦</span> Disco Dough Pizza Co. <span className="menu-kicker-star" aria-hidden="true">✦</span></p>
             <h2>Our Menu</h2>
             <span>Austin, Texas</span>
           </div>
           <div className="menu-sections">
             {menuSections.map((section) => (
               <div className="menu-section" key={section.title}>
-                <h3>{section.title}</h3>
+                <h3>
+                  {section.icon ? <img src={section.icon} alt="" aria-hidden="true" className="menu-section-icon" /> : null}
+                  {section.title}
+                </h3>
                 <div className="menu-list">
                   {section.items.map((item) => (
                     <div className="menu-row" key={item.name}>
@@ -363,12 +391,12 @@ function Menu() {
 
 function OurPies() {
   const details = [
-    { title: "Hand tossed and folded dough" },
-    { title: "Well done and spotted char undercarriage" },
-    { title: "Hand milled San Marzano tomatoes" },
-    { title: "Charred crust with mature chew and crisp" },
-    { title: "72 hour cold sourdough ferment" },
-    { title: "Blistered perimeter and light crumb" },
+    { title: "Hand tossed and folded dough", icon: illDough },
+    { title: "Well done and spotted char undercarriage", icon: illChar },
+    { title: "Hand milled San Marzano tomatoes", icon: illTomato },
+    { title: "Charred crust with mature chew and crisp", icon: illSlice },
+    { title: "72 hour cold sourdough ferment", icon: illFerment },
+    { title: "Blistered perimeter and light crumb", icon: illCrumb },
   ];
   return (
     <section id="our-pies" className="section">
@@ -377,12 +405,16 @@ function OurPies() {
         <div>
           <h2 className="section-title section-title--small">A sourdough hybrid with New York structure and Neapolitan soul.</h2>
           <p className="copy copy-lead mt-6">
-            Every dough batch starts with a three-flour blend designed for crispness, chew, airy structure, browning, strength, and no-flop slices. The result is a pie that folds when you want it to, holds when you need it to, and eats like something made by hand.
+            Every dough batch starts with a three-flour blend built for crispness, chew, airy structure, browning, strength, and no-flop slices.
+          </p>
+          <p className="copy mt-5">
+            The result is a pie that folds when you want it to, holds when you need it to, and eats like something made by hand.
           </p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
           {details.map((detail) => (
-            <div key={detail.title} className="interactive-lift interactive-card-lift interactive-box-zoom unified-premium-glow feature-card rounded-3xl border border-tomato/15 bg-[#fffaf0] p-6 shadow-soft">
+            <div key={detail.title} className="interactive-lift interactive-card-lift interactive-box-zoom unified-premium-glow feature-card rounded-3xl border border-tomato/15 bg-[#fffaf0] px-5 py-3.5 shadow-soft">
+              {detail.icon ? <img src={detail.icon} alt="" aria-hidden="true" className="feature-card-illu" /> : null}
               <p className="feature-card-title">{detail.title}</p>
               {detail.copy ? <span className="feature-card-copy">{detail.copy}</span> : null}
             </div>
@@ -446,11 +478,13 @@ function Gallery() {
       <div className="gallery-grid">
         {galleryImages.map((image, index) => (
           <figure key={`${image.src}-${index}`} className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-card-lift gallery-card">
-            <img
-              src={image.src}
-              alt={image.alt}
-              className={`h-full w-full object-cover object-center ${galleryPositionClasses[index] || ""}`}
-            />
+            <div className="ph-media">
+              <img
+                src={image.src}
+                alt={image.alt}
+                className={`h-full w-full object-cover object-center ${galleryPositionClasses[index] || ""}`}
+              />
+            </div>
           </figure>
         ))}
       </div>
@@ -464,7 +498,7 @@ function PrivateEvents() {
       <div className="grid gap-10 lg:grid-cols-[1.18fr_0.82fr] lg:items-start lg:gap-16">
         <div className="event-media order-2 lg:order-1">
           <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-frame photo-contain photo-top contained-image-zoom aspect-[5/4]">
-            <img src={privateEventsPhoto} alt="Pizza peel and Disco Dough pizza in front of the Austin Capitol" />
+            <div className="ph-media"><img src={privateEventsPhoto} alt="Pizza peel and Disco Dough pizza in front of the Austin Capitol" /></div>
           </figure>
         </div>
         <div className="event-content order-1 lg:order-2">
@@ -479,11 +513,7 @@ function PrivateEvents() {
           </div>
         </div>
         <div className="event-details order-3 lg:col-span-2">
-          <div className="event-types" aria-label="Private event types">
-            {eventTypes.map((event) => (
-              <span className="interactive-lift interactive-box-zoom unified-premium-glow" key={event}>{event}</span>
-            ))}
-          </div>
+          <TextMarquee phrases={eventTypes} durationSec={60} rounded />
           <div className="event-detail-cards">
             <div className="interactive-lift interactive-box-zoom unified-premium-glow event-detail-card event-indoor-card">
               <div className="event-experience-card__label">
