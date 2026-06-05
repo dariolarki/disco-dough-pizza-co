@@ -1,3 +1,4 @@
+import { useState } from "react";
 import heroPizza from "../images/Capital skyline facing pizza shot  copy.JPG";
 import caylaPizza from "../images/Cayla Capital Solo Tomato Stracciatella Pie copy.JPG";
 import brandenPizza from "../images/Branden Captial Solo Hot Honey Pep.JPG";
@@ -247,9 +248,10 @@ function App() {
 }
 
 function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <header className="fixed inset-x-0 top-[4.5rem] z-50 border-b border-tomato/20 bg-cream/88 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
         <a href="#hero" className="font-serif text-base font-black uppercase leading-none tracking-wide text-tomato sm:text-xl">
           Disco Dough Pizza Co.
         </a>
@@ -260,10 +262,41 @@ function Header() {
             </a>
           ))}
         </nav>
-        <a href="sms:5035167759" className="rounded-full bg-tomato px-5 py-2.5 font-serif text-sm font-semibold tracking-normal text-cream shadow-soft transition hover:bg-ink">
-          Text to Order
-        </a>
+        <div className="flex shrink-0 items-center gap-2">
+          <a href="sms:5035167759" className="rounded-full bg-tomato px-4 py-2.5 font-serif text-sm font-semibold tracking-normal text-cream shadow-soft transition hover:bg-ink sm:px-5">
+            Text to Order
+          </a>
+          <button
+            type="button"
+            className={`nav-toggle lg:hidden ${menuOpen ? "is-open" : ""}`}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav"
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+          </button>
+        </div>
       </div>
+      <nav
+        id="mobile-nav"
+        className={`nav-mobile lg:hidden ${menuOpen ? "is-open" : ""}`}
+        style={{ maxHeight: menuOpen ? "80vh" : 0, opacity: menuOpen ? 1 : 0 }}
+        aria-label="Primary"
+      >
+        {navItems.map((item) => (
+          <a
+            key={item}
+            href={`#${item.toLowerCase().replaceAll(" ", "-")}`}
+            className="nav-mobile-link"
+            onClick={() => setMenuOpen(false)}
+          >
+            {item}
+          </a>
+        ))}
+      </nav>
     </header>
   );
 }
@@ -401,7 +434,7 @@ function OurPies() {
   return (
     <section id="our-pies" className="section">
       <SectionLabel>Our pies</SectionLabel>
-      <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:items-start">
+      <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         <div>
           <h2 className="section-title section-title--small">A sourdough hybrid with New York structure and Neapolitan soul.</h2>
           <p className="copy copy-lead mt-6">
@@ -442,7 +475,7 @@ function PizzaDrops() {
         </div>
         <div className="interactive-lift interactive-card-lift interactive-box-zoom unified-premium-glow motion-box drop-card">
           <div className="drop-kicker">Friday · Saturday · Sunday</div>
-          <p>Limited pizza drops</p>
+          <p>This weekend's drop</p>
           <a className="drop-phone" href="sms:5035167759">503-516-7759</a>
           <span>Text to order</span>
           <small>Follow Instagram for availability</small>
@@ -561,6 +594,11 @@ function Contact() {
           <a href="sms:5035167759" className="mt-2 block font-serif text-4xl font-black">503-516-7759</a>
           <p className="mt-6 text-sm font-black uppercase tracking-[0.2em]">Instagram</p>
           <a href="https://instagram.com/discodoughpizzaco" className="mt-2 block font-serif text-3xl font-black">@discodoughpizzaco</a>
+        </div>
+        <div className="footer-legal lg:col-span-2">
+          <span>© 2026 Disco Dough Pizza Co.</span>
+          <span aria-hidden="true">·</span>
+          <span>Small-batch sourdough, handmade in Austin, TX</span>
         </div>
       </div>
     </footer>

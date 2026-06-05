@@ -257,15 +257,15 @@ a.rounded-full[href^="sms"]:hover {
 .feature-card-title {
   margin-top: 0;
   max-width: 100%;
-  padding-right: 3rem;
+  padding-right: 2.4rem;
   color: var(--brand-red);
   font-family: "Fraunces", Georgia, serif;
-  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  font-size: clamp(1.15rem, 1.78vw, 1.38rem);
   font-weight: 600;
   letter-spacing: 0;
   line-height: 1.28;
   text-transform: none;
-  overflow-wrap: break-word;
+  overflow-wrap: normal;
   word-break: normal;
   hyphens: none;
   text-wrap: balance;
@@ -1580,6 +1580,109 @@ a.rounded-full[href^="sms"]:hover {
   filter: none !important;
   mix-blend-mode: normal !important;
   opacity: 1 !important;
+}
+
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 2.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(252, 240, 223, 0.28);
+  color: rgba(252, 240, 223, 0.72);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.footer-legal span[aria-hidden="true"] {
+  opacity: 0.5;
+}
+
+/* Mobile nav toggle (hamburger) */
+.nav-toggle {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 2.65rem;
+  height: 2.65rem;
+  padding: 0 0.62rem;
+  border: 2px solid var(--brand-red);
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  flex: none;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--brand-red);
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+.nav-toggle.is-open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle.is-open span:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle.is-open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Mobile dropdown nav */
+.nav-mobile {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  background: rgba(252, 240, 223, 0.98);
+  transition: max-height 0.3s ease, opacity 0.25s ease;
+}
+
+.nav-mobile.is-open {
+  max-height: 80vh;
+  opacity: 1;
+}
+
+.nav-mobile-link {
+  display: block;
+  padding: 0.9rem 1.25rem;
+  font-family: "Inter", sans-serif;
+  font-size: 0.92rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--brand-red);
+  border-top: 1px solid rgb(194 43 26 / 0.12);
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.nav-mobile-link:hover,
+.nav-mobile-link:active {
+  background: rgb(194 43 26 / 0.07);
+  color: var(--color-ink);
+}
+
+@media (min-width: 640px) {
+  .nav-mobile-link {
+    padding-inline: 1.5rem;
+  }
+}
+
+/* Desktop: hide mobile nav UI (overrides .nav-toggle display set above) */
+@media (min-width: 1024px) {
+  .nav-toggle,
+  .nav-mobile {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
