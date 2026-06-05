@@ -1709,9 +1709,16 @@ a.rounded-full[href^="sms"]:hover {
   z-index: 60;
   height: 4.5rem;
   background-color: #fcf0df;
-  background-image: conic-gradient(from 90deg, #fcf0df 25%, #9a2418 0 50%, #fcf0df 0 75%, #9a2418 0);
+  background-image: conic-gradient(from 90deg, #fcf0df 25%, #c22b1a 0 50%, #fcf0df 0 75%, #c22b1a 0);
   background-size: 3rem 3rem;
-  border-bottom: 2px solid rgb(154 36 24 / 0.5);
+  border-bottom: 2px solid rgb(194 43 26 / 0.5);
+  animation: checker-slide 4s linear infinite;
+}
+
+/* Gentle horizontal drift of the checker pattern (one full tile = seamless) */
+@keyframes checker-slide {
+  from { background-position: 0 0; }
+  to { background-position: -3rem 0; }
 }
 
 /* Logo marquee band (relocated to the bottom of the page — not fixed) */
