@@ -369,12 +369,13 @@ a.rounded-full[href^="sms"]:hover {
 .hero-lede {
   font-family: "Fraunces", Georgia, serif;
   font-optical-sizing: auto;
-  font-variation-settings: "SOFT" 50;
+  font-variation-settings: "SOFT" 60, "WONK" 1;
   color: var(--brand-red);
-  font-size: clamp(1.7rem, 4.2vw, 2.7rem);
-  font-weight: 600;
-  line-height: 1.05;
-  letter-spacing: -0.01em;
+  font-size: clamp(1.9rem, 4.6vw, 3rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
 }
 
 /* Supporting line — cursive signature tagline (matches the eyebrow font) */
