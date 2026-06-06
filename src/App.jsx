@@ -313,7 +313,7 @@ function Hero() {
             <img className="hero-logo-ball" src={logoOBall} alt="" aria-hidden="true" />
           </div>
           <div className="hero-intro-copy mx-auto max-w-2xl text-center">
-            <p className="hero-lede">NY Structure.<br />Neapolitan Soul.</p>
+            <p className="hero-lede">NY Inspired.<br />Austin Made.</p>
             <p className="hero-subcopy">Handmade in Austin, Texas.</p>
           </div>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
