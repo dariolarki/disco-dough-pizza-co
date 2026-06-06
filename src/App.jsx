@@ -11,7 +11,7 @@ import tomatoPie from "../images/Disco Dough Pizza Co. Sourdough Tomato Straccia
 import cheesePieNew from "../images/Cheese pie.jpeg";
 import dubaiAndCheesePie from "../images/Dubai and Cheese Pie.jpeg";
 import dubaiCookiePieDouble from "../images/Dubai Cookie Pie Double.jpeg";
-import dubaiCookiePieThree from "../images/Dubai Cookie Pie 3.0.HEIC.png";
+import dubaiCookiePieThree from "../images/Dubai Cookie Pie 3.0.HEIC.jpeg";
 import hotHoneyPepTwo from "../images/Hot Honey Pep 2.0.jpeg";
 import chocolateChipCookieOven from "../images/Choclate Chip Cookie Pie 2.0 oven shot.jpeg";
 import dubaiCookiePieTwo from "../images/Dubai Cookie Pie 2.0.jpeg";
