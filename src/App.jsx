@@ -250,7 +250,7 @@ function App() {
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   return (
-    <header className="fixed inset-x-0 top-[4.5rem] z-50 border-b border-tomato/20 bg-cream/88 backdrop-blur-md">
+    <header className="fixed inset-x-0 top-[3rem] z-50 border-b border-tomato/20 bg-cream/88 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
         <a href="#hero" className="font-serif text-base font-black uppercase leading-none tracking-wide text-tomato sm:text-xl">
           Disco Dough Pizza Co.
@@ -303,7 +303,7 @@ function Header() {
 
 function Hero() {
   return (
-    <section id="hero" className="relative min-h-[92vh] border-b-2 border-tomato/25 pt-[10.5rem]">
+    <section id="hero" className="relative min-h-[92vh] border-b-2 border-tomato/25 pt-[9rem]">
       <div className="absolute inset-0 grain opacity-70" />
       <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-8 px-4 pb-12 sm:px-6 lg:px-8">
         <div className="flex w-full min-w-0 max-w-full flex-col items-center justify-center text-center">
@@ -314,7 +314,7 @@ function Hero() {
           </div>
           <div className="hero-intro-copy mx-auto max-w-2xl text-center">
             <p className="hero-lede">NY Structure.<br />Neapolitan Soul.</p>
-            <p className="hero-subcopy">72-hour sourdough fermentation. Handmade in Austin, TX.</p>
+            <p className="hero-subcopy">Handmade in Austin, Texas.</p>
           </div>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a href="sms:5035167759" className="hero-text-cta cta-button cta-button--filled rounded-full px-7 py-4 text-center font-serif text-lg font-semibold tracking-normal shadow-soft">
@@ -546,7 +546,7 @@ function PrivateEvents() {
           </div>
         </div>
         <div className="event-details order-3 lg:col-span-2">
-          <TextMarquee phrases={eventTypes} durationSec={60} rounded />
+          <TextMarquee phrases={eventTypes} durationSec={82} rounded />
           <div className="event-detail-cards">
             <div className="interactive-lift interactive-box-zoom unified-premium-glow event-detail-card event-indoor-card">
               <div className="event-experience-card__label">
@@ -591,9 +591,9 @@ function Contact() {
         </div>
         <div className="interactive-lift interactive-box-zoom unified-premium-glow motion-box contact-panel contact-card rounded-[2rem] border-2 p-6">
           <p className="text-sm font-black uppercase tracking-[0.2em]">Text to order</p>
-          <a href="sms:5035167759" className="mt-2 block font-serif text-4xl font-black">503-516-7759</a>
+          <a href="sms:5035167759" className="mt-2 block font-serif text-4xl font-black text-cream">503-516-7759</a>
           <p className="mt-6 text-sm font-black uppercase tracking-[0.2em]">Instagram</p>
-          <a href="https://instagram.com/discodoughpizzaco" className="mt-2 block font-serif text-3xl font-black">@discodoughpizzaco</a>
+          <a href="https://instagram.com/discodoughpizzaco" className="mt-2 block font-serif text-3xl font-black text-cream">@discodoughpizzaco</a>
         </div>
         <div className="footer-legal lg:col-span-2">
           <span>© 2026 Disco Dough Pizza Co.</span>
