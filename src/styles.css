@@ -257,15 +257,15 @@ a.rounded-full[href^="sms"]:hover {
 .feature-card-title {
   margin-top: 0;
   max-width: 100%;
-  padding-right: 2.4rem;
+  padding-right: 3rem;
   color: var(--brand-red);
   font-family: "Fraunces", Georgia, serif;
-  font-size: clamp(1.15rem, 1.78vw, 1.38rem);
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
   font-weight: 600;
   letter-spacing: 0;
   line-height: 1.28;
   text-transform: none;
-  overflow-wrap: normal;
+  overflow-wrap: break-word;
   word-break: normal;
   hyphens: none;
   text-wrap: balance;
