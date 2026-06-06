@@ -434,7 +434,7 @@ function OurPies() {
   return (
     <section id="our-pies" className="section">
       <SectionLabel>Our pies</SectionLabel>
-      <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:items-start">
+      <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         <div>
           <h2 className="section-title section-title--small">A sourdough hybrid with New York structure and Neapolitan soul.</h2>
           <p className="copy copy-lead mt-6">
