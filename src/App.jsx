@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import heroPizza from "../images/Capital skyline facing pizza shot  copy.JPG";
 import caylaPizza from "../images/Cayla Capital Solo Tomato Stracciatella Pie copy.JPG";
 import brandenPizza from "../images/Branden Captial Solo Hot Honey Pep.JPG";
@@ -229,6 +229,23 @@ function TextMarquee({ phrases = tickerPhrases, durationSec = 38, rounded = fals
 }
 
 function App() {
+  // Auto-hide the checkerboard + nav bar on scroll-down, reveal on scroll-up,
+  // to free up screen space for content.
+  useEffect(() => {
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (y > lastY + 4 && y > 140) {
+        document.body.classList.add("nav-hidden");
+      } else if (y < lastY - 4 || y <= 140) {
+        document.body.classList.remove("nav-hidden");
+      }
+      lastY = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <main className="min-h-screen overflow-hidden bg-cream text-ink">
       <CheckerBanner />
@@ -250,7 +267,7 @@ function App() {
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   return (
-    <header className="fixed inset-x-0 top-[3rem] z-50 border-b border-tomato/20 bg-cream/88 backdrop-blur-md">
+    <header className="site-header fixed inset-x-0 top-[3rem] z-50 border-b border-tomato/20 bg-cream/88 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
         <a href="#hero" className="font-serif text-base font-black uppercase leading-none tracking-wide text-tomato sm:text-xl">
           Disco Dough Pizza Co.

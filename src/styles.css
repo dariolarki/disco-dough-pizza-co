@@ -335,6 +335,9 @@ a.rounded-full[href^="sms"]:hover {
 .hero-logo {
   position: relative;
   width: min(100%, 44rem);
+  /* Reserve the logo's intrinsic ratio so the absolutely-positioned disco
+     ball stays correctly placed before the images finish loading. */
+  aspect-ratio: 1212 / 631;
   margin-inline: auto;
 }
 
@@ -1570,6 +1573,20 @@ header a[href^="sms"] {
   opacity: 1 !important;
 }
 
+/* Footer contact links: clean brighten on hover — no lift, drop-shadow box,
+   or lingering click outline. Keyboard focus ring is preserved. */
+#contact .contact-card a:hover,
+#contact .contact-card a:active,
+#contact .contact-card a:focus {
+  transform: none !important;
+  box-shadow: none !important;
+  color: #fff !important;
+}
+
+#contact .contact-card a:focus:not(:focus-visible) {
+  outline: none;
+}
+
 #contact .contact-card:hover {
   border-color: var(--premium-highlight-border) !important;
   box-shadow: var(--premium-highlight-glow) !important;
@@ -1838,6 +1855,21 @@ header a[href^="sms"] {
 @keyframes checker-slide {
   from { background-position: 0 0; }
   to { background-position: -1.5rem 0; }
+}
+
+/* Auto-hide the checkerboard + nav bar on scroll-down (toggled via body.nav-hidden) */
+.checker-banner,
+.site-header {
+  transition: transform 0.35s ease;
+  will-change: transform;
+}
+
+body.nav-hidden .checker-banner {
+  transform: translateY(-100%);
+}
+
+body.nav-hidden .site-header {
+  transform: translateY(calc(-100% - 3.5rem));
 }
 
 /* Logo marquee band (relocated to the bottom of the page — not fixed) */
