@@ -263,7 +263,7 @@ function Header() {
           ))}
         </nav>
         <div className="flex shrink-0 items-center gap-2">
-          <a href="sms:5035167759" className="rounded-full bg-tomato px-4 py-2.5 font-sans text-sm font-semibold tracking-normal text-cream shadow-soft transition hover:bg-ink sm:px-5">
+          <a href="sms:5035167759" className="rounded-full bg-tomato px-4 py-2.5 font-serif text-sm font-semibold tracking-normal text-cream shadow-soft transition hover:bg-ink sm:px-5">
             Text to Order
           </a>
           <button
@@ -317,10 +317,10 @@ function Hero() {
             <p className="hero-subcopy">Handmade in Austin, Texas.</p>
           </div>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a href="sms:5035167759" className="hero-text-cta cta-button cta-button--filled rounded-full px-7 py-4 text-center font-sans text-lg font-semibold tracking-normal shadow-soft">
+            <a href="sms:5035167759" className="hero-text-cta cta-button cta-button--filled rounded-full px-7 py-4 text-center font-serif text-lg font-semibold tracking-normal shadow-soft">
               Text 503-516-7759
             </a>
-            <a href="#pizza-drops" className="cta-button cta-button--outline rounded-full border-2 border-tomato px-7 py-4 text-center font-sans text-lg font-semibold tracking-normal text-tomato transition hover:-translate-y-0.5 hover:bg-tomato hover:text-cream">
+            <a href="#pizza-drops" className="cta-button cta-button--outline rounded-full border-2 border-tomato px-7 py-4 text-center font-serif text-lg font-semibold tracking-normal text-tomato transition hover:-translate-y-0.5 hover:bg-tomato hover:text-cream">
               See Pizza Drops
             </a>
           </div>

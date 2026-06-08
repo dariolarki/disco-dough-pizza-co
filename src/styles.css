@@ -408,13 +408,23 @@ a.rounded-full[href^="sms"]:hover {
   background: #fcf0df;
   padding: 0.7rem 1.4rem;
   color: #c22b1a;
-  font-family: var(--font-sans);
+  font-family: "Fraunces", Georgia, serif;
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0;
   line-height: 1.2;
   text-transform: none;
   box-shadow: 0 10px 25px rgb(194 43 26 / 0.1);
+}
+
+/* CTAs + top nav adopt the hero header's groovy Fraunces look (WONK) */
+#hero .cta-button,
+.hero-links a,
+.event-links a,
+header nav a,
+header a[href^="sms"] {
+  font-family: "Fraunces", Georgia, serif;
+  font-variation-settings: "SOFT" 60, "WONK" 1;
 }
 
 .hero-links a:hover {
@@ -746,7 +756,7 @@ a.rounded-full[href^="sms"]:hover {
   background: #fcf0df;
   padding: 0.9rem 1.15rem;
   color: #c22b1a;
-  font-family: var(--font-sans);
+  font-family: "Fraunces", Georgia, serif;
   font-size: 1.05rem;
   font-weight: 600;
   letter-spacing: 0;
