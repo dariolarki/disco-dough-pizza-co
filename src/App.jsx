@@ -263,7 +263,7 @@ function Header() {
           ))}
         </nav>
         <div className="flex shrink-0 items-center gap-2">
-          <a href="sms:5035167759" className="rounded-full bg-tomato px-4 py-2.5 font-serif text-sm font-semibold tracking-normal text-cream shadow-soft transition hover:bg-ink sm:px-5">
+          <a href="sms:5035167759" className="rounded-full bg-tomato px-4 py-2.5 font-sans text-sm font-semibold tracking-normal text-cream shadow-soft transition hover:bg-ink sm:px-5">
             Text to Order
           </a>
           <button
@@ -317,10 +317,10 @@ function Hero() {
             <p className="hero-subcopy">Handmade in Austin, Texas.</p>
           </div>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a href="sms:5035167759" className="hero-text-cta cta-button cta-button--filled rounded-full px-7 py-4 text-center font-serif text-lg font-semibold tracking-normal shadow-soft">
+            <a href="sms:5035167759" className="hero-text-cta cta-button cta-button--filled rounded-full px-7 py-4 text-center font-sans text-lg font-semibold tracking-normal shadow-soft">
               Text 503-516-7759
             </a>
-            <a href="#pizza-drops" className="cta-button cta-button--outline rounded-full border-2 border-tomato px-7 py-4 text-center font-serif text-lg font-semibold tracking-normal text-tomato transition hover:-translate-y-0.5 hover:bg-tomato hover:text-cream">
+            <a href="#pizza-drops" className="cta-button cta-button--outline rounded-full border-2 border-tomato px-7 py-4 text-center font-sans text-lg font-semibold tracking-normal text-tomato transition hover:-translate-y-0.5 hover:bg-tomato hover:text-cream">
               See Pizza Drops
             </a>
           </div>
@@ -591,9 +591,9 @@ function Contact() {
         </div>
         <div className="interactive-lift interactive-box-zoom unified-premium-glow motion-box contact-panel contact-card rounded-[2rem] border-2 p-6">
           <p className="text-sm font-black uppercase tracking-[0.2em]">Text to order</p>
-          <a href="sms:5035167759" className="mt-2 block font-serif text-4xl font-black text-cream">503-516-7759</a>
+          <a href="sms:5035167759" className="mt-2 block font-sans text-4xl font-black text-cream">503-516-7759</a>
           <p className="mt-6 text-sm font-black uppercase tracking-[0.2em]">Instagram</p>
-          <a href="https://instagram.com/discodoughpizzaco" className="mt-2 block font-serif text-3xl font-black text-cream">@discodoughpizzaco</a>
+          <a href="https://instagram.com/discodoughpizzaco" className="mt-2 block font-sans text-3xl font-black text-cream">@discodoughpizzaco</a>
         </div>
         <div className="footer-legal lg:col-span-2">
           <span>© 2026 Disco Dough Pizza Co.</span>
