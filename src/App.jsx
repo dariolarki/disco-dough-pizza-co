@@ -178,10 +178,23 @@ function CheckerBanner() {
 }
 
 function LogoBanner() {
-  const items = [...bannerAssets, ...bannerAssets];
+  // Repeat the logo set enough times that each looped half always exceeds the
+  // viewport width, so the marquee never shows an empty gap. The track holds two
+  // identical halves and animates by -50% for a seamless, never-ending loop.
+  const [reps, setReps] = useState(3);
+  useEffect(() => {
+    const BASE = 650; // approx px width of one logo set (kept conservative)
+    const compute = () => setReps(Math.max(3, Math.ceil(window.innerWidth / BASE) + 1));
+    compute();
+    window.addEventListener("resize", compute);
+    return () => window.removeEventListener("resize", compute);
+  }, []);
+
+  const half = Array.from({ length: reps }, () => bannerAssets).flat();
+  const items = [...half, ...half];
   return (
     <div className="logo-banner" aria-hidden="true">
-      <div className="logo-banner-track">
+      <div className="logo-banner-track" style={{ animationDuration: `${reps * 11}s` }}>
         {items.map((item, i) => (
           <span key={i} className="logo-banner-cell">
             <img src={item.src} alt={item.alt} className="logo-banner-item" />
