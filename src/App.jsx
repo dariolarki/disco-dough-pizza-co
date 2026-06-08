@@ -591,9 +591,9 @@ function Contact() {
         </div>
         <div className="interactive-lift interactive-box-zoom unified-premium-glow motion-box contact-panel contact-card rounded-[2rem] border-2 p-6">
           <p className="text-sm font-black uppercase tracking-[0.2em]">Text to order</p>
-          <a href="sms:5035167759" className="mt-2 block font-sans text-4xl font-black text-cream">503-516-7759</a>
+          <a href="sms:5035167759" className="mt-2 block font-serif text-4xl font-black text-cream">503-516-7759</a>
           <p className="mt-6 text-sm font-black uppercase tracking-[0.2em]">Instagram</p>
-          <a href="https://instagram.com/discodoughpizzaco" className="mt-2 block font-sans text-3xl font-black text-cream">@discodoughpizzaco</a>
+          <a href="https://instagram.com/discodoughpizzaco" className="mt-2 block font-serif text-3xl font-black text-cream">@discodoughpizzaco</a>
         </div>
         <div className="footer-legal lg:col-span-2">
           <span>© 2026 Disco Dough Pizza Co.</span>
