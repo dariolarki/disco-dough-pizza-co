@@ -14,14 +14,8 @@ import dubaiCookiePieDouble from "../images/Dubai Cookie Pie Double.jpeg";
 import dubaiCookiePieThree from "../images/Dubai Cookie Pie 3.0.HEIC.jpeg";
 import hotHoneyPepTwo from "../images/Hot Honey Pep 2.0.jpeg";
 import chocolateChipCookieOven from "../images/Choclate Chip Cookie Pie 2.0 oven shot.jpeg";
-import dubaiCookiePieTwo from "../images/Dubai Cookie Pie 2.0.jpeg";
 import hotHoneyPepFour from "../images/Hot Honey Pep 4.0.jpeg";
-import stracciatellaCheesePie from "../images/Stracciatella Cheese Pie.jpeg";
 import img6318 from "../images/IMG_6318.jpeg";
-import img6324 from "../images/IMG_6324.jpeg";
-import img6364 from "../images/IMG_6364.jpeg";
-import img6722 from "../images/IMG_6722.jpg";
-import imgProcess from "../images/IMG_E6D657F1-1E7C-4350-9B2A-81AB8E046D75.JPEG";
 import grandmaCheesePie from "../images/Disco Dough Grandma Cheese Pie.jpeg";
 import brandAsset from "../images/disco-logo.png";
 import pizzaAsset from "../images/Disco Dough Pizza Asset.png";
@@ -38,32 +32,9 @@ import logoNoO from "../images/logo-no-o.png";
 import logoOBall from "../images/logo-o-ball.png";
 import privateEventsPhoto from "../images/Capital Peel and Pizza photo.jpeg";
 
-const images = [
-  { src: heroPizza, alt: "Disco Dough pizza held in front of the Austin skyline" },
-  { src: caylaPizza, alt: "Cayla holding a tomato stracciatella pie in Austin" },
-  { src: brandenPizza, alt: "Branden holding a hot honey pepperoni pie in Austin" },
-  { src: skylineBack, alt: "Disco Dough pizza with the Texas Capitol skyline behind it" },
-  { src: successionShot, alt: "Disco Dough pizza box on the Capitol lawn" },
-  { src: wieldingPeels, alt: "Disco Dough founders carrying pizza peels in Austin" },
-  { src: cheesePie, alt: "Disco Dough sourdough cheese pie" },
-  { src: hotHoneyPie, alt: "Disco Dough sourdough hot honey pepperoni pie" },
-  { src: tomatoPie, alt: "Disco Dough sourdough tomato stracciatella pie" },
-  { src: cheesePieNew, alt: "Disco Dough cheese pie" },
-  { src: dubaiAndCheesePie, alt: "Disco Dough Dubai cookie pie and cheese pie" },
-  { src: dubaiCookiePieDouble, alt: "Two Disco Dough Dubai cookie pies" },
-  { src: dubaiCookiePieThree, alt: "Disco Dough Dubai cookie pie" },
-  { src: hotHoneyPepTwo, alt: "Disco Dough hot honey pepperoni pie" },
-  { src: chocolateChipCookieOven, alt: "Disco Dough chocolate chip cookie pie in the oven" },
-  { src: dubaiCookiePieTwo, alt: "Disco Dough Dubai cookie pie" },
-  { src: hotHoneyPepFour, alt: "Disco Dough hot honey pepperoni pie with charred crust" },
-  { src: stracciatellaCheesePie, alt: "Disco Dough stracciatella cheese pie" },
-  { src: img6318, alt: "Freshly baked Disco Dough pizza with crisp edges" },
-  { src: img6324, alt: "Handmade pizza with basil and tomato" },
-  { src: img6364, alt: "Sourdough pizza with leopard-spotted char" },
-  { src: img6722, alt: "Disco Dough process and warm kitchen detail" },
-  { src: imgProcess, alt: "Austin sourdough pizza slice with structure" },
-  { src: grandmaCheesePie, alt: "Disco Dough grandma cheese pie" },
-];
+const heroImage = { src: heroPizza, alt: "Disco Dough pizza held in front of the Austin skyline" };
+const caylaPhoto = { src: caylaPizza, alt: "Cayla holding a tomato stracciatella pie in Austin" };
+const brandenPhoto = { src: brandenPizza, alt: "Branden holding a hot honey pepperoni pie in Austin" };
 
 const navItems = ["About", "Menu", "Our Pies", "Pizza Drops", "Gallery", "Private Events", "Contact"];
 
@@ -111,22 +82,22 @@ const dropItems = [
 ];
 
 const galleryImages = [
-  images[3],
-  images[1],
-  images[4],
-  images[5],
-  images[6],
-  images[7],
-  images[8],
-  images[9],
-  images[13],
-  images[16],
-  images[23],
-  images[18],
-  images[10],
-  images[14],
-  images[12],
-  images[11],
+  { src: skylineBack, alt: "Disco Dough pizza with the Texas Capitol skyline behind it" },
+  { src: caylaPizza, alt: "Cayla holding a tomato stracciatella pie in Austin" },
+  { src: successionShot, alt: "Disco Dough pizza box on the Capitol lawn" },
+  { src: wieldingPeels, alt: "Disco Dough founders carrying pizza peels in Austin" },
+  { src: cheesePie, alt: "Disco Dough sourdough cheese pie" },
+  { src: hotHoneyPie, alt: "Disco Dough sourdough hot honey pepperoni pie" },
+  { src: tomatoPie, alt: "Disco Dough sourdough tomato stracciatella pie" },
+  { src: cheesePieNew, alt: "Disco Dough cheese pie" },
+  { src: hotHoneyPepTwo, alt: "Disco Dough hot honey pepperoni pie" },
+  { src: hotHoneyPepFour, alt: "Disco Dough hot honey pepperoni pie with charred crust" },
+  { src: grandmaCheesePie, alt: "Disco Dough grandma cheese pie" },
+  { src: img6318, alt: "Freshly baked Disco Dough pizza with crisp edges" },
+  { src: dubaiAndCheesePie, alt: "Disco Dough Dubai cookie pie and cheese pie" },
+  { src: chocolateChipCookieOven, alt: "Disco Dough chocolate chip cookie pie in the oven" },
+  { src: dubaiCookiePieThree, alt: "Disco Dough Dubai cookie pie" },
+  { src: dubaiCookiePieDouble, alt: "Two Disco Dough Dubai cookie pies" },
 ];
 
 const galleryPositionClasses = {
@@ -197,7 +168,7 @@ function LogoBanner() {
       <div className="logo-banner-track" style={{ animationDuration: `${reps * 11}s` }}>
         {items.map((item, i) => (
           <span key={i} className="logo-banner-cell">
-            <img src={item.src} alt={item.alt} className="logo-banner-item" />
+            <img src={item.src} alt={item.alt} loading="lazy" decoding="async" className="logo-banner-item" />
             <span className="logo-banner-sep">✦</span>
           </span>
         ))}
@@ -337,6 +308,9 @@ function Hero() {
       <div className="absolute inset-0 grain opacity-70" />
       <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-8 px-4 pb-12 sm:px-6 lg:px-8">
         <div className="flex w-full min-w-0 max-w-full flex-col items-center justify-center text-center">
+          <h1 className="sr-only">
+            Disco Dough Pizza Co. — NY-inspired, Austin-made sourdough pizza in Austin, Texas
+          </h1>
           <TextMarquee phrases={eyebrowPhrases} durationSec={26} variant="eyebrow" />
           <div className="hero-logo">
             <img className="hero-logo-img" src={logoNoO} alt="Disco Dough Pizza Co. est. 2026" />
@@ -361,7 +335,7 @@ function Hero() {
           </div>
         </div>
         <div className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame hero-contained-zoom hero-photo overflow-hidden rounded-[2rem] border border-tomato/20 bg-cream shadow-card">
-          <img src={images[0].src} alt={images[0].alt} className="h-full w-full object-cover object-center" />
+          <img src={heroImage.src} alt={heroImage.alt} className="h-full w-full object-cover object-center" />
         </div>
       </div>
     </section>
@@ -385,10 +359,10 @@ function About() {
         <div className="about-side">
           <div className="about-photos" aria-label="Cayla and Branden with Disco Dough pizzas in Austin">
             <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-card-lift photo-tile photo-contain contained-image-zoom about-photo about-photo--primary">
-              <div className="ph-media"><img src={images[1].src} alt={images[1].alt} /></div>
+              <div className="ph-media"><img src={caylaPhoto.src} alt={caylaPhoto.alt} loading="lazy" decoding="async" /></div>
             </figure>
             <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-card-lift photo-tile photo-contain contained-image-zoom about-photo about-photo--secondary">
-              <div className="ph-media"><img src={images[2].src} alt={images[2].alt} /></div>
+              <div className="ph-media"><img src={brandenPhoto.src} alt={brandenPhoto.alt} loading="lazy" decoding="async" /></div>
             </figure>
           </div>
           <div className="interactive-lift interactive-box-zoom unified-premium-glow community-card">
@@ -423,7 +397,7 @@ function Menu() {
             {menuSections.map((section) => (
               <div className="menu-section" key={section.title}>
                 <h3>
-                  {section.icon ? <img src={section.icon} alt="" aria-hidden="true" className="menu-section-icon" /> : null}
+                  {section.icon ? <img src={section.icon} alt="" aria-hidden="true" loading="lazy" decoding="async" className="menu-section-icon" /> : null}
                   {section.title}
                 </h3>
                 <div className="menu-list">
@@ -477,7 +451,7 @@ function OurPies() {
         <div className="grid gap-3 sm:grid-cols-2">
           {details.map((detail) => (
             <div key={detail.title} className="interactive-lift interactive-card-lift interactive-box-zoom unified-premium-glow feature-card rounded-3xl border border-tomato/15 bg-[#fffaf0] px-5 py-3.5 shadow-soft">
-              {detail.icon ? <img src={detail.icon} alt="" aria-hidden="true" className="feature-card-illu" /> : null}
+              {detail.icon ? <img src={detail.icon} alt="" aria-hidden="true" loading="lazy" decoding="async" className="feature-card-illu" /> : null}
               <p className="feature-card-title">{detail.title}</p>
               {detail.copy ? <span className="feature-card-copy">{detail.copy}</span> : null}
             </div>
@@ -545,6 +519,8 @@ function Gallery() {
               <img
                 src={image.src}
                 alt={image.alt}
+                loading="lazy"
+                decoding="async"
                 className={`h-full w-full object-cover object-center ${galleryPositionClasses[index] || ""}`}
               />
             </div>
@@ -561,7 +537,7 @@ function PrivateEvents() {
       <div className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)] lg:items-start lg:gap-16">
         <div className="event-media order-2 lg:order-1">
           <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-frame photo-contain photo-top contained-image-zoom aspect-[5/4]">
-            <div className="ph-media"><img src={privateEventsPhoto} alt="Pizza peel and Disco Dough pizza in front of the Austin Capitol" /></div>
+            <div className="ph-media"><img src={privateEventsPhoto} alt="Pizza peel and Disco Dough pizza in front of the Austin Capitol" loading="lazy" decoding="async" /></div>
           </figure>
         </div>
         <div className="event-content order-1 lg:order-2">
