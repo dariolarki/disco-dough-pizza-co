@@ -1587,6 +1587,9 @@ header a[href^="sms"] {
   filter: none !important;
   mix-blend-mode: normal !important;
   opacity: 1 !important;
+  /* Flat card: kill the resting ink drop-shadow (the "grey box") and any lift */
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 #contact .contact-card a,
@@ -1613,7 +1616,8 @@ header a[href^="sms"] {
 
 #contact .contact-card:hover {
   border-color: var(--premium-highlight-border) !important;
-  box-shadow: var(--premium-highlight-glow) !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 #contact .contact-panel,
@@ -1624,13 +1628,16 @@ header a[href^="sms"] {
   filter: none !important;
   mix-blend-mode: normal !important;
   opacity: 1 !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 #contact .contact-panel:hover {
   background: var(--brand-red) !important;
   color: var(--cream) !important;
   border-color: var(--premium-highlight-border) !important;
-  box-shadow: var(--premium-highlight-glow) !important;
+  box-shadow: none !important;
+  transform: none !important;
   filter: none !important;
   mix-blend-mode: normal !important;
   opacity: 1 !important;
