@@ -135,8 +135,9 @@ a.rounded-full:hover,
 .hero-links a:hover,
 .event-links a:hover,
 .contact-card a:hover {
+  /* Lift only — no detached drop-shadow (it read as a grey box on the cream bg) */
   transform: translateY(-2px) scale(1.025);
-  box-shadow: 0 22px 42px rgb(194 43 26 / 0.24);
+  box-shadow: none;
 }
 
 a.rounded-full:active,
@@ -353,10 +354,14 @@ a.rounded-full[href^="sms"]:hover {
   top: 53.57%;
   width: 19.5%;
   height: auto;
+  /* Reserve the ball's square box so it can't shift/pop when the PNG loads */
+  aspect-ratio: 1 / 1;
   transform: translate(-50%, -50%);
+  transform-origin: center center;
   animation: disco-o-spin 24s linear infinite;
   pointer-events: none;
   user-select: none;
+  backface-visibility: hidden;
 }
 
 @keyframes disco-o-spin {
@@ -1921,6 +1926,9 @@ body.nav-hidden .site-header {
   height: 100%;
   animation: logo-marquee 32s linear infinite;
   width: max-content;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .logo-banner-cell {

@@ -261,10 +261,15 @@ function CheckerBanner() {
 }
 
 function LogoBanner() {
-  const [reps, setReps] = useState(3);
+  const [reps, setReps] = useState(4);
   useEffect(() => {
     const BASE = 650;
-    const compute = () => setReps(Math.max(3, Math.ceil(window.innerWidth / BASE) + 1));
+    const compute = () => {
+      const need = Math.max(4, Math.ceil(window.innerWidth / BASE) + 1);
+      // Grow-only: never shrink (shrinking re-renders the track and visibly
+      // restarts the scroll). Extra repetitions just keep scrolling seamlessly.
+      setReps((r) => (need > r ? need : r));
+    };
     compute();
     window.addEventListener("resize", compute);
     return () => window.removeEventListener("resize", compute);
@@ -272,12 +277,15 @@ function LogoBanner() {
 
   const half = Array.from({ length: reps }, () => bannerAssets).flat();
   const items = [...half, ...half];
+  // Speed is constant regardless of reps: track width ∝ reps and duration ∝ reps.
   return (
     <div className="logo-banner" aria-hidden="true">
       <div className="logo-banner-track" style={{ animationDuration: `${reps * 11}s` }}>
         {items.map((item, i) => (
           <span key={i} className="logo-banner-cell">
-            <img src={item.src} alt={item.alt} loading="lazy" decoding="async" className="logo-banner-item" />
+            {/* eager + sync decode so widths are stable before the marquee is
+                seen — lazy-loading made the track resize and the speed jump */}
+            <img src={item.src} alt={item.alt} loading="eager" decoding="sync" className="logo-banner-item" />
             <span className="logo-banner-sep">✦</span>
           </span>
         ))}
