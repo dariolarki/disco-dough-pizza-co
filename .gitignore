@@ -2,3 +2,7 @@ node_modules
 dist
 .DS_Store
 .vercel
+
+# Raw event-media originals (HEIC/MOV/full-res) — only the optimized web/ versions are imported
+images/disco-dough-new-media/*
+!images/disco-dough-new-media/web/
