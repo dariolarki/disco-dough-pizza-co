@@ -1404,7 +1404,9 @@ header a[href^="sms"] {
   .event-types span {
     animation: image-reveal both ease-out;
     animation-timeline: view();
-    animation-range: entry 6% cover 22%;
+    /* Complete within the entry phase so elements near the page bottom (which
+       can never reach a `cover`/`exit` end point) still finish at full opacity. */
+    animation-range: entry 0% entry 50%;
   }
 
   .section-title,
@@ -1412,7 +1414,7 @@ header a[href^="sms"] {
   .copy {
     animation: image-reveal both ease-out;
     animation-timeline: view();
-    animation-range: entry 4% cover 30%;
+    animation-range: entry 0% entry 60%;
   }
 }
 
@@ -1424,13 +1426,13 @@ header a[href^="sms"] {
   .menu-card,
   .menu-footer,
   .event-types span {
-    animation-range: entry 4% cover 14%;
+    animation-range: entry 0% entry 38%;
   }
 
   .section-title,
   .gallery-title,
   .copy {
-    animation-range: entry 3% cover 18%;
+    animation-range: entry 0% entry 45%;
   }
 }
 
@@ -2614,6 +2616,6 @@ body.show-floating-cta .floating-cta:hover {
   .experience-photo {
     animation: image-reveal both ease-out;
     animation-timeline: view();
-    animation-range: entry 4% cover 26%;
+    animation-range: entry 0% entry 50%;
   }
 }
