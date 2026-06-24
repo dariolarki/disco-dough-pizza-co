@@ -52,6 +52,7 @@ import vidPiesPoster from "../images/disco-dough-new-media/web/IMG_5500-poster.j
 const CALENDLY = "https://calendly.com/Branden-Beyer";
 const EMAIL = "mailto:Discodoughpizzaco@outlook.com";
 const INSTAGRAM = "https://www.instagram.com/discodoughpizzaco/";
+const TIKTOK = "https://www.tiktok.com/@discodoughpizzaco";
 
 const heroImage = { src: heroPizza, alt: "Disco Dough pizza held in front of the Austin skyline" };
 const caylaPhoto = { src: caylaPizza, alt: "Cayla holding a tomato stracciatella pie in Austin" };
@@ -941,22 +942,25 @@ function Contact() {
     <footer id="contact" className="relative bg-tomato px-4 py-16 text-cream sm:px-6 lg:px-8">
       <div className="absolute inset-0 grain opacity-30" />
       <div className="relative mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-end">
-        <div>
+        <div className="min-w-0">
           <div className="flex items-center gap-3 text-xs font-black uppercase tracking-[0.28em]">
             <Star />
             <span>Austin, Texas</span>
           </div>
-          <h2 className="mt-6 font-serif text-[clamp(3.5rem,13vw,8.5rem)] font-black uppercase leading-[0.8] tracking-normal">
+          {/* clamp min reduced from 3.5rem→2rem so 13vw applies on phones (48px at 375px) */}
+          <h2 className="mt-6 font-serif text-[clamp(2rem,13vw,8.5rem)] font-black uppercase leading-[0.8] tracking-normal">
             Disco Dough Pizza Co.
           </h2>
         </div>
-        <div className="interactive-lift interactive-box-zoom unified-premium-glow motion-box contact-panel contact-card rounded-[2rem] border-2 p-6">
+        <div className="min-w-0 interactive-lift interactive-box-zoom unified-premium-glow motion-box contact-panel contact-card rounded-[2rem] border-2 p-6">
           <p className="text-sm font-black uppercase tracking-[0.2em]">Plan your event</p>
-          <a href={CALENDLY} target="_blank" rel="noreferrer" className="mt-2 block font-serif text-3xl font-black text-cream">Schedule a consultation</a>
+          <a href={CALENDLY} target="_blank" rel="noreferrer" className="mt-2 block font-serif text-xl font-black text-cream sm:text-3xl">Schedule a consultation</a>
           <p className="mt-6 text-sm font-black uppercase tracking-[0.2em]">Email</p>
-          <a href={EMAIL} className="mt-2 block break-words font-serif text-2xl font-black text-cream">Discodoughpizzaco@outlook.com</a>
+          <a href={EMAIL} className="mt-2 block font-serif text-base font-black text-cream sm:text-2xl" style={{ overflowWrap: "anywhere" }}>Discodoughpizzaco@outlook.com</a>
           <p className="mt-6 text-sm font-black uppercase tracking-[0.2em]">Instagram</p>
-          <a href={INSTAGRAM} target="_blank" rel="noreferrer" className="mt-2 block font-serif text-3xl font-black text-cream">@discodoughpizzaco</a>
+          <a href={INSTAGRAM} target="_blank" rel="noreferrer" className="mt-2 block font-serif text-xl font-black text-cream sm:text-3xl">@discodoughpizzaco</a>
+          <p className="mt-6 text-sm font-black uppercase tracking-[0.2em]">TikTok</p>
+          <a href={TIKTOK} target="_blank" rel="noreferrer" className="mt-2 block font-serif text-xl font-black text-cream sm:text-3xl">@discodoughpizzaco</a>
         </div>
         <div className="footer-legal lg:col-span-2">
           <span>© 2026 Disco Dough Pizza Co.</span>
