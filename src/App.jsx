@@ -14,6 +14,11 @@ import dubaiCookiePieDouble from "../images/Dubai Cookie Pie Double.jpeg";
 import dubaiCookiePieThree from "../images/Dubai Cookie Pie 3.0.HEIC.jpeg";
 import hotHoneyPepTwo from "../images/Hot Honey Pep 2.0.jpeg";
 import chocolateChipCookieOven from "../images/Choclate Chip Cookie Pie 2.0 oven shot.jpeg";
+import cookieBoxTray from "../images/IMG_2492.JPG";
+import chocolateChipCupClose from "../images/cookie2.jpg";
+import cookieAssortmentBox from "../images/cookie3.jpg";
+import dubaiPistachioMarble from "../images/cookie4.jpg";
+import cookieFourMarble from "../images/cookie5.jpg";
 import hotHoneyPepFour from "../images/Hot Honey Pep 4.0.jpeg";
 import img6318 from "../images/IMG_6318.jpeg";
 import grandmaCheesePie from "../images/Disco Dough Grandma Cheese Pie.jpeg";
@@ -121,10 +126,11 @@ const galleryImages = [
   { src: hotHoneyPepFour, alt: "Disco Dough hot honey pepperoni pie with charred crust" },
   { src: grandmaCheesePie, alt: "Disco Dough grandma cheese pie" },
   { src: img6318, alt: "Freshly baked Disco Dough pizza with crisp edges" },
-  { src: dubaiAndCheesePie, alt: "Disco Dough Dubai cookie pie and cheese pie" },
-  { src: chocolateChipCookieOven, alt: "Disco Dough chocolate chip cookie pie in the oven" },
-  { src: dubaiCookiePieThree, alt: "Disco Dough Dubai cookie pie" },
-  { src: dubaiCookiePieDouble, alt: "Two Disco Dough Dubai cookie pies" },
+  { src: cookieBoxTray, alt: "Disco Dough cookie box assortment on checkered tablecloth" },
+  { src: chocolateChipCupClose, alt: "Disco Dough chocolate chip cookie with sea salt in kraft cup" },
+  { src: cookieAssortmentBox, alt: "Disco Dough assorted cookie pies in a box" },
+  { src: dubaiPistachioMarble, alt: "Disco Dough Dubai chocolate chip cookie with pistachio" },
+  { src: cookieFourMarble, alt: "Disco Dough cookie selection on marble" },
   { src: evtCutting, alt: "Slicing a Disco Dough pie tableside at an Austin event" },
   { src: evtBoards, alt: "Disco Dough catering spread on wooden boards" },
 ];
