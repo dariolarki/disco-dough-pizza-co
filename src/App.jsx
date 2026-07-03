@@ -64,6 +64,11 @@ const EMAIL = "mailto:Discodoughpizzaco@outlook.com";
 const INSTAGRAM = "https://www.instagram.com/discodoughpizzaco/";
 const TIKTOK = "https://www.tiktok.com/@discodoughpizzaco";
 const EVENTS_ROUTE = "#/events";
+const ABOUT_ROUTE = "#/about";
+const MENU_ROUTE = "#/menu";
+const OUR_PIES_ROUTE = "#/our-pies";
+const GALLERY_ROUTE = "#/gallery";
+const CONTACT_ROUTE = "#/contact";
 
 const eventSectionHref = (section) => `${EVENTS_ROUTE}/${section}`;
 
@@ -179,6 +184,25 @@ const eventGallery = [
   { src: evtCutting, alt: "Slicing a Disco Dough pie tableside" },
   { src: evtFoundersAlt, alt: "Cayla and Branden hosting a Disco Dough pizza event" },
 ];
+
+// Full gallery page — every homepage + event photo, deduped, plus a few
+// extra shots (Dubai cookie pies, oven shot) that aren't shown elsewhere.
+const fullGalleryImages = (() => {
+  const combined = [
+    ...galleryImages,
+    ...eventGallery,
+    { src: dubaiAndCheesePie, alt: "Disco Dough Dubai cookie pie and cheese pie" },
+    { src: dubaiCookiePieDouble, alt: "Two Disco Dough Dubai cookie pies" },
+    { src: dubaiCookiePieThree, alt: "Disco Dough Dubai cookie pie" },
+    { src: chocolateChipCookieOven, alt: "Disco Dough chocolate chip cookie pie in the oven" },
+  ];
+  const seen = new Set();
+  return combined.filter((image) => {
+    if (seen.has(image.src)) return false;
+    seen.add(image.src);
+    return true;
+  });
+})();
 
 const eventLoops = [
   { src: vidPeel, poster: vidPeelPoster, caption: "Oven-side service, peel in hand." },
@@ -502,8 +526,21 @@ function PhotoGrid({ images, positionClasses = {} }) {
   );
 }
 
+const ROUTE_TABLE = [
+  ["events", EVENTS_ROUTE],
+  ["about", ABOUT_ROUTE],
+  ["menu", MENU_ROUTE],
+  ["our-pies", OUR_PIES_ROUTE],
+  ["gallery", GALLERY_ROUTE],
+  ["contact", CONTACT_ROUTE],
+];
+
 function useRoute() {
-  const read = () => (window.location.hash.startsWith("#/events") ? "events" : "home");
+  const read = () => {
+    const hash = window.location.hash;
+    const match = ROUTE_TABLE.find(([, prefix]) => hash.startsWith(prefix));
+    return match ? match[0] : "home";
+  };
   const [route, setRoute] = useState(read);
   useEffect(() => {
     const onHash = () => setRoute(read());
@@ -511,6 +548,41 @@ function useRoute() {
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
   return route;
+}
+
+// Scrolls to a home-page section anchor (e.g. #about) after routing back to
+// home from a standalone page. Browsers only auto-scroll to an id already
+// present in the DOM at hashchange time, which a section on another route
+// never is, so home has to do this scroll itself once it (re)mounts.
+function useHomeAnchorScroll() {
+  useEffect(() => {
+    const scrollToAnchor = () => {
+      const hash = window.location.hash;
+      if (!hash || hash === "#" || hash.startsWith("#/")) return;
+      const el = document.getElementById(hash.slice(1));
+      if (!el) return;
+      window.requestAnimationFrame(() => {
+        el.scrollIntoView({
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+          block: "start",
+        });
+      });
+    };
+    scrollToAnchor();
+    window.addEventListener("hashchange", scrollToAnchor);
+    return () => window.removeEventListener("hashchange", scrollToAnchor);
+  }, []);
+}
+
+// Scrolls a standalone page to its top on mount/hashchange — mirrors the
+// section-aware version EventsPage uses, but these pages have no sub-sections.
+function useScrollTopOnRoute() {
+  useEffect(() => {
+    const scrollTop = () => window.scrollTo({ top: 0, behavior: "auto" });
+    scrollTop();
+    window.addEventListener("hashchange", scrollTop);
+    return () => window.removeEventListener("hashchange", scrollTop);
+  }, []);
 }
 
 function App() {
@@ -532,22 +604,69 @@ function App() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  if (route === "events") {
+  if (route === "home") {
     return (
       <main className="min-h-screen overflow-hidden bg-cream text-ink">
         <CheckerBanner />
-        <EventsHeader />
-        <EventsPage />
-        <LogoBanner />
-        <Contact />
-        <FloatingCTA />
+        <HomePage />
       </main>
     );
   }
 
+  const standalonePages = {
+    events: (
+      <>
+        <EventsHeader />
+        <EventsPage />
+      </>
+    ),
+    about: (
+      <>
+        <Header />
+        <AboutPage />
+      </>
+    ),
+    menu: (
+      <>
+        <Header />
+        <MenuPage />
+      </>
+    ),
+    "our-pies": (
+      <>
+        <Header />
+        <OurPiesPage />
+      </>
+    ),
+    gallery: (
+      <>
+        <Header />
+        <GalleryPage />
+      </>
+    ),
+    contact: (
+      <>
+        <Header />
+        <ContactPage />
+      </>
+    ),
+  };
+
   return (
     <main className="min-h-screen overflow-hidden bg-cream text-ink">
       <CheckerBanner />
+      {standalonePages[route]}
+      <LogoBanner />
+      <Contact />
+      <FloatingCTA />
+    </main>
+  );
+}
+
+function HomePage() {
+  useHomeAnchorScroll();
+  return (
+    <>
       <Header />
       <Hero />
       <TextMarquee />
@@ -560,7 +679,7 @@ function App() {
       <LogoBanner />
       <Contact />
       <FloatingCTA />
-    </main>
+    </>
   );
 }
 
@@ -699,6 +818,7 @@ function About() {
           <p className="copy copy-lead mt-6">
             For Cayla and Branden, the best nights always started with a hot pizza on the table. Disco Dough grew out of their Austin apartment — an obsession with fermentation, dough craft, and hospitality, built for the city that treated them like home.
           </p>
+          <a href={ABOUT_ROUTE} className="section-more-link">Read our story →</a>
         </div>
         <div className="about-side">
           <div className="about-photos" aria-label="Cayla and Branden with Disco Dough pizzas in Austin">
@@ -761,46 +881,56 @@ function MenuSection({ section }) {
   );
 }
 
+function MenuCard() {
+  return (
+    <div className="menu-card">
+      <div className="menu-header">
+        <p><span className="menu-kicker-star" aria-hidden="true">✦</span> Disco Dough Pizza Co. <span className="menu-kicker-star" aria-hidden="true">✦</span></p>
+        <h2>Our Menu</h2>
+        <span>Austin, Texas</span>
+      </div>
+      <div className="menu-sections">
+        <div className="menu-pizza-grid">
+          <MenuSection section={neapolitanMenu} />
+          <div className="menu-pizza-divider" aria-hidden="true" />
+          <MenuSection section={newYorkMenu} />
+        </div>
+        {menuSections.map((section, index) => (
+          <MenuSection section={section} key={`${section.title}-${section.subtitle ?? index}`} />
+        ))}
+      </div>
+      <div className="menu-footer">
+        <p>72 hour cold sourdough ferment</p>
+        <span>Hand tossed and stretched after a two hour bench proof for an ideal crumb, mature chew, and light airy structure.</span>
+      </div>
+    </div>
+  );
+}
+
 function Menu() {
   return (
     <section id="menu" className="section border-y-2 border-tomato/25 bg-cream">
       <div className="mx-auto max-w-5xl">
         <SectionLabel>Menu</SectionLabel>
-        <div className="menu-card">
-          <div className="menu-header">
-            <p><span className="menu-kicker-star" aria-hidden="true">✦</span> Disco Dough Pizza Co. <span className="menu-kicker-star" aria-hidden="true">✦</span></p>
-            <h2>Our Menu</h2>
-            <span>Austin, Texas</span>
-          </div>
-          <div className="menu-sections">
-            <div className="menu-pizza-grid">
-              <MenuSection section={neapolitanMenu} />
-              <div className="menu-pizza-divider" aria-hidden="true" />
-              <MenuSection section={newYorkMenu} />
-            </div>
-            {menuSections.map((section, index) => (
-              <MenuSection section={section} key={`${section.title}-${section.subtitle ?? index}`} />
-            ))}
-          </div>
-          <div className="menu-footer">
-            <p>72 hour cold sourdough ferment</p>
-            <span>Hand tossed and stretched after a two hour bench proof for an ideal crumb, mature chew, and light airy structure.</span>
-          </div>
+        <MenuCard />
+        <div className="text-center">
+          <a href={MENU_ROUTE} className="section-more-link">View the full menu page →</a>
         </div>
       </div>
     </section>
   );
 }
 
+const pieDetails = [
+  { title: "Hand tossed and folded dough", icon: illDough },
+  { title: "Well done and spotted char undercarriage", icon: illChar },
+  { title: "Hand milled San Marzano tomatoes", icon: illTomato },
+  { title: "Charred crust with mature chew and crisp", icon: illSlice },
+  { title: "72 hour cold sourdough ferment", icon: illFerment },
+  { title: "Blistered perimeter and light crumb", icon: illCrumb },
+];
+
 function OurPies() {
-  const details = [
-    { title: "Hand tossed and folded dough", icon: illDough },
-    { title: "Well done and spotted char undercarriage", icon: illChar },
-    { title: "Hand milled San Marzano tomatoes", icon: illTomato },
-    { title: "Charred crust with mature chew and crisp", icon: illSlice },
-    { title: "72 hour cold sourdough ferment", icon: illFerment },
-    { title: "Blistered perimeter and light crumb", icon: illCrumb },
-  ];
   return (
     <section id="our-pies" className="section">
       <SectionLabel>Our pies</SectionLabel>
@@ -813,9 +943,10 @@ function OurPies() {
           <p className="copy mt-5">
             It folds when you want it to, holds when you need it to, and eats like something made by hand.
           </p>
+          <a href={OUR_PIES_ROUTE} className="section-more-link">More on our dough &amp; craft →</a>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
-          {details.map((detail) => (
+          {pieDetails.map((detail) => (
             <div key={detail.title} className="interactive-lift interactive-card-lift interactive-box-zoom unified-premium-glow feature-card rounded-3xl border border-tomato/15 bg-[#fffaf0] px-5 py-3.5 shadow-soft">
               {detail.icon ? <img src={detail.icon} alt="" aria-hidden="true" loading="lazy" decoding="async" className="feature-card-illu" /> : null}
               <p className="feature-card-title">{detail.title}</p>
@@ -863,9 +994,12 @@ function Gallery() {
           <SectionLabel>Gallery</SectionLabel>
           <h2 className="gallery-title section-title">Warm boxes, crisp edges, handmade details.</h2>
         </div>
-        <p className="max-w-lg text-base font-normal leading-8 text-brown">
-          Handmade in Austin with locally sourced ingredients whenever possible — a small Texas business built around family, community, and long-fermented dough.
-        </p>
+        <div className="max-w-lg">
+          <p className="text-base font-normal leading-8 text-brown">
+            Handmade in Austin with locally sourced ingredients whenever possible — a small Texas business built around family, community, and long-fermented dough.
+          </p>
+          <a href={GALLERY_ROUTE} className="section-more-link">See the full gallery →</a>
+        </div>
       </div>
       <PhotoGrid images={galleryImages} positionClasses={galleryPositionClasses} />
     </section>
@@ -1039,6 +1173,279 @@ function EventsPage() {
   );
 }
 
+// ---------- Standalone pages (About / Menu / Our Pies / Gallery / Contact) ----------
+
+function AboutPage() {
+  useScrollTopOnRoute();
+  const primaryTilt = useTilt();
+  const secondaryTilt = useTilt();
+
+  return (
+    <div className="standalone-page">
+      <section className="events-hero">
+        <div className="absolute inset-0 grain opacity-60" />
+        <div className="events-hero-inner">
+          <div className="events-hero-copy">
+            <SectionLabel>About Disco Dough Pizza Co.</SectionLabel>
+            <h1 className="section-title section-title--small">Built from family nights and a hot pizza on the table.</h1>
+            <p className="copy mt-6">
+              For Cayla and Branden, the best nights always started with a hot pizza on the table. Disco Dough grew out of their Austin apartment — an obsession with fermentation, dough craft, and hospitality, built for the city that treated them like home.
+            </p>
+            <div className="event-links">
+              <a href={EVENTS_ROUTE}>Explore Events →</a>
+              <a href={CALENDLY} target="_blank" rel="noreferrer">Schedule a Consultation</a>
+            </div>
+          </div>
+          <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-frame photo-contain contained-image-zoom events-hero-photo">
+            <div className="ph-media"><img src={caylaPhoto.src} alt={caylaPhoto.alt} loading="eager" decoding="async" /></div>
+          </figure>
+        </div>
+      </section>
+
+      <section className="section">
+        <SectionLabel>How we got here</SectionLabel>
+        <h2 className="section-title section-title--small">NY inspired, Austin made.</h2>
+        <div className="grid gap-6 lg:grid-cols-2 lg:items-start mt-8">
+          <p className="copy copy-lead">
+            Disco Dough started small — a home oven, a stack of takeout boxes, and a habit of feeding anyone who walked through the door. That habit turned into an obsession with fermentation and dough craft that neither of them could put down.
+          </p>
+          <p className="copy">
+            Every pie still starts the same way it did back then: a three-flour sourdough blend, a 72-hour cold ferment, hand tossed and stretched to order. Now it travels — live, oven-side, to weddings, celebrations, and gatherings all over Austin.
+          </p>
+        </div>
+        <div className="about-photos mt-12" aria-label="Cayla and Branden with Disco Dough pizzas in Austin">
+          <figure
+            ref={primaryTilt.ref}
+            onMouseMove={primaryTilt.onMouseMove}
+            onMouseLeave={primaryTilt.onMouseLeave}
+            className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-card-lift photo-tile photo-contain contained-image-zoom about-photo about-photo--primary"
+          >
+            <div className="ph-media"><img src={caylaPhoto.src} alt={caylaPhoto.alt} loading="lazy" decoding="async" /></div>
+          </figure>
+          <figure
+            ref={secondaryTilt.ref}
+            onMouseMove={secondaryTilt.onMouseMove}
+            onMouseLeave={secondaryTilt.onMouseLeave}
+            className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-card-lift photo-tile photo-contain contained-image-zoom about-photo about-photo--secondary"
+          >
+            <div className="ph-media"><img src={brandenPhoto.src} alt={brandenPhoto.alt} loading="lazy" decoding="async" /></div>
+          </figure>
+        </div>
+      </section>
+
+      <section className="section border-t-2 border-tomato/25 bg-blush">
+        <div className="text-center">
+          <SectionLabel>What we believe</SectionLabel>
+          <h2 className="section-title section-title--small mx-auto">Hospitality first, always.</h2>
+        </div>
+        <div className="grid gap-6 sm:grid-cols-2 max-w-4xl mx-auto mt-10">
+          <div className="interactive-lift interactive-box-zoom unified-premium-glow community-card">
+            <div className="community-card__rule" aria-hidden="true"><Star /><span /><Star /></div>
+            <h3>Community First</h3>
+            <p>
+              Disco Dough was built to give back to the city that welcomed us. As we grow, we're investing in community pizza nights, food bank partnerships, and zero-waste service so great pies never go to waste.
+            </p>
+          </div>
+          <div className="interactive-lift interactive-box-zoom unified-premium-glow community-card">
+            <div className="community-card__rule" aria-hidden="true"><Star /><span /><Star /></div>
+            <h3>Made By Hand</h3>
+            <p>
+              Every pie is hand tossed and stretched to order after a 72 hour cold ferment — no shortcuts, no par-baked crusts. Just a three-flour blend, real fire, and a pizzaiolo who's there in person, every time.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function MenuPage() {
+  useScrollTopOnRoute();
+  return (
+    <div className="standalone-page">
+      <section className="events-hero">
+        <div className="absolute inset-0 grain opacity-60" />
+        <div className="events-hero-inner">
+          <div className="events-hero-copy">
+            <SectionLabel>Menu</SectionLabel>
+            <h1 className="section-title section-title--small">Neapolitan &amp; New York, made to order.</h1>
+            <p className="copy mt-6">
+              Pick your style, add fresh toppings, and finish with a mini cookie pie. Custom menus are available for weddings, private events, and pop-ups — just tell us the headcount and occasion.
+            </p>
+            <div className="event-links">
+              <a href={EVENTS_ROUTE}>Explore Events →</a>
+              <a href={CALENDLY} target="_blank" rel="noreferrer">Schedule a Consultation</a>
+            </div>
+          </div>
+          <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-frame photo-contain contained-image-zoom events-hero-photo">
+            <div className="ph-media"><img src={tomatoPie} alt="Disco Dough sourdough tomato stracciatella pie" loading="eager" decoding="async" /></div>
+          </figure>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="mx-auto max-w-5xl">
+          <MenuCard />
+        </div>
+      </section>
+
+      <section className="section border-t-2 border-tomato/25 bg-blush">
+        <div className="text-center">
+          <SectionLabel>Ingredients &amp; craft</SectionLabel>
+          <h2 className="section-title section-title--small mx-auto">What goes into every pie.</h2>
+        </div>
+        <div className="mx-auto mt-10 grid max-w-5xl gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {pieDetails.map((detail) => (
+            <div key={detail.title} className="interactive-lift interactive-card-lift interactive-box-zoom unified-premium-glow feature-card rounded-3xl border border-tomato/15 bg-[#fffaf0] px-5 py-3.5 shadow-soft">
+              {detail.icon ? <img src={detail.icon} alt="" aria-hidden="true" loading="lazy" decoding="async" className="feature-card-illu" /> : null}
+              <p className="feature-card-title">{detail.title}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function OurPiesPage() {
+  useScrollTopOnRoute();
+  return (
+    <div className="standalone-page">
+      <section className="events-hero">
+        <div className="absolute inset-0 grain opacity-60" />
+        <div className="events-hero-inner">
+          <div className="events-hero-copy">
+            <SectionLabel>Our pies</SectionLabel>
+            <h1 className="section-title section-title--small">A sourdough hybrid with New York structure and Neapolitan soul.</h1>
+            <p className="copy mt-6">
+              Every dough batch starts with a three-flour blend built for crispness, chew, and structure. It folds when you want it to, holds when you need it to, and eats like something made by hand.
+            </p>
+            <div className="event-links">
+              <a href={MENU_ROUTE}>See the Menu →</a>
+              <a href={CALENDLY} target="_blank" rel="noreferrer">Schedule a Consultation</a>
+            </div>
+          </div>
+          <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-frame photo-contain contained-image-zoom events-hero-photo">
+            <div className="ph-media"><img src={hotHoneyPie} alt="Disco Dough sourdough hot honey pepperoni pie" loading="eager" decoding="async" /></div>
+          </figure>
+        </div>
+      </section>
+
+      <section className="section">
+        <SectionLabel>The dough</SectionLabel>
+        <h2 className="section-title section-title--small">Six details in every pie.</h2>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 mt-8">
+          {pieDetails.map((detail) => (
+            <div key={detail.title} className="interactive-lift interactive-card-lift interactive-box-zoom unified-premium-glow feature-card rounded-3xl border border-tomato/15 bg-[#fffaf0] px-5 py-3.5 shadow-soft">
+              {detail.icon ? <img src={detail.icon} alt="" aria-hidden="true" loading="lazy" decoding="async" className="feature-card-illu" /> : null}
+              <p className="feature-card-title">{detail.title}</p>
+            </div>
+          ))}
+          <div className="interactive-lift interactive-card-lift interactive-box-zoom unified-premium-glow motion-box ferment-card sm:col-span-2 lg:col-span-3">
+            <p>3 flour blend</p>
+            <span>00 flour, bolted flour, and whole wheat come together for deeper flavor, stronger structure, better browning, and crisp edges with airy chew.</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="section border-t-2 border-tomato/25 bg-blush">
+        <div className="text-center">
+          <SectionLabel>Two styles, one dough</SectionLabel>
+          <h2 className="section-title section-title--small mx-auto">Neapolitan vs. New York.</h2>
+        </div>
+        <div className="grid gap-6 sm:grid-cols-2 max-w-4xl mx-auto mt-10">
+          <div className="interactive-lift interactive-box-zoom unified-premium-glow community-card">
+            <div className="community-card__rule" aria-hidden="true"><Star /><span /><Star /></div>
+            <h3>Neapolitan</h3>
+            <p>
+              12–13", soft and blistered, wood-fired-style char, hand milled San Marzano tomatoes, and fresh fior di latte. Built to fold once, then eat with a fork.
+            </p>
+          </div>
+          <div className="interactive-lift interactive-box-zoom unified-premium-glow community-card">
+            <div className="community-card__rule" aria-hidden="true"><Star /><span /><Star /></div>
+            <h3>New York</h3>
+            <p>
+              14–17", thin, crispy, and foldable — the classic slice. Same dough, same 72 hour ferment, stretched wider and baked for a crackling, sturdy crust.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function GalleryPage() {
+  useScrollTopOnRoute();
+  return (
+    <div className="standalone-page">
+      <section className="section" style={{ paddingTop: "clamp(6.5rem, 12vw, 8.5rem)" }}>
+        <div className="gallery-intro">
+          <div>
+            <SectionLabel>Gallery</SectionLabel>
+            <h1 className="gallery-title section-title">Warm boxes, crisp edges, handmade details.</h1>
+          </div>
+          <p className="max-w-lg text-base font-normal leading-8 text-brown">
+            Every real Disco Dough pie, pop-up, and private event in one place — handmade in Austin with locally sourced ingredients whenever possible.
+          </p>
+        </div>
+        <PhotoGrid images={fullGalleryImages} />
+      </section>
+    </div>
+  );
+}
+
+function ContactPage() {
+  useScrollTopOnRoute();
+  return (
+    <div className="standalone-page">
+      <section className="events-hero">
+        <div className="absolute inset-0 grain opacity-60" />
+        <div className="events-hero-inner">
+          <div className="events-hero-copy">
+            <SectionLabel>Contact</SectionLabel>
+            <h1 className="section-title section-title--small">Let's talk pizza.</h1>
+            <p className="copy mt-6">
+              Planning a wedding, birthday, or backyard hang? Have a general question? Just want to see what's next? Here's the fastest way to reach us for each.
+            </p>
+          </div>
+          <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-frame photo-contain contained-image-zoom events-hero-photo">
+            <div className="ph-media"><img src={evtFounders} alt="Cayla and Branden behind a full Disco Dough catering spread" loading="eager" decoding="async" /></div>
+          </figure>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="occasion-grid">
+          <div className="interactive-lift interactive-box-zoom unified-premium-glow occasion-card">
+            <div className="occasion-card__rule" aria-hidden="true"><Star /><span /></div>
+            <h3>Plan an Event</h3>
+            <p>Weddings, birthdays, showers, corporate dinners — schedule a consultation and we'll build a menu around your gathering.</p>
+            <a href={CALENDLY} target="_blank" rel="noreferrer" className="section-more-link">Schedule a consultation →</a>
+          </div>
+          <div className="interactive-lift interactive-box-zoom unified-premium-glow occasion-card">
+            <div className="occasion-card__rule" aria-hidden="true"><Star /><span /></div>
+            <h3>General Questions</h3>
+            <p>Menu questions, dietary needs, anything else — email is the best way to reach us directly.</p>
+            <a href={EMAIL} className="section-more-link" style={{ overflowWrap: "anywhere" }}>Discodoughpizzaco@outlook.com</a>
+          </div>
+          <div className="interactive-lift interactive-box-zoom unified-premium-glow occasion-card">
+            <div className="occasion-card__rule" aria-hidden="true"><Star /><span /></div>
+            <h3>Follow Along</h3>
+            <p>Behind-the-scenes dough, live catering setups, and Austin pizza moments — follow along between events.</p>
+            <a href={INSTAGRAM} target="_blank" rel="noreferrer" className="section-more-link">@discodoughpizzaco on Instagram →</a>
+          </div>
+          <div className="interactive-lift interactive-box-zoom unified-premium-glow occasion-card">
+            <div className="occasion-card__rule" aria-hidden="true"><Star /><span /></div>
+            <h3>See It In Motion</h3>
+            <p>Oven-side clips, fresh-from-the-box shots, and live fire — the same moments, in short-form video.</p>
+            <a href={TIKTOK} target="_blank" rel="noreferrer" className="section-more-link">@discodoughpizzaco on TikTok →</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function Contact() {
   return (
     <footer id="contact" className="relative bg-tomato px-4 py-16 text-cream sm:px-6 lg:px-8">
@@ -1053,6 +1460,9 @@ function Contact() {
           <h2 className="mt-6 font-serif text-[clamp(2rem,13vw,8.5rem)] font-black uppercase leading-[0.8] tracking-normal">
             Disco Dough Pizza Co.
           </h2>
+          <a href={CONTACT_ROUTE} className="mt-4 inline-flex items-center gap-1.5 text-sm font-black uppercase tracking-[0.14em] text-cream/80 underline decoration-cream/40 underline-offset-4 transition hover:text-cream">
+            Full contact page →
+          </a>
         </div>
         <div className="min-w-0 interactive-lift interactive-box-zoom unified-premium-glow motion-box contact-panel contact-card rounded-[2rem] border-2 p-6">
           <p className="text-sm font-black uppercase tracking-[0.2em]">Plan your event</p>

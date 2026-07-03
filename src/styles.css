@@ -779,6 +779,26 @@ header a[href^="sms"] {
   color: #fcf0df;
 }
 
+/* Small "Read more" arrow-link used to point from a condensed homepage
+   section to its full standalone page */
+.section-more-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1.5rem;
+  color: #c22b1a;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.02rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: gap 200ms ease, opacity 200ms ease;
+}
+
+.section-more-link:hover {
+  gap: 0.65rem;
+  opacity: 0.75;
+}
+
 .event-detail-cards {
   display: grid;
   gap: 1.2rem;
@@ -2467,6 +2487,7 @@ body.show-floating-cta .floating-cta:hover {
 }
 
 /* Events page wrapper */
+.standalone-page,
 .events-page {
   position: relative;
 }
