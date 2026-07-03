@@ -79,34 +79,36 @@ const navItems = [
 ];
 
 // Prices ordered most expensive → least within each section
+const neapolitanMenu = {
+  title: "Neapolitan",
+  subtitle: "12–13\" Sourdough",
+  icon: pizzaAsset,
+  items: [
+    { name: "Spicy Calabrian Pie", prices: ["$28"] },
+    { name: "Sopressata Rosemary Pie", prices: ["$25"] },
+    { name: "Hot Honey Pep Pie", prices: ["$24"] },
+    { name: "Tomato Stracciatella Pie", prices: ["$23"] },
+    { name: "Pepperoni Jalapeño Pie", prices: ["$22"] },
+    { name: "Margarita Pie", prices: ["$21"] },
+    { name: "Plain Pie", prices: ["$18"] },
+  ],
+};
+
+const newYorkMenu = {
+  title: "New York",
+  subtitle: "14–17\" Sourdough",
+  icon: pizzaAsset,
+  items: [
+    { name: "Spicy Calabrian Pie", prices: ["$28"] },
+    { name: "Sopressata Rosemary Pie", prices: ["$25"] },
+    { name: "Hot Honey Pep Pie", prices: ["$24"] },
+    { name: "Tomato Stracciatella Pie", prices: ["$23"] },
+    { name: "Pepperoni Jalapeño Pie", prices: ["$22"] },
+    { name: "Cheese Pie", prices: ["$20"] },
+  ],
+};
+
 const menuSections = [
-  {
-    title: "Pies",
-    subtitle: "14–17\" Sourdough NY",
-    icon: pizzaAsset,
-    items: [
-      { name: "Spicy Calabrian Pie", prices: ["$28"] },
-      { name: "Sopressata Rosemary Pie", prices: ["$25"] },
-      { name: "Hot Honey Pep Pie", prices: ["$24"] },
-      { name: "Tomato Stracciatella Pie", prices: ["$23"] },
-      { name: "Pepperoni Jalapeño Pie", prices: ["$22"] },
-      { name: "Cheese Pie", prices: ["$20"] },
-    ],
-  },
-  {
-    title: "Pies",
-    subtitle: "12–13\" Sourdough Neapolitan",
-    icon: pizzaAsset,
-    items: [
-      { name: "Spicy Calabrian Pie", prices: ["$28"] },
-      { name: "Sopressata Rosemary Pie", prices: ["$25"] },
-      { name: "Hot Honey Pep Pie", prices: ["$24"] },
-      { name: "Tomato Stracciatella Pie", prices: ["$23"] },
-      { name: "Pepperoni Jalapeño Pie", prices: ["$22"] },
-      { name: "Margarita Pie", prices: ["$21"] },
-      { name: "Plain Pie", prices: ["$18"] },
-    ],
-  },
   {
     title: "Mini Cookie Pies",
     icon: mirrorBall,
@@ -119,6 +121,7 @@ const menuSections = [
   {
     title: "Add-Ons",
     icon: pizzaBox,
+    layout: "grid",
     items: [
       { name: "Nduja Sausage", prices: ["+$4"] },
       { name: "Double Pepperoni", prices: ["+$3"] },
@@ -730,6 +733,31 @@ function About() {
   );
 }
 
+function MenuSection({ section }) {
+  return (
+    <div className="menu-section">
+      <h3>
+        {section.icon ? <img src={section.icon} alt="" aria-hidden="true" loading="lazy" decoding="async" className="menu-section-icon" /> : null}
+        {section.title}
+      </h3>
+      {section.subtitle ? <p className="menu-section-subtitle">{section.subtitle}</p> : null}
+      <div className={`menu-list ${section.layout === "grid" ? "menu-list--grid" : ""}`}>
+        {section.items.map((item) => (
+          <div className="menu-row" key={item.name}>
+            <span>{item.name}</span>
+            <i aria-hidden="true" />
+            <strong>
+              {item.prices.map((price) => (
+                <span key={price}>{price}</span>
+              ))}
+            </strong>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Menu() {
   return (
     <section id="menu" className="section border-y-2 border-tomato/25 bg-cream">
@@ -742,27 +770,13 @@ function Menu() {
             <span>Austin, Texas</span>
           </div>
           <div className="menu-sections">
+            <div className="menu-pizza-grid">
+              <MenuSection section={neapolitanMenu} />
+              <div className="menu-pizza-divider" aria-hidden="true" />
+              <MenuSection section={newYorkMenu} />
+            </div>
             {menuSections.map((section, index) => (
-              <div className="menu-section" key={`${section.title}-${section.subtitle ?? index}`}>
-                <h3>
-                  {section.icon ? <img src={section.icon} alt="" aria-hidden="true" loading="lazy" decoding="async" className="menu-section-icon" /> : null}
-                  {section.title}
-                </h3>
-                {section.subtitle ? <p className="menu-section-subtitle">{section.subtitle}</p> : null}
-                <div className="menu-list">
-                  {section.items.map((item) => (
-                    <div className="menu-row" key={item.name}>
-                      <span>{item.name}</span>
-                      <i aria-hidden="true" />
-                      <strong>
-                        {item.prices.map((price) => (
-                          <span key={price}>{price}</span>
-                        ))}
-                      </strong>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <MenuSection section={section} key={`${section.title}-${section.subtitle ?? index}`} />
             ))}
           </div>
           <div className="menu-footer">
