@@ -77,12 +77,12 @@ const caylaPhoto = { src: caylaPizza, alt: "Cayla holding a tomato stracciatella
 const brandenPhoto = { src: brandenPizza, alt: "Branden holding a hot honey pepperoni pie in Austin" };
 
 const navItems = [
-  { label: "About", href: "#about" },
-  { label: "Menu", href: "#menu" },
-  { label: "Our Pies", href: "#our-pies" },
-  { label: "Events", href: "#/events" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Contact", href: "#contact" },
+  { label: "About", href: ABOUT_ROUTE },
+  { label: "Menu", href: MENU_ROUTE },
+  { label: "Our Pies", href: OUR_PIES_ROUTE },
+  { label: "Events", href: EVENTS_ROUTE },
+  { label: "Gallery", href: GALLERY_ROUTE },
+  { label: "Contact", href: CONTACT_ROUTE },
 ];
 
 // Prices ordered most expensive → least within each section
@@ -563,7 +563,10 @@ function useHomeAnchorScroll() {
       if (!el) return;
       window.requestAnimationFrame(() => {
         el.scrollIntoView({
-          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+          // "auto" would inherit the global `scroll-behavior: smooth` and
+          // animate instead of jumping, even though that's meant as an
+          // instant fallback for reduced-motion users.
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
           block: "start",
         });
       });
@@ -578,7 +581,9 @@ function useHomeAnchorScroll() {
 // section-aware version EventsPage uses, but these pages have no sub-sections.
 function useScrollTopOnRoute() {
   useEffect(() => {
-    const scrollTop = () => window.scrollTo({ top: 0, behavior: "auto" });
+    // "instant", not "auto" — the page sets `scroll-behavior: smooth`
+    // globally, so "auto" would animate this instead of jumping.
+    const scrollTop = () => window.scrollTo({ top: 0, behavior: "instant" });
     scrollTop();
     window.addEventListener("hashchange", scrollTop);
     return () => window.removeEventListener("hashchange", scrollTop);
@@ -1034,13 +1039,15 @@ function EventsPage() {
     const scrollFromRoute = () => {
       const section = window.location.hash.slice(`${EVENTS_ROUTE}/`.length);
       if (!section || window.location.hash === EVENTS_ROUTE) {
-        window.scrollTo({ top: 0, behavior: "auto" });
+        // "instant", not "auto" — the page sets `scroll-behavior: smooth`
+        // globally, so "auto" would animate this instead of jumping.
+        window.scrollTo({ top: 0, behavior: "instant" });
         return;
       }
 
       window.requestAnimationFrame(() => {
         document.getElementById(section)?.scrollIntoView({
-          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
           block: "start",
         });
       });
