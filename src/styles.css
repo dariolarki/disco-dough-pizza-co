@@ -1942,7 +1942,7 @@ header a[href^="sms"] {
   right: 0;
   top: 0;
   z-index: 60;
-  height: 3rem;
+  height: 1.5rem;
   background-color: #fcf0df;
   background-image: conic-gradient(from 90deg, #fcf0df 25%, #c22b1a 0 50%, #fcf0df 0 75%, #c22b1a 0);
   background-size: 1.5rem 1.5rem;
@@ -1968,7 +1968,7 @@ body.nav-hidden .checker-banner {
 }
 
 body.nav-hidden .site-header {
-  transform: translateY(calc(-100% - 3.5rem));
+  transform: translateY(calc(-100% - 2rem));
 }
 
 /* Logo marquee band (relocated to the bottom of the page — not fixed) */
@@ -2472,14 +2472,14 @@ body.show-floating-cta .floating-cta:hover {
 #occasions,
 #event-gallery,
 #book {
-  scroll-margin-top: 8rem;
+  scroll-margin-top: 6.5rem;
 }
 
 /* Events hero */
 .events-hero {
   position: relative;
   border-bottom: 2px solid rgb(194 43 26 / 0.25);
-  padding-top: clamp(8rem, 14vw, 10rem);
+  padding-top: clamp(6.5rem, 12vw, 8.5rem);
   padding-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 

@@ -574,7 +574,7 @@ function Header() {
   }, [menuOpen]);
 
   return (
-    <header className="site-header fixed inset-x-0 top-[3rem] z-50 border-b border-tomato/20 bg-cream/88 backdrop-blur-md">
+    <header className="site-header fixed inset-x-0 top-[1.5rem] z-50 border-b border-tomato/20 bg-cream/88 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
         <a href="#hero" className="font-serif text-base font-black uppercase leading-none tracking-wide text-tomato sm:text-xl">
           Disco Dough Pizza Co.
@@ -645,7 +645,7 @@ function Hero() {
   }, []);
 
   return (
-    <section id="hero" className="relative min-h-[92vh] border-b-2 border-tomato/25 pt-[9rem]">
+    <section id="hero" className="relative min-h-[92vh] border-b-2 border-tomato/25 pt-[7.5rem]">
       <div className="absolute inset-0 grain opacity-70" />
       <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-8 px-4 pb-12 sm:px-6 lg:px-8">
         <div className="flex w-full min-w-0 max-w-full flex-col items-center justify-center text-center">
@@ -873,7 +873,7 @@ function Gallery() {
 
 function EventsHeader() {
   return (
-    <header className="site-header fixed inset-x-0 top-[3rem] z-50 border-b border-tomato/20 bg-cream/88 backdrop-blur-md">
+    <header className="site-header fixed inset-x-0 top-[1.5rem] z-50 border-b border-tomato/20 bg-cream/88 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
         <a href="#" className="font-serif text-base font-black uppercase leading-none tracking-wide text-tomato sm:text-xl">
           Disco Dough Pizza Co.
