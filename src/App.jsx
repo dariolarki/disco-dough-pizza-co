@@ -104,7 +104,7 @@ const newYorkMenu = {
     { name: "Hot Honey Pep Pie", prices: ["$24"] },
     { name: "Tomato Stracciatella Pie", prices: ["$23"] },
     { name: "Pepperoni Jalapeño Pie", prices: ["$22"] },
-    { name: "Cheese Pie", prices: ["$20"] },
+    { name: "Plain Pie", prices: ["$20"] },
   ],
 };
 
@@ -157,6 +157,7 @@ const galleryImages = [
   { src: cookieFourMarble, alt: "Disco Dough cookie selection on marble" },
   { src: evtCutting, alt: "Slicing a Disco Dough pie tableside at an Austin event" },
   { src: evtBoards, alt: "Disco Dough catering spread on wooden boards" },
+  { src: evtRooftop, alt: "Disco Dough pizza service on a rooftop with the Austin skyline behind it" },
 ];
 
 const galleryPositionClasses = {
@@ -175,7 +176,6 @@ const eventGallery = [
   { src: evtBoards, alt: "Disco Dough catering spread on wooden boards" },
   { src: evtCutting, alt: "Slicing a Disco Dough pie tableside" },
   { src: evtFoundersAlt, alt: "Cayla and Branden hosting a Disco Dough pizza event" },
-  { src: evtRooftop, alt: "Disco Dough pizza service on a rooftop with the Austin skyline behind it" },
 ];
 
 const eventLoops = [
