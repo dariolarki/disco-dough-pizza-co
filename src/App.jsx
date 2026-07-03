@@ -340,7 +340,7 @@ function LogoBanner() {
   // Speed is constant regardless of reps: track width ∝ reps and duration ∝ reps.
   return (
     <div className="logo-banner" aria-hidden="true">
-      <div className="logo-banner-track" style={{ animationDuration: `${reps * 11}s` }}>
+      <div className="logo-banner-track" style={{ animationDuration: `${reps * 16}s` }}>
         {items.map((item, i) => (
           <span key={i} className="logo-banner-cell">
             {/* eager + sync decode so widths are stable before the marquee is
