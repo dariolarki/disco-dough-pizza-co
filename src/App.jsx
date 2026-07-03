@@ -58,6 +58,9 @@ const CALENDLY = "https://calendly.com/Branden-Beyer";
 const EMAIL = "mailto:Discodoughpizzaco@outlook.com";
 const INSTAGRAM = "https://www.instagram.com/discodoughpizzaco/";
 const TIKTOK = "https://www.tiktok.com/@discodoughpizzaco";
+const EVENTS_ROUTE = "#/events";
+
+const eventSectionHref = (section) => `${EVENTS_ROUTE}/${section}`;
 
 const heroImage = { src: heroPizza, alt: "Disco Dough pizza held in front of the Austin skyline" };
 const caylaPhoto = { src: caylaPizza, alt: "Cayla holding a tomato stracciatella pie in Austin" };
@@ -76,6 +79,7 @@ const navItems = [
 const menuSections = [
   {
     title: "Pies",
+    subtitle: "14–17\" Sourdough NY",
     icon: pizzaAsset,
     items: [
       { name: "Spicy Calabrian Pie", prices: ["$28"] },
@@ -87,12 +91,26 @@ const menuSections = [
     ],
   },
   {
-    title: "Desserts",
+    title: "Pies",
+    subtitle: "12–13\" Sourdough Neapolitan",
+    icon: pizzaAsset,
+    items: [
+      { name: "Spicy Calabrian Pie", prices: ["$28"] },
+      { name: "Sopressata Rosemary Pie", prices: ["$25"] },
+      { name: "Hot Honey Pep Pie", prices: ["$24"] },
+      { name: "Tomato Stracciatella Pie", prices: ["$23"] },
+      { name: "Pepperoni Jalapeño Pie", prices: ["$22"] },
+      { name: "Margarita Pie", prices: ["$21"] },
+      { name: "Plain Pie", prices: ["$18"] },
+    ],
+  },
+  {
+    title: "Mini Cookie Pies",
     icon: mirrorBall,
     items: [
-      { name: "Dubai Chocolate Chip Cookie Pie", prices: ["$17"] },
-      { name: "German Chocolate Cookie Pie", prices: ["$16"] },
-      { name: "Chocolate Chip Cookie Pie", prices: ["$14"] },
+      { name: "Dubai Chocolate Chip Mini Cookie Pie", prices: ["$6"] },
+      { name: "German Chocolate Mini Cookie Pie", prices: ["$5"] },
+      { name: "Classic Chocolate Chip Cookie Pie", prices: ["$4"] },
     ],
   },
   {
@@ -342,7 +360,7 @@ function InstagramCTA() {
         @discodoughpizzaco
       </a>
       <p className="instagram-cta-sub">
-        Fresh drops, behind-the-scenes dough, and Austin pizza moments.
+        Behind-the-scenes dough, live catering setups, and Austin pizza moments.
       </p>
       <a href={INSTAGRAM} target="_blank" rel="noreferrer" className="instagram-cta-btn">
         Follow on Instagram
@@ -368,24 +386,44 @@ function FloatingCTA() {
 
 // Full-screen gallery lightbox
 function Lightbox({ images, index, onClose, onPrev, onNext }) {
+  const closeRef = useRef(null);
+  const prevRef = useRef(null);
+  const nextRef = useRef(null);
+
   useEffect(() => {
+    const previouslyFocused = document.activeElement;
     document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
     const onKey = (e) => {
       if (e.key === "Escape") onClose();
       if (e.key === "ArrowLeft") onPrev();
       if (e.key === "ArrowRight") onNext();
+      if (e.key === "Tab") {
+        const focusable = [closeRef.current, prevRef.current, nextRef.current].filter(Boolean);
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKey);
+      previouslyFocused?.focus?.();
     };
   }, [onClose, onPrev, onNext]);
 
   return (
     <div className="lightbox" onClick={onClose} role="dialog" aria-modal="true" aria-label="Photo viewer">
-      <button className="lightbox-close" onClick={onClose} aria-label="Close photo viewer">×</button>
+      <button ref={closeRef} className="lightbox-close" onClick={onClose} aria-label="Close photo viewer">×</button>
       <button
+        ref={prevRef}
         className="lightbox-prev"
         onClick={(e) => { e.stopPropagation(); onPrev(); }}
         aria-label="Previous photo"
@@ -393,6 +431,7 @@ function Lightbox({ images, index, onClose, onPrev, onNext }) {
         ←
       </button>
       <button
+        ref={nextRef}
         className="lightbox-next"
         onClick={(e) => { e.stopPropagation(); onNext(); }}
         aria-label="Next photo"
@@ -426,7 +465,12 @@ function PhotoGrid({ images, positionClasses = {} }) {
             role="button"
             tabIndex={0}
             aria-label={`Open photo: ${image.alt}`}
-            onKeyDown={(e) => e.key === "Enter" && setIndex(i)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setIndex(i);
+              }
+            }}
           >
             <div className="ph-media">
               <img
@@ -511,6 +555,16 @@ function App() {
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [menuOpen]);
+
   return (
     <header className="site-header fixed inset-x-0 top-[3rem] z-50 border-b border-tomato/20 bg-cream/88 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
@@ -547,6 +601,8 @@ function Header() {
         className={`nav-mobile lg:hidden ${menuOpen ? "is-open" : ""}`}
         style={{ maxHeight: menuOpen ? "80vh" : 0, opacity: menuOpen ? 1 : 0 }}
         aria-label="Primary"
+        aria-hidden={!menuOpen}
+        inert={!menuOpen}
       >
         {navItems.map((item) => (
           <a key={item.label} href={item.href} className="nav-mobile-link" onClick={() => setMenuOpen(false)}>
@@ -681,12 +737,13 @@ function Menu() {
             <span>Austin, Texas</span>
           </div>
           <div className="menu-sections">
-            {menuSections.map((section) => (
-              <div className="menu-section" key={section.title}>
+            {menuSections.map((section, index) => (
+              <div className="menu-section" key={`${section.title}-${section.subtitle ?? index}`}>
                 <h3>
                   {section.icon ? <img src={section.icon} alt="" aria-hidden="true" loading="lazy" decoding="async" className="menu-section-icon" /> : null}
                   {section.title}
                 </h3>
+                {section.subtitle ? <p className="menu-section-subtitle">{section.subtitle}</p> : null}
                 <div className="menu-list">
                   {section.items.map((item) => (
                     <div className="menu-row" key={item.name}>
@@ -804,9 +861,9 @@ function EventsHeader() {
         </a>
         <nav className="hidden items-center gap-6 text-[11px] font-black uppercase tracking-[0.18em] text-tomato lg:flex">
           <a href="#" className="transition hover:text-ink">← Back to site</a>
-          <a href="#occasions" className="transition hover:text-ink">Occasions</a>
-          <a href="#event-gallery" className="transition hover:text-ink">Gallery</a>
-          <a href="#book" className="transition hover:text-ink">Book</a>
+          <a href={eventSectionHref("occasions")} className="transition hover:text-ink">Occasions</a>
+          <a href={eventSectionHref("event-gallery")} className="transition hover:text-ink">Gallery</a>
+          <a href={eventSectionHref("book")} className="transition hover:text-ink">Book</a>
         </nav>
         <a href={CALENDLY} target="_blank" rel="noreferrer" className="rounded-full bg-tomato px-4 py-2.5 font-serif text-sm font-semibold tracking-normal text-cream shadow-soft transition hover:bg-ink sm:px-5">
           Book an Event
@@ -818,7 +875,24 @@ function EventsHeader() {
 
 function EventsPage() {
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+    const scrollFromRoute = () => {
+      const section = window.location.hash.slice(`${EVENTS_ROUTE}/`.length);
+      if (!section || window.location.hash === EVENTS_ROUTE) {
+        window.scrollTo({ top: 0, behavior: "auto" });
+        return;
+      }
+
+      window.requestAnimationFrame(() => {
+        document.getElementById(section)?.scrollIntoView({
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+          block: "start",
+        });
+      });
+    };
+
+    scrollFromRoute();
+    window.addEventListener("hashchange", scrollFromRoute);
+    return () => window.removeEventListener("hashchange", scrollFromRoute);
   }, []);
 
   return (
@@ -834,7 +908,7 @@ function EventsPage() {
               A live, sourdough pizza experience — crafted oven-side for weddings, milestone celebrations, and the moments worth gathering for. Premium hospitality, made by hand, served hot.
             </p>
             <div className="event-links">
-              <a href="#book">Plan Your Event →</a>
+              <a href={eventSectionHref("book")}>Plan Your Event →</a>
               <a href={CALENDLY} target="_blank" rel="noreferrer">Schedule a Consultation</a>
             </div>
           </div>

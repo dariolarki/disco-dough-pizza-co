@@ -1001,6 +1001,15 @@ header a[href^="sms"] {
   opacity: 0.85;
 }
 
+.menu-section-subtitle {
+  margin: 0.5rem 0 0;
+  color: rgb(194 43 26 / 0.6);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
 .menu-kicker-star {
   font-size: 0.7em;
   opacity: 0.7;
@@ -1711,13 +1720,18 @@ header a[href^="sms"] {
   overflow: hidden;
   max-height: 0;
   opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
   background: rgba(252, 240, 223, 0.98);
-  transition: max-height 0.3s ease, opacity 0.25s ease;
+  transition: max-height 0.3s ease, opacity 0.25s ease, visibility 0s linear 0.3s;
 }
 
 .nav-mobile.is-open {
   max-height: 80vh;
   opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
 }
 
 .nav-mobile-link {
@@ -2406,6 +2420,12 @@ body.show-floating-cta .floating-cta:hover {
 /* Events page wrapper */
 .events-page {
   position: relative;
+}
+
+#occasions,
+#event-gallery,
+#book {
+  scroll-margin-top: 8rem;
 }
 
 /* Events hero */
