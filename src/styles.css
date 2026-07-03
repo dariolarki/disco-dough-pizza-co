@@ -2534,7 +2534,11 @@ body.show-floating-cta .floating-cta:hover {
 }
 
 @media (min-width: 640px) {
-  .loop-grid { grid-template-columns: repeat(3, 1fr); }
+  .loop-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .loop-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
 .loop-card {

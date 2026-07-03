@@ -47,12 +47,15 @@ import evtOverhead from "../images/disco-dough-new-media/web/Tezza-5722.jpg";
 import evtPlating from "../images/disco-dough-new-media/web/Tezza-5068.jpg";
 import evtCutting from "../images/disco-dough-new-media/web/4A1B83AA-9BAE-497F-8767-13CB8A3A7741.jpg";
 import evtBoxes from "../images/disco-dough-new-media/web/CE87145C-3069-49EE-BDD4-B51EBFCDCD0E.jpg";
+import evtRooftop from "../images/disco-dough-new-media/web/IMG_7966.jpeg";
 import vidPeel from "../images/disco-dough-new-media/web/IMG_5509.mp4";
 import vidPeelPoster from "../images/disco-dough-new-media/web/IMG_5509-poster.jpg";
 import vidReach from "../images/disco-dough-new-media/web/IMG_5499.mp4";
 import vidReachPoster from "../images/disco-dough-new-media/web/IMG_5499-poster.jpg";
 import vidPies from "../images/disco-dough-new-media/web/IMG_5500.mp4";
 import vidPiesPoster from "../images/disco-dough-new-media/web/IMG_5500-poster.jpg";
+import vidRack from "../images/disco-dough-new-media/web/IMG_5825.mp4";
+import vidRackPoster from "../images/disco-dough-new-media/web/IMG_5825-poster.jpg";
 
 const CALENDLY = "https://calendly.com/Branden-Beyer";
 const EMAIL = "mailto:Discodoughpizzaco@outlook.com";
@@ -169,12 +172,14 @@ const eventGallery = [
   { src: evtBoards, alt: "Disco Dough catering spread on wooden boards" },
   { src: evtCutting, alt: "Slicing a Disco Dough pie tableside" },
   { src: evtFoundersAlt, alt: "Cayla and Branden hosting a Disco Dough pizza event" },
+  { src: evtRooftop, alt: "Disco Dough pizza service on a rooftop with the Austin skyline behind it" },
 ];
 
 const eventLoops = [
   { src: vidPeel, poster: vidPeelPoster, caption: "Oven-side service, peel in hand." },
   { src: vidReach, poster: vidReachPoster, caption: "Fresh from the box, straight to the table." },
   { src: vidPies, poster: vidPiesPoster, caption: "Spotted char, every single pie." },
+  { src: vidRack, poster: vidRackPoster, caption: "Fresh off the peel, cooling on the rack." },
 ];
 
 const occasions = [
