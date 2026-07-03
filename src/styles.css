@@ -2386,10 +2386,11 @@ body.show-floating-cta .floating-cta:hover {
 
 .instagram-cta-handle {
   display: block;
+  max-width: 100%;
   font-family: "Fraunces", Georgia, serif;
   font-optical-sizing: auto;
   font-variation-settings: "SOFT" 60, "WONK" 1;
-  font-size: clamp(2.2rem, 7vw, 5rem);
+  font-size: clamp(1.4rem, 6.5vw, 5rem);
   font-weight: 900;
   line-height: 0.92;
   letter-spacing: -0.02em;
@@ -2397,6 +2398,7 @@ body.show-floating-cta .floating-cta:hover {
   color: var(--brand-red);
   transition: opacity 200ms ease;
   text-decoration: none;
+  overflow-wrap: anywhere;
 }
 
 .instagram-cta-handle:hover {
