@@ -56,6 +56,8 @@ import vidPies from "../images/disco-dough-new-media/web/IMG_5500.mp4";
 import vidPiesPoster from "../images/disco-dough-new-media/web/IMG_5500-poster.jpg";
 import vidRack from "../images/disco-dough-new-media/web/IMG_5825.mp4";
 import vidRackPoster from "../images/disco-dough-new-media/web/IMG_5825-poster.jpg";
+import vidSipHaus from "../images/disco-dough-new-media/web/sip-haus-oven.mp4";
+import vidSipHausPoster from "../images/disco-dough-new-media/web/sip-haus-oven-poster.jpg";
 
 const CALENDLY = "https://calendly.com/Branden-Beyer";
 const EMAIL = "mailto:Discodoughpizzaco@outlook.com";
@@ -183,6 +185,7 @@ const eventLoops = [
   { src: vidReach, poster: vidReachPoster, caption: "Fresh from the box, straight to the table." },
   { src: vidPies, poster: vidPiesPoster, caption: "Spotted char, every single pie." },
   { src: vidRack, poster: vidRackPoster, caption: "Fresh off the peel, cooling on the rack." },
+  { src: vidSipHaus, poster: vidSipHausPoster, caption: "Live fire at Sip Haus." },
 ];
 
 const occasions = [
