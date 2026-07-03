@@ -377,7 +377,7 @@ function InstagramCTA() {
 // Floating sticky CTA — appears after scrolling 500px
 function FloatingCTA() {
   return (
-    <a href={CALENDLY} target="_blank" rel="noreferrer" className="floating-cta" aria-label="Book your event">
+    <a href={eventSectionHref("book")} className="floating-cta" aria-label="Book your event">
       <span aria-hidden="true">✦</span>
       Book Your Event
     </a>
