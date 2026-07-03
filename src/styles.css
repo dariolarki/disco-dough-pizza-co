@@ -2578,8 +2578,6 @@ body.show-floating-cta .floating-cta:hover {
   display: grid;
   gap: 1.25rem;
   grid-template-columns: 1fr;
-  max-width: 60rem;
-  margin-inline: auto;
 }
 
 @media (min-width: 640px) {
