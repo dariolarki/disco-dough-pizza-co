@@ -63,14 +63,15 @@ const CALENDLY = "https://calendly.com/Branden-Beyer";
 const EMAIL = "mailto:Discodoughpizzaco@outlook.com";
 const INSTAGRAM = "https://www.instagram.com/discodoughpizzaco/";
 const TIKTOK = "https://www.tiktok.com/@discodoughpizzaco";
-const EVENTS_ROUTE = "#/events";
-const ABOUT_ROUTE = "#/about";
-const MENU_ROUTE = "#/menu";
-const OUR_PIES_ROUTE = "#/our-pies";
-const GALLERY_ROUTE = "#/gallery";
-const CONTACT_ROUTE = "#/contact";
+const EVENTS_ROUTE = "/events";
+const ABOUT_ROUTE = "/about";
+const MENU_ROUTE = "/menu";
+const OUR_PIES_ROUTE = "/our-pies";
+const GALLERY_ROUTE = "/gallery";
+const CONTACT_ROUTE = "/contact";
 
-const eventSectionHref = (section) => `${EVENTS_ROUTE}/${section}`;
+// Real path + a plain URL fragment, e.g. "/events#book" — not a nested route.
+const eventSectionHref = (section) => `${EVENTS_ROUTE}#${section}`;
 
 const heroImage = { src: heroPizza, alt: "Disco Dough pizza held in front of the Austin skyline" };
 const caylaPhoto = { src: caylaPizza, alt: "Cayla holding a tomato stracciatella pie in Austin" };
@@ -535,17 +536,60 @@ const ROUTE_TABLE = [
   ["contact", CONTACT_ROUTE],
 ];
 
+// pushState never fires popstate on its own, so every internal navigation
+// dispatches one manually — every hook below listens for "popstate" (never
+// "hashchange"), one consistent event for both real nav and browser back/forward.
+function navigate(path) {
+  if (window.location.pathname + window.location.hash === path) return;
+  window.history.pushState(null, "", path);
+  window.dispatchEvent(new PopStateEvent("popstate"));
+}
+
+// Intercepts clicks on same-origin page links so navigation goes through the
+// History API instead of a full page reload. Same-page anchors (href="#hero")
+// are left alone on purpose — the browser already handles those natively.
+function useClientSideNavigation() {
+  useEffect(() => {
+    const onClick = (e) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const link = e.target.closest("a");
+      if (!link) return;
+      if (link.target && link.target !== "_self") return;
+      if (link.hasAttribute("download")) return;
+      const href = link.getAttribute("href");
+      if (!href || href.startsWith("#")) return;
+      let url;
+      try {
+        url = new URL(href, window.location.href);
+      } catch {
+        return;
+      }
+      if (url.origin !== window.location.origin) return;
+      e.preventDefault();
+      navigate(url.pathname + url.hash);
+    };
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, []);
+}
+
 function useRoute() {
   const read = () => {
-    const hash = window.location.hash;
-    const match = ROUTE_TABLE.find(([, prefix]) => hash.startsWith(prefix));
+    // One-time migration for old hash-style links (e.g. "#/menu") from
+    // before this site used real paths, so old bookmarks/shares still land
+    // on the right page instead of silently falling through to home.
+    if (window.location.hash.startsWith("#/")) {
+      window.history.replaceState(null, "", window.location.hash.slice(1));
+    }
+    const path = window.location.pathname.replace(/\/$/, "") || "/";
+    const match = ROUTE_TABLE.find(([, prefix]) => path === prefix);
     return match ? match[0] : "home";
   };
   const [route, setRoute] = useState(read);
   useEffect(() => {
-    const onHash = () => setRoute(read());
-    window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
+    const onPop = () => setRoute(read());
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
   }, []);
   return route;
 }
@@ -598,20 +642,27 @@ function useRouteMeta(route) {
 
     const canonicalTag = document.querySelector('link[rel="canonical"]');
     if (canonicalTag) {
-      canonicalTag.setAttribute("href", route === "home" ? SITE_URL : `${SITE_URL}#/${route}`);
+      const path = window.location.pathname.replace(/\/$/, "");
+      canonicalTag.setAttribute("href", path ? `${SITE_URL.slice(0, -1)}${path}` : SITE_URL);
     }
   }, [route]);
 }
 
 // Scrolls to a home-page section anchor (e.g. #about) after routing back to
-// home from a standalone page. Browsers only auto-scroll to an id already
-// present in the DOM at hashchange time, which a section on another route
-// never is, so home has to do this scroll itself once it (re)mounts.
+// home from a standalone page — or to the top when there's no anchor at all
+// (e.g. the logo link, which now points at a bare "/"). Browsers only
+// auto-scroll to an id already present in the DOM at popstate time, which a
+// section on another route never is, so home has to do this scroll itself
+// once it (re)mounts.
 function useHomeAnchorScroll() {
   useEffect(() => {
     const scrollToAnchor = () => {
       const hash = window.location.hash;
-      if (!hash || hash === "#" || hash.startsWith("#/")) return;
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!hash || hash === "#") {
+        window.scrollTo({ top: 0, behavior: "instant" });
+        return;
+      }
       const el = document.getElementById(hash.slice(1));
       if (!el) return;
       window.requestAnimationFrame(() => {
@@ -619,18 +670,18 @@ function useHomeAnchorScroll() {
           // "auto" would inherit the global `scroll-behavior: smooth` and
           // animate instead of jumping, even though that's meant as an
           // instant fallback for reduced-motion users.
-          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+          behavior: reduceMotion ? "instant" : "smooth",
           block: "start",
         });
       });
     };
     scrollToAnchor();
-    window.addEventListener("hashchange", scrollToAnchor);
-    return () => window.removeEventListener("hashchange", scrollToAnchor);
+    window.addEventListener("popstate", scrollToAnchor);
+    return () => window.removeEventListener("popstate", scrollToAnchor);
   }, []);
 }
 
-// Scrolls a standalone page to its top on mount/hashchange — mirrors the
+// Scrolls a standalone page to its top on mount/popstate — mirrors the
 // section-aware version EventsPage uses, but these pages have no sub-sections.
 function useScrollTopOnRoute() {
   useEffect(() => {
@@ -638,14 +689,15 @@ function useScrollTopOnRoute() {
     // globally, so "auto" would animate this instead of jumping.
     const scrollTop = () => window.scrollTo({ top: 0, behavior: "instant" });
     scrollTop();
-    window.addEventListener("hashchange", scrollTop);
-    return () => window.removeEventListener("hashchange", scrollTop);
+    window.addEventListener("popstate", scrollTop);
+    return () => window.removeEventListener("popstate", scrollTop);
   }, []);
 }
 
 function App() {
   const route = useRoute();
   useRouteMeta(route);
+  useClientSideNavigation();
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -757,7 +809,7 @@ function Header() {
   return (
     <header className="site-header fixed inset-x-0 top-[1.5rem] z-50 border-b border-tomato/20 bg-cream/88 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
-        <a href="#hero" className="font-serif text-base font-black uppercase leading-none tracking-wide text-tomato sm:text-xl">
+        <a href="/" className="font-serif text-base font-black uppercase leading-none tracking-wide text-tomato sm:text-xl">
           Disco Dough Pizza Co.
         </a>
         <nav className="hidden items-center gap-6 text-[11px] font-black uppercase tracking-[0.18em] text-tomato lg:flex">
@@ -846,7 +898,7 @@ function Hero() {
             <a href={CALENDLY} target="_blank" rel="noreferrer" className="hero-text-cta cta-button cta-button--filled rounded-full px-7 py-4 text-center font-serif text-lg font-semibold tracking-normal shadow-soft">
               Book an Event
             </a>
-            <a href="#/events" className="cta-button cta-button--outline rounded-full border-2 border-tomato px-7 py-4 text-center font-serif text-lg font-semibold tracking-normal text-tomato transition hover:-translate-y-0.5 hover:bg-tomato hover:text-cream">
+            <a href={EVENTS_ROUTE} className="cta-button cta-button--outline rounded-full border-2 border-tomato px-7 py-4 text-center font-serif text-lg font-semibold tracking-normal text-tomato transition hover:-translate-y-0.5 hover:bg-tomato hover:text-cream">
               Explore Events
             </a>
           </div>
@@ -1036,7 +1088,7 @@ function EventsTeaser() {
             From weddings to backyard birthdays, Disco Dough brings a live, oven-side pizza experience to your gathering — handmade, hospitable, and built around your guests.
           </p>
           <div className="event-links">
-            <a href="#/events">Explore Events →</a>
+            <a href={EVENTS_ROUTE}>Explore Events →</a>
             <a href={CALENDLY} target="_blank" rel="noreferrer">Schedule a Consultation</a>
           </div>
         </div>
@@ -1071,11 +1123,11 @@ function EventsHeader() {
   return (
     <header className="site-header fixed inset-x-0 top-[1.5rem] z-50 border-b border-tomato/20 bg-cream/88 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
-        <a href="#hero" className="font-serif text-base font-black uppercase leading-none tracking-wide text-tomato sm:text-xl">
+        <a href="/" className="font-serif text-base font-black uppercase leading-none tracking-wide text-tomato sm:text-xl">
           Disco Dough Pizza Co.
         </a>
         <nav className="hidden items-center gap-6 text-[11px] font-black uppercase tracking-[0.18em] text-tomato lg:flex">
-          <a href="#hero" className="transition hover:text-ink">← Back to site</a>
+          <a href="/" className="transition hover:text-ink">← Back to site</a>
           <a href={eventSectionHref("occasions")} className="transition hover:text-ink">Occasions</a>
           <a href={eventSectionHref("event-gallery")} className="transition hover:text-ink">Gallery</a>
           <a href={eventSectionHref("book")} className="transition hover:text-ink">Book</a>
@@ -1091,8 +1143,8 @@ function EventsHeader() {
 function EventsPage() {
   useEffect(() => {
     const scrollFromRoute = () => {
-      const section = window.location.hash.slice(`${EVENTS_ROUTE}/`.length);
-      if (!section || window.location.hash === EVENTS_ROUTE) {
+      const section = window.location.hash.slice(1);
+      if (!section) {
         // "instant", not "auto" — the page sets `scroll-behavior: smooth`
         // globally, so "auto" would animate this instead of jumping.
         window.scrollTo({ top: 0, behavior: "instant" });
@@ -1108,8 +1160,8 @@ function EventsPage() {
     };
 
     scrollFromRoute();
-    window.addEventListener("hashchange", scrollFromRoute);
-    return () => window.removeEventListener("hashchange", scrollFromRoute);
+    window.addEventListener("popstate", scrollFromRoute);
+    return () => window.removeEventListener("popstate", scrollFromRoute);
   }, []);
 
   return (
