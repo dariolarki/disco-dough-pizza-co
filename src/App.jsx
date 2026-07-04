@@ -550,6 +550,59 @@ function useRoute() {
   return route;
 }
 
+const SITE_TITLE = "Disco Dough Pizza Co.";
+const SITE_URL = "https://discodoughpizzaco.com/";
+
+// Per-route <title>, meta description, and canonical link. index.html only
+// has one static set (for the pre-JS/crawler-fallback view of "/"), so every
+// hash route showed the exact same tab title and description — this fixes
+// that for the client-rendered document once JS has run.
+const ROUTE_META = {
+  home: {
+    title: `${SITE_TITLE} | Austin Pizza Catering & Pop-Ups`,
+    description: "Disco Dough Pizza Co. is an Austin, Texas premium sourdough pizza catering and pop-up company — live, oven-side service for weddings, celebrations, and private events.",
+  },
+  events: {
+    title: `Catering & Private Events | ${SITE_TITLE}`,
+    description: "A live, sourdough pizza experience crafted oven-side for weddings, milestone celebrations, and private events in Austin, Texas.",
+  },
+  about: {
+    title: `About Us | ${SITE_TITLE}`,
+    description: "Built from family nights and a hot pizza on the table — the story behind Disco Dough Pizza Co., NY inspired and Austin made.",
+  },
+  menu: {
+    title: `Menu | ${SITE_TITLE}`,
+    description: "Neapolitan and New York sourdough pizzas, mini cookie pies, and add-ons — the full Disco Dough Pizza Co. menu for Austin catering and events.",
+  },
+  "our-pies": {
+    title: `Our Pies | ${SITE_TITLE}`,
+    description: "A sourdough hybrid with New York structure and Neapolitan soul — hand tossed, 72 hour cold fermented, and made to order.",
+  },
+  gallery: {
+    title: `Gallery | ${SITE_TITLE}`,
+    description: "Warm boxes, crisp edges, handmade details — photos from real Disco Dough Pizza Co. pop-ups and private events around Austin.",
+  },
+  contact: {
+    title: `Contact | ${SITE_TITLE}`,
+    description: "Plan an event, ask a question, or follow along with Disco Dough Pizza Co. in Austin, Texas.",
+  },
+};
+
+function useRouteMeta(route) {
+  useEffect(() => {
+    const meta = ROUTE_META[route] ?? ROUTE_META.home;
+    document.title = meta.title;
+
+    const descriptionTag = document.querySelector('meta[name="description"]');
+    if (descriptionTag) descriptionTag.setAttribute("content", meta.description);
+
+    const canonicalTag = document.querySelector('link[rel="canonical"]');
+    if (canonicalTag) {
+      canonicalTag.setAttribute("href", route === "home" ? SITE_URL : `${SITE_URL}#/${route}`);
+    }
+  }, [route]);
+}
+
 // Scrolls to a home-page section anchor (e.g. #about) after routing back to
 // home from a standalone page. Browsers only auto-scroll to an id already
 // present in the DOM at hashchange time, which a section on another route
@@ -592,6 +645,7 @@ function useScrollTopOnRoute() {
 
 function App() {
   const route = useRoute();
+  useRouteMeta(route);
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -1017,11 +1071,11 @@ function EventsHeader() {
   return (
     <header className="site-header fixed inset-x-0 top-[1.5rem] z-50 border-b border-tomato/20 bg-cream/88 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
-        <a href="#" className="font-serif text-base font-black uppercase leading-none tracking-wide text-tomato sm:text-xl">
+        <a href="#hero" className="font-serif text-base font-black uppercase leading-none tracking-wide text-tomato sm:text-xl">
           Disco Dough Pizza Co.
         </a>
         <nav className="hidden items-center gap-6 text-[11px] font-black uppercase tracking-[0.18em] text-tomato lg:flex">
-          <a href="#" className="transition hover:text-ink">← Back to site</a>
+          <a href="#hero" className="transition hover:text-ink">← Back to site</a>
           <a href={eventSectionHref("occasions")} className="transition hover:text-ink">Occasions</a>
           <a href={eventSectionHref("event-gallery")} className="transition hover:text-ink">Gallery</a>
           <a href={eventSectionHref("book")} className="transition hover:text-ink">Book</a>
