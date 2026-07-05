@@ -89,7 +89,7 @@ const navItems = [
 // Prices ordered most expensive → least within each section
 const pizzaMenu = {
   title: "Pies",
-  note: "Every pie is built on our 72-hour sourdough with San Marzano tomatoes, mozzarella, Pecorino Romano, Parmesan, and Sicilian extra virgin olive oil.",
+  note: "Every pie is built on our 72-hour sourdough with San Marzano tomatoes, mozzarella, Pecorino Romano, Parmesan, and Sicilian extra virgin olive oil. Baked well-done for a sturdy crust that folds clean — no flop.",
   icon: pizzaAsset,
   items: [
     { name: "Spicy Vodka Pie", prices: ["$28"], description: "Handmade vodka sauce, Calabrian chili, parsley-lemon-pistachio pesto." },
