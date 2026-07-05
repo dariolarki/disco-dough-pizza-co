@@ -1240,7 +1240,7 @@ function EventsPage() {
         <div className="gallery-intro">
           <div>
             <SectionLabel>Event Gallery</SectionLabel>
-            <h2 className="gallery-title section-title">From our tables to yours.</h2>
+            <h2 className="gallery-title section-title">From our table to yours.</h2>
           </div>
           <p className="max-w-lg text-base font-normal leading-8 text-brown">
             Real Disco Dough events around Austin — full spreads, charred crusts, and the kind of hospitality that turns a gathering into a memory.
