@@ -1221,7 +1221,7 @@ function EventsPage() {
         <div className="experience-layout">
           <div>
             <SectionLabel>The Experience</SectionLabel>
-            <h2 className="section-title section-title--editorial">An experiential approach to hospitality.</h2>
+            <h2 className="section-title section-title--editorial">The Disco Dough approach to hospitality.</h2>
             <p className="copy mt-6">
               We bring guests into the process — live dough stretching, oven-side preparation, and tableside storytelling with our pizzaiolos. From fermentation to bake, every service is personal, memorable, and deeply human.
             </p>
