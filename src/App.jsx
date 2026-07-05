@@ -87,32 +87,16 @@ const navItems = [
 ];
 
 // Prices ordered most expensive → least within each section
-const neapolitanMenu = {
-  title: "Neapolitan",
-  subtitle: "12–13\" Sourdough",
+const pizzaMenu = {
+  title: "Pies",
+  note: "Every pie is built on our 72-hour sourdough with San Marzano tomatoes, mozzarella, Pecorino Romano, Parmesan, and Sicilian extra virgin olive oil.",
   icon: pizzaAsset,
   items: [
-    { name: "Spicy Calabrian Pie", prices: ["$28"] },
-    { name: "Sopressata Rosemary Pie", prices: ["$25"] },
-    { name: "Hot Honey Pep Pie", prices: ["$24"] },
-    { name: "Tomato Stracciatella Pie", prices: ["$23"] },
-    { name: "Pepperoni Jalapeño Pie", prices: ["$22"] },
-    { name: "Margarita Pie", prices: ["$21"] },
-    { name: "Plain Pie", prices: ["$18"] },
-  ],
-};
-
-const newYorkMenu = {
-  title: "New York",
-  subtitle: "14–17\" Sourdough",
-  icon: pizzaAsset,
-  items: [
-    { name: "Spicy Calabrian Pie", prices: ["$28"] },
-    { name: "Sopressata Rosemary Pie", prices: ["$25"] },
-    { name: "Hot Honey Pep Pie", prices: ["$24"] },
-    { name: "Tomato Stracciatella Pie", prices: ["$23"] },
-    { name: "Pepperoni Jalapeño Pie", prices: ["$22"] },
-    { name: "Plain Pie", prices: ["$20"] },
+    { name: "Spicy Vodka Pie", prices: ["$28"], description: "Handmade vodka sauce, Calabrian chili, parsley-lemon-pistachio pesto." },
+    { name: "Soppressata Rosemary Pie", prices: ["$25"], description: "Soppressata, pepperoni, rosemary, fresh basil." },
+    { name: "Hot Honey Pepperoni", prices: ["$24"], description: "Pepperoni, ricotta dollops, hot honey." },
+    { name: "Classic Pepperoni", prices: ["$22"], description: "Pepperoni." },
+    { name: "Classic Cheese", prices: ["$20"], description: "The essentials, done right." },
   ],
 };
 
@@ -136,11 +120,12 @@ const menuSections = [
       { name: "Extra Cheese", prices: ["+$2"] },
       { name: "Ricotta", prices: ["+$2"] },
       { name: "Stracciatella", prices: ["+$2"] },
-      { name: "Jalapeño", prices: ["+$1.50"] },
-      { name: "Arugula", prices: ["+$1"] },
-      { name: "Bell Pepper", prices: ["+$1"] },
-      { name: "Red Onion", prices: ["+$1"] },
-      { name: "Mushrooms", prices: ["+$1"] },
+      { name: "Jalapeño", prices: ["+$0.50"] },
+      { name: "Basil", prices: ["+$0.50"] },
+      { name: "Arugula", prices: ["+$0.50"] },
+      { name: "Bell Pepper", prices: ["+$0.50"] },
+      { name: "Red Onion", prices: ["+$0.50"] },
+      { name: "Mushrooms", prices: ["+$0.50"] },
     ],
   },
 ];
@@ -616,7 +601,7 @@ const ROUTE_META = {
   },
   menu: {
     title: `Menu | ${SITE_TITLE}`,
-    description: "Neapolitan and New York sourdough pizzas, mini cookie pies, and add-ons — the full Disco Dough Pizza Co. menu for Austin catering and events.",
+    description: "New York style sourdough pizzas, mini cookie pies, and add-ons — the full Disco Dough Pizza Co. menu for Austin catering and events.",
   },
   "our-pies": {
     title: `Our Pies | ${SITE_TITLE}`,
@@ -975,16 +960,20 @@ function MenuSection({ section }) {
         {section.title}
       </h3>
       {section.subtitle ? <p className="menu-section-subtitle">{section.subtitle}</p> : null}
+      {section.note ? <p className="menu-section-note">{section.note}</p> : null}
       <div className={`menu-list ${section.layout === "grid" ? "menu-list--grid" : ""}`}>
         {section.items.map((item) => (
-          <div className="menu-row" key={item.name}>
-            <span>{item.name}</span>
-            <i aria-hidden="true" />
-            <strong>
-              {item.prices.map((price) => (
-                <span key={price}>{price}</span>
-              ))}
-            </strong>
+          <div className="menu-item" key={item.name}>
+            <div className="menu-row">
+              <span>{item.name}</span>
+              <i aria-hidden="true" />
+              <strong>
+                {item.prices.map((price) => (
+                  <span key={price}>{price}</span>
+                ))}
+              </strong>
+            </div>
+            {item.description ? <p className="menu-item-description">{item.description}</p> : null}
           </div>
         ))}
       </div>
@@ -1001,11 +990,7 @@ function MenuCard() {
         <span>Austin, Texas</span>
       </div>
       <div className="menu-sections">
-        <div className="menu-pizza-grid">
-          <MenuSection section={neapolitanMenu} />
-          <div className="menu-pizza-divider" aria-hidden="true" />
-          <MenuSection section={newYorkMenu} />
-        </div>
+        <MenuSection section={pizzaMenu} />
         {menuSections.map((section, index) => (
           <MenuSection section={section} key={`${section.title}-${section.subtitle ?? index}`} />
         ))}
@@ -1381,9 +1366,9 @@ function MenuPage() {
         <div className="events-hero-inner">
           <div className="events-hero-copy">
             <SectionLabel>Menu</SectionLabel>
-            <h1 className="section-title section-title--small">Neapolitan &amp; New York, made to order.</h1>
+            <h1 className="section-title section-title--small">New York style, made to order.</h1>
             <p className="copy mt-6">
-              Pick your style, add fresh toppings, and finish with a mini cookie pie. Custom menus are available for weddings, private events, and pop-ups — just tell us the headcount and occasion.
+              Hand tossed and topped your way, finished with a mini cookie pie. Custom menus are available for weddings, private events, and pop-ups — just tell us the headcount and occasion.
             </p>
             <div className="event-links">
               <a href={EVENTS_ROUTE}>Explore Events →</a>
