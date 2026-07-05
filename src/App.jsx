@@ -605,7 +605,7 @@ const ROUTE_META = {
   },
   "our-pies": {
     title: `Our Pies | ${SITE_TITLE}`,
-    description: "A sourdough hybrid with New York structure and Neapolitan soul — hand tossed, 72 hour cold fermented, and made to order.",
+    description: "Naturally leavened 72-hour sourdough, hand-stretched into a deep golden, foldable New York pie — premium ingredients, made to order.",
   },
   gallery: {
     title: `Gallery | ${SITE_TITLE}`,
@@ -1032,7 +1032,7 @@ function OurPies() {
       <SectionLabel>Our pies</SectionLabel>
       <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         <div>
-          <h2 className="section-title section-title--small">A sourdough hybrid with New York structure and Neapolitan soul.</h2>
+          <h2 className="section-title section-title--small">72-hour sourdough, hand-stretched into a deep golden, foldable New York pie.</h2>
           <p className="copy copy-lead mt-6">
             Every dough batch starts with a three-flour blend built for crispness, chew, and structure.
           </p>
@@ -1414,7 +1414,7 @@ function OurPiesPage() {
         <div className="events-hero-inner">
           <div className="events-hero-copy">
             <SectionLabel>Our pies</SectionLabel>
-            <h1 className="section-title section-title--small">A sourdough hybrid with New York structure and Neapolitan soul.</h1>
+            <h1 className="section-title section-title--small">72-hour sourdough, hand-stretched into a deep golden, foldable New York pie.</h1>
             <p className="copy mt-6">
               Every dough batch starts with a three-flour blend built for crispness, chew, and structure. It folds when you want it to, holds when you need it to, and eats like something made by hand.
             </p>
@@ -1448,22 +1448,22 @@ function OurPiesPage() {
 
       <section className="section border-t-2 border-tomato/25 bg-blush">
         <div className="text-center">
-          <SectionLabel>Two styles, one dough</SectionLabel>
-          <h2 className="section-title section-title--small mx-auto">Neapolitan vs. New York.</h2>
+          <SectionLabel>The sourdough difference</SectionLabel>
+          <h2 className="section-title section-title--small mx-auto">Craft NY, done right.</h2>
         </div>
         <div className="grid gap-6 sm:grid-cols-2 max-w-4xl mx-auto mt-10">
           <div className="interactive-lift interactive-box-zoom unified-premium-glow community-card">
             <div className="community-card__rule" aria-hidden="true"><Star /><span /><Star /></div>
-            <h3>Neapolitan</h3>
+            <h3>72-Hour Sourdough</h3>
             <p>
-              12–13", soft and blistered, wood-fired-style char, hand milled San Marzano tomatoes, and fresh fior di latte. Built to fold once, then eat with a fork.
+              Naturally leavened, cold fermented for 72 hours — no commercial yeast, ever. It's what gives the crust its depth, its chew, and a crumb you can't rush.
             </p>
           </div>
           <div className="interactive-lift interactive-box-zoom unified-premium-glow community-card">
             <div className="community-card__rule" aria-hidden="true"><Star /><span /><Star /></div>
-            <h3>New York</h3>
+            <h3>New York, Done Right</h3>
             <p>
-              14–17", thin, crispy, and foldable — the classic slice. Same dough, same 72 hour ferment, stretched wider and baked for a crackling, sturdy crust.
+              Hand-stretched to 14–17", thin and foldable, fired to a deep golden crackle. San Marzano tomatoes, mozzarella, Pecorino Romano, Parmesan, and Sicilian extra virgin olive oil — every single time.
             </p>
           </div>
         </div>
