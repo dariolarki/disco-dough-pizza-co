@@ -2714,3 +2714,494 @@ body.show-floating-cta .floating-cta:hover {
     animation-range: entry 0% entry 50%;
   }
 }
+
+/* ============================================================
+   Dough Calculator
+   ============================================================ */
+
+.calc-layout {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .calc-layout {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  }
+
+  .calc-recipe-wrap {
+    position: sticky;
+    top: 7.5rem;
+  }
+}
+
+.calc-panel {
+  border: 1px solid rgb(194 43 26 / 0.2);
+  border-radius: 2rem;
+  background: #fffaf0;
+  padding: clamp(1.5rem, 3.5vw, 2.5rem);
+  box-shadow: var(--premium-resting-glow);
+}
+
+.calc-group {
+  margin-top: 1.9rem;
+}
+
+.calc-panel > .calc-group:first-of-type {
+  margin-top: 1.4rem;
+}
+
+.calc-group + .calc-group {
+  border-top: 1px dashed rgb(194 43 26 / 0.25);
+  padding-top: 1.7rem;
+}
+
+.calc-group-label {
+  margin: 0 0 1rem;
+  color: var(--brand-red);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+/* Pie count stepper */
+.calc-count-row {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+.calc-count-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.9rem;
+  height: 2.9rem;
+  border: 2px solid var(--brand-red);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--brand-red);
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 200ms ease, color 200ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.calc-count-btn:hover:not(:disabled) {
+  background: var(--brand-red);
+  color: var(--cream);
+  transform: translateY(-2px);
+}
+
+.calc-count-btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.95);
+}
+
+.calc-count-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.calc-count-value {
+  min-width: 3.2rem;
+  color: var(--brand-red);
+  font-family: "Fraunces", Georgia, serif;
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 60, "WONK" 1;
+  font-size: clamp(2.6rem, 5vw, 3.4rem);
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+}
+
+.calc-dough-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  min-height: 1.1rem;
+}
+
+.calc-dough-dot {
+  width: 1.05rem;
+  height: 1.05rem;
+  border: 1.5px solid rgb(194 43 26 / 0.55);
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 30%, #fff7e8, #f3ddba 72%);
+  box-shadow: inset 0 -2px 3px rgb(194 43 26 / 0.14);
+  animation: dough-dot-in 340ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes dough-dot-in {
+  from { opacity: 0; transform: scale(0.2); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Size presets */
+.calc-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-bottom: 1.35rem;
+}
+
+.calc-preset {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  min-width: 5.2rem;
+  border: 2px solid rgb(194 43 26 / 0.45);
+  border-radius: 1.1rem;
+  background: transparent;
+  padding: 0.6rem 1rem 0.65rem;
+  color: var(--brand-red);
+  cursor: pointer;
+  transition: background 200ms ease, color 200ms ease, border-color 200ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.calc-preset strong {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.calc-preset span {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.calc-preset:hover {
+  border-color: var(--brand-red);
+  transform: translateY(-2px);
+}
+
+.calc-preset.is-active {
+  background: var(--brand-red);
+  border-color: var(--brand-red);
+  color: var(--cream);
+}
+
+/* Sliders — disco-ball thumb on a tomato track */
+.calc-slider-row {
+  margin-top: 1.25rem;
+}
+
+.calc-slider-row:first-of-type {
+  margin-top: 0;
+}
+
+.calc-slider-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.calc-slider-head label {
+  color: var(--brand-red);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.calc-slider-head strong {
+  color: var(--brand-red);
+  font-family: "Fraunces", Georgia, serif;
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 60, "WONK" 1;
+  font-size: 1.35rem;
+  font-weight: 900;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.calc-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 1.6rem;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.calc-slider:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 4px;
+  border-radius: 999px;
+}
+
+.calc-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--brand-red) 0 var(--fill, 50%), rgb(194 43 26 / 0.18) var(--fill, 50%));
+}
+
+.calc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1.6rem;
+  height: 1.6rem;
+  margin-top: -0.5rem;
+  border: none;
+  border-radius: 50%;
+  background: url("../images/Disco Dough Mirror Ball.png") center / cover no-repeat;
+  box-shadow: 0 3px 10px rgb(194 43 26 / 0.4);
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.calc-slider:hover::-webkit-slider-thumb {
+  transform: scale(1.18) rotate(20deg);
+}
+
+.calc-slider:active::-webkit-slider-thumb {
+  transform: scale(1.24) rotate(45deg);
+}
+
+.calc-slider::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--brand-red) 0 var(--fill, 50%), rgb(194 43 26 / 0.18) var(--fill, 50%));
+}
+
+.calc-slider::-moz-range-thumb {
+  width: 1.6rem;
+  height: 1.6rem;
+  border: none;
+  border-radius: 50%;
+  background: url("../images/Disco Dough Mirror Ball.png") center / cover no-repeat;
+  box-shadow: 0 3px 10px rgb(194 43 26 / 0.4);
+}
+
+.calc-feel {
+  margin: 0.55rem 0 0;
+  color: var(--brand-red);
+  font-family: "Pacifico", "Brush Script MT", cursive;
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.calc-note {
+  margin: 1.4rem 0 0;
+  color: #4f2d1c;
+  font-size: 0.8rem;
+  font-weight: 450;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+/* Recipe card tweaks (built on .menu-card) */
+.calc-recipe .menu-header h2 {
+  font-size: clamp(2.6rem, 7vw, 4.6rem);
+}
+
+.calc-recipe-row {
+  font-size: clamp(1.1rem, 2.6vw, 1.55rem);
+}
+
+.calc-recipe-row strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.calc-copy-row {
+  margin-top: 1.75rem;
+  text-align: center;
+}
+
+.calc-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 11rem;
+  border: 2px solid var(--brand-red);
+  border-radius: 999px;
+  background: transparent;
+  padding: 0.85rem 2.1rem;
+  color: var(--brand-red);
+  font-family: "Fraunces", Georgia, serif;
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 60, "WONK" 1;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 220ms ease, color 220ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.calc-copy-btn:hover {
+  background: var(--brand-red);
+  color: var(--cream);
+  transform: translateY(-2px);
+}
+
+.calc-copy-btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Bake-time picker */
+.calc-when {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  margin: clamp(2rem, 4vw, 2.75rem) auto 0;
+}
+
+.calc-when label {
+  color: var(--brand-red);
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.calc-when input {
+  border: 2px solid var(--brand-red);
+  border-radius: 999px;
+  background: #fffaf0;
+  padding: 0.7rem 1.4rem;
+  color: var(--brand-red);
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgb(194 43 26 / 0.1);
+}
+
+.calc-when input:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 3px;
+}
+
+/* Schedule timeline */
+.calc-timeline {
+  list-style: none;
+  margin: clamp(2.25rem, 4.5vw, 3.25rem) auto 0;
+  padding: 0;
+  max-width: 44rem;
+}
+
+.calc-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.3rem 1fr;
+  gap: 1.1rem;
+  padding-bottom: 2rem;
+}
+
+.calc-step:last-child {
+  padding-bottom: 0;
+}
+
+/* Dotted connector between star nodes — same dot language as the menu leaders */
+.calc-step::before {
+  content: "";
+  position: absolute;
+  top: 2.5rem;
+  bottom: 0.3rem;
+  left: calc(1.15rem - 1.5px);
+  width: 3px;
+  background-image: radial-gradient(circle, rgb(194 43 26 / 0.5) 0 1.5px, transparent 1.9px);
+  background-size: 3px 9px;
+  background-repeat: repeat-y;
+}
+
+.calc-step:last-child::before {
+  display: none;
+}
+
+.calc-step-node {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.3rem;
+  height: 2.3rem;
+  border: 2px solid var(--brand-red);
+  border-radius: 50%;
+  background: #fffaf0;
+  color: var(--brand-red);
+  font-size: 0.8rem;
+  box-shadow: var(--premium-resting-glow);
+}
+
+.calc-step-body {
+  min-width: 0;
+  padding-top: 0.1rem;
+}
+
+.calc-step-time {
+  margin: 0;
+  color: var(--brand-red);
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  font-variant-numeric: tabular-nums;
+}
+
+.calc-step h3 {
+  margin: 0.35rem 0 0;
+  color: var(--brand-red);
+  font-family: "Fraunces", Georgia, serif;
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 60, "WONK" 1;
+  font-size: clamp(1.35rem, 2.6vw, 1.75rem);
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.calc-step-copy {
+  margin: 0.55rem 0 0;
+  max-width: 36rem;
+  color: #4f2d1c;
+  font-size: 0.97rem;
+  font-weight: 450;
+  line-height: 1.7;
+}
+
+.calc-cta {
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  text-align: center;
+}
+
+.calc-cta .copy {
+  max-width: 34rem;
+}
+
+.calc-cta .book-cta-actions {
+  margin-top: 1.5rem;
+}
+
+@supports (animation-timeline: view()) {
+  .calc-panel,
+  .calc-recipe,
+  .calc-step {
+    animation: image-reveal both ease-out;
+    animation-timeline: view();
+    animation-range: entry 0% entry 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .calc-dough-dot {
+    animation: none;
+  }
+
+  .calc-slider:hover::-webkit-slider-thumb,
+  .calc-slider:active::-webkit-slider-thumb {
+    transform: none;
+  }
+}
