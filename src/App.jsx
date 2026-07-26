@@ -59,14 +59,26 @@ import vidRackPoster from "../images/disco-dough-new-media/web/IMG_5825-poster.j
 import vidSipHaus from "../images/disco-dough-new-media/web/sip-haus-oven.mp4";
 import vidSipHausPoster from "../images/disco-dough-new-media/web/sip-haus-oven-poster.jpg";
 
+import {
+  COOKIE_PACKS,
+  DOUGH_KITS,
+  MAX_QUANTITY_PER_LINE,
+  formatUsd,
+  formatUsdExact,
+  productById,
+  unitPriceCents,
+} from "./shop-catalog.js";
+
 const CALENDLY = "https://calendly.com/Branden-Beyer";
-const EMAIL = "mailto:Discodoughpizzaco@outlook.com";
+const EMAIL_ADDRESS = "Discodoughpizzaco@outlook.com";
+const EMAIL = `mailto:${EMAIL_ADDRESS}`;
 const INSTAGRAM = "https://www.instagram.com/discodoughpizzaco/";
 const TIKTOK = "https://www.tiktok.com/@discodoughpizzaco";
 const EVENTS_ROUTE = "/events";
 const ABOUT_ROUTE = "/about";
 const MENU_ROUTE = "/menu";
 const OUR_PIES_ROUTE = "/our-pies";
+const SHOP_ROUTE = "/shop";
 const GALLERY_ROUTE = "/gallery";
 const CONTACT_ROUTE = "/contact";
 
@@ -80,6 +92,7 @@ const brandenPhoto = { src: brandenPizza, alt: "Branden holding a hot honey pepp
 const navItems = [
   { label: "About", href: ABOUT_ROUTE },
   { label: "Menu", href: MENU_ROUTE },
+  { label: "Shop", href: SHOP_ROUTE },
   { label: "Our Pies", href: OUR_PIES_ROUTE },
   { label: "Events", href: EVENTS_ROUTE },
   { label: "Gallery", href: GALLERY_ROUTE },
@@ -238,6 +251,175 @@ const eyebrowPhrases = [
   "Disco Dough Pizza Co.",
   "Austin, Texas",
 ];
+
+// ---------- Shop / online orders ----------
+//
+// Product names and prices live in src/shop-catalog.js, which the Stripe
+// checkout function imports too — so the price a customer is charged always
+// comes from the same list the page renders.
+
+// Cookie packs have real product shots. The dough kits don't yet, so they fall
+// back to a branded illustration tile; drop an `image`/`alt` pair in here and
+// the placeholder disappears on its own.
+const shopProductMedia = {
+  "cookie-pack-4": { image: cookieFourMarble, alt: "Four Disco Dough sourdough cookies in parchment cups" },
+  "cookie-pack-6": { image: cookieAssortmentBox, alt: "A box of assorted Disco Dough sourdough cookies" },
+  "cookie-pack-12": { image: cookieBoxTray, alt: "A full box of Disco Dough sourdough cookies in parchment cups" },
+  "dough-kit-5": { illustration: pizzaBox },
+  "dough-kit-10": { illustration: pizzaBox },
+  "dough-kit-20": { illustration: pizzaBox },
+};
+
+// Manual payment handles. Both render on the local pickup/delivery card once
+// filled in; while blank, that card just points at email and Instagram.
+const ZELLE_HANDLE = "";
+const VENMO_HANDLE = "";
+
+// Backend pass slots. Each renders only once it holds copy, so the live page
+// never shows a customer a section reading "TBD".
+const SHOP_POLICIES = [
+  { title: "Shipping", body: "" }, // fill once ship weights + carrier rates are set
+  { title: "Sales tax", body: "" }, // fill once tax registration is done
+  { title: "Refunds & returns", body: "" },
+  { title: "Order questions", body: "" },
+];
+
+// Per-product ingredient + allergen statements, keyed by product id. Each one
+// renders on its own card as soon as it has text.
+const SHOP_ALLERGENS = {
+  "cookie-pack-4": "",
+  "cookie-pack-6": "",
+  "cookie-pack-12": "",
+  "dough-kit-5": "",
+  "dough-kit-10": "",
+  "dough-kit-20": "",
+};
+
+const SHIP_WINDOW_NOTE = "Orders ship Monday–Thursday to avoid weekend transit.";
+const FRESHNESS_NOTE = "Best enjoyed within 7 days of delivery.";
+const DAMAGE_NOTE = "Arrived damaged? Message us and we'll make it right.";
+const PRICING_NOTE = "Prices are before shipping. Shipping is added at checkout and shown before you pay.";
+const ALLERGEN_POINTER = "Questions about ingredients or allergens? Email us before you order.";
+
+const shopMarqueePhrases = [
+  "Sourdough Cookie Packs",
+  "Dry Dough Kits",
+  "Shipped From Austin",
+  "Ships Monday–Thursday",
+  "Local Pickup & Delivery",
+];
+
+const CART_STORAGE_KEY = "dd-shop-cart-v1";
+
+// Anything stored by an older build (or hand-edited in devtools) is re-validated
+// against the live catalog, so a renamed or retired product can't wedge the cart.
+function readStoredCart() {
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(CART_STORAGE_KEY) ?? "[]");
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .map((line) => ({ id: String(line?.id), quantity: Math.round(Number(line?.quantity)) }))
+      .filter((line) => productById(line.id) && line.quantity >= 1)
+      .map((line) => ({ ...line, quantity: Math.min(line.quantity, MAX_QUANTITY_PER_LINE) }));
+  } catch {
+    return [];
+  }
+}
+
+function useCart() {
+  const [lines, setLines] = useState(readStoredCart);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(lines));
+    } catch {
+      // Private browsing or a full quota — the cart still works for this visit.
+    }
+  }, [lines]);
+
+  const add = useCallback((id) => {
+    setLines((current) => {
+      if (!current.some((line) => line.id === id)) return [...current, { id, quantity: 1 }];
+      return current.map((line) =>
+        line.id === id
+          ? { ...line, quantity: Math.min(line.quantity + 1, MAX_QUANTITY_PER_LINE) }
+          : line,
+      );
+    });
+  }, []);
+
+  const setQuantity = useCallback((id, quantity) => {
+    const next = Math.min(Math.max(Math.round(quantity), 0), MAX_QUANTITY_PER_LINE);
+    setLines((current) =>
+      next === 0
+        ? current.filter((line) => line.id !== id)
+        : current.map((line) => (line.id === id ? { ...line, quantity: next } : line)),
+    );
+  }, []);
+
+  const clear = useCallback(() => setLines([]), []);
+
+  const items = lines
+    .map((line) => ({ ...productById(line.id), quantity: line.quantity }))
+    .filter((item) => item.id);
+  const itemCount = items.reduce((total, item) => total + item.quantity, 0);
+  const subtotalCents = items.reduce((total, item) => total + item.priceCents * item.quantity, 0);
+
+  return { items, itemCount, subtotalCents, add, setQuantity, clear };
+}
+
+// Only ids and quantities go over the wire — api/checkout.js prices the order
+// from its own copy of the catalog.
+async function requestCheckoutUrl(items) {
+  const response = await fetch("/api/checkout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      items: items.map(({ id, quantity }) => ({ id, quantity })),
+    }),
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || !payload.url) {
+    const error = new Error(payload.error || "We couldn't start checkout. Please try again.");
+    error.code = payload.code;
+    throw error;
+  }
+  return payload.url;
+}
+
+// Pre-fills an email with the cart already itemized — this is the manual
+// Zelle/Venmo path, where we quote the total by hand.
+function manualOrderMailto(items, subtotalCents) {
+  const body = items.length
+    ? [
+        "Hi Disco Dough — I'd like to place an order:",
+        "",
+        ...items.map(
+          (item) => `${item.quantity} × ${item.name} — ${formatUsd(item.priceCents * item.quantity)}`,
+        ),
+        "",
+        `Items subtotal: ${formatUsd(subtotalCents)} (before shipping or delivery)`,
+        "",
+        "Name:",
+        "Phone:",
+        "Pickup or local delivery:",
+        "Date needed:",
+        "",
+      ].join("\n")
+    : "Hi Disco Dough — I'd like to place an order for local pickup or delivery.\n\n";
+  return `mailto:${EMAIL_ADDRESS}?subject=${encodeURIComponent("Disco Dough order")}&body=${encodeURIComponent(body)}`;
+}
+
+// The size with the lowest cost per cookie / per dough ball, per category —
+// derived rather than hard-coded so it can't contradict the prices.
+const bestValueIds = new Set(
+  [COOKIE_PACKS, DOUGH_KITS].map(
+    (group) =>
+      group.reduce((best, product) =>
+        unitPriceCents(product) < unitPriceCents(best) ? product : best,
+      ).id,
+  ),
+);
 
 // 3D tilt hook — used on the About section portrait photos
 function useTilt(maxAngle = 7) {
@@ -517,6 +699,7 @@ const ROUTE_TABLE = [
   ["about", ABOUT_ROUTE],
   ["menu", MENU_ROUTE],
   ["our-pies", OUR_PIES_ROUTE],
+  ["shop", SHOP_ROUTE],
   ["gallery", GALLERY_ROUTE],
   ["contact", CONTACT_ROUTE],
 ];
@@ -606,6 +789,10 @@ const ROUTE_META = {
   "our-pies": {
     title: `Our Pies | ${SITE_TITLE}`,
     description: "Naturally leavened 72-hour sourdough, hand-stretched into a deep golden, foldable New York pie — premium ingredients, made to order.",
+  },
+  shop: {
+    title: `Shop | ${SITE_TITLE}`,
+    description: "Order Disco Dough sourdough cookie packs and dry dough kits online — shipped from Austin, or arrange local pickup and delivery with us directly.",
   },
   gallery: {
     title: `Gallery | ${SITE_TITLE}`,
@@ -734,6 +921,12 @@ function App() {
         <OurPiesPage />
       </>
     ),
+    shop: (
+      <>
+        <Header />
+        <ShopPage />
+      </>
+    ),
     gallery: (
       <>
         <Header />
@@ -754,7 +947,8 @@ function App() {
       {standalonePages[route]}
       <LogoBanner />
       <Contact />
-      <FloatingCTA />
+      {/* Shop has its own floating cart button in the same slot. */}
+      {route === "shop" ? null : <FloatingCTA />}
     </main>
   );
 }
@@ -797,9 +991,11 @@ function Header() {
         <a href="/" className="font-serif text-base font-black uppercase leading-none tracking-wide text-tomato sm:text-xl">
           Disco Dough Pizza Co.
         </a>
-        <nav className="hidden items-center gap-6 text-[11px] font-black uppercase tracking-[0.18em] text-tomato lg:flex">
+        {/* gap-4 until xl: with Shop added, gap-6 left the seven labels too
+            tight against the Book an Event button at exactly 1024px. */}
+        <nav className="hidden items-center gap-4 text-[11px] font-black uppercase tracking-[0.18em] text-tomato lg:flex xl:gap-6">
           {navItems.map((item) => (
-            <a key={item.label} href={item.href} className="transition hover:text-ink">
+            <a key={item.label} href={item.href} className="whitespace-nowrap transition hover:text-ink">
               {item.label}
             </a>
           ))}
@@ -1468,6 +1664,441 @@ function OurPiesPage() {
           </div>
         </div>
       </section>
+    </div>
+  );
+}
+
+// ---------- Shop page ----------
+
+function ShopProductCard({ product, bestValue, justAdded, onAdd }) {
+  const media = shopProductMedia[product.id] ?? {};
+  const allergens = SHOP_ALLERGENS[product.id];
+
+  return (
+    <article className="interactive-lift interactive-box-zoom unified-premium-glow shop-card">
+      <div className="shop-card-media ph-media">
+        {media.image ? (
+          <img src={media.image} alt={media.alt} loading="lazy" decoding="async" />
+        ) : (
+          <div className="shop-card-placeholder">
+            {media.illustration ? (
+              <img src={media.illustration} alt="" aria-hidden="true" loading="lazy" decoding="async" />
+            ) : null}
+            <span>Product photo coming soon</span>
+          </div>
+        )}
+        {bestValue ? <span className="shop-badge">Best value</span> : null}
+      </div>
+      <div className="shop-card-body">
+        <h3 className="shop-card-title">{product.shortName}</h3>
+        <p className="shop-card-desc">{product.description}</p>
+        {allergens ? <p className="shop-card-allergens">{allergens}</p> : null}
+        <div className="shop-card-foot">
+          <span className="shop-price">
+            {formatUsd(product.priceCents)}
+            <small>
+              {formatUsdExact(unitPriceCents(product))} / {product.unitNoun}
+            </small>
+          </span>
+          <button
+            type="button"
+            className={`shop-add ${justAdded ? "is-added" : ""}`}
+            onClick={() => onAdd(product.id)}
+          >
+            {justAdded ? "Added ✦" : "Add to cart"}
+          </button>
+        </div>
+        <p className="shop-card-note">Plus shipping, added at checkout.</p>
+      </div>
+    </article>
+  );
+}
+
+function CartDrawer({ items, subtotalCents, checkout, onClose, onSetQuantity, onCheckout }) {
+  const panelRef = useRef(null);
+  const closeRef = useRef(null);
+
+  useEffect(() => {
+    const previouslyFocused = document.activeElement;
+    document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
+
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      // The drawer's contents change as lines are added and removed, so the
+      // focus ring is collected fresh on each Tab rather than cached.
+      const focusable = panelRef.current?.querySelectorAll(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusable?.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+      previouslyFocused?.focus?.();
+    };
+  }, [onClose]);
+
+  return (
+    <div className="shop-drawer" role="dialog" aria-modal="true" aria-label="Your cart">
+      <div className="shop-drawer-backdrop" onClick={onClose} />
+      <div className="shop-drawer-panel" ref={panelRef}>
+        <div className="shop-drawer-head">
+          <p>
+            <Star /> Your cart
+          </p>
+          <button ref={closeRef} type="button" onClick={onClose} aria-label="Close cart">
+            ×
+          </button>
+        </div>
+
+        {items.length === 0 ? (
+          <div className="shop-drawer-empty">
+            <p>Nothing in the cart yet.</p>
+            <p>Cookie packs and dough kits are just up the page.</p>
+          </div>
+        ) : (
+          <>
+            <ul className="shop-lines">
+              {items.map((item) => (
+                <li key={item.id} className="shop-line">
+                  <div className="shop-line-info">
+                    <p className="shop-line-name">{item.name}</p>
+                    <p className="shop-line-unit">{formatUsd(item.priceCents)} each</p>
+                  </div>
+                  <div className="shop-qty">
+                    <button
+                      type="button"
+                      onClick={() => onSetQuantity(item.id, item.quantity - 1)}
+                      aria-label={`Remove one ${item.name}`}
+                    >
+                      −
+                    </button>
+                    <span>{item.quantity}</span>
+                    <button
+                      type="button"
+                      onClick={() => onSetQuantity(item.id, item.quantity + 1)}
+                      disabled={item.quantity >= MAX_QUANTITY_PER_LINE}
+                      aria-label={`Add one ${item.name}`}
+                    >
+                      +
+                    </button>
+                  </div>
+                  <strong className="shop-line-total">
+                    {formatUsd(item.priceCents * item.quantity)}
+                  </strong>
+                </li>
+              ))}
+            </ul>
+
+            <div className="shop-drawer-foot">
+              <div className="shop-subtotal">
+                <span>Items subtotal</span>
+                <strong>{formatUsd(subtotalCents)}</strong>
+              </div>
+              <p className="shop-drawer-note">{PRICING_NOTE}</p>
+              <button
+                type="button"
+                className="shop-checkout-btn"
+                onClick={onCheckout}
+                disabled={checkout.status === "loading"}
+              >
+                {checkout.status === "loading" ? "Starting checkout…" : "Checkout with card"}
+              </button>
+              {checkout.message ? (
+                <p className="shop-checkout-error" role="alert">
+                  {checkout.message}
+                </p>
+              ) : null}
+              <a className="shop-drawer-manual" href={manualOrderMailto(items, subtotalCents)}>
+                Local pickup or delivery? Message us to arrange →
+              </a>
+              <p className="shop-drawer-note">
+                {SHIP_WINDOW_NOTE} {FRESHNESS_NOTE}
+              </p>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ShopPage() {
+  useScrollTopOnRoute();
+  const { items, itemCount, subtotalCents, add, setQuantity, clear } = useCart();
+  const [cartOpen, setCartOpen] = useState(false);
+  const [justAdded, setJustAdded] = useState(null);
+  const [checkout, setCheckout] = useState({ status: "idle", message: "" });
+  const [orderStatus, setOrderStatus] = useState(null);
+  const addedTimer = useRef(null);
+
+  // Stripe sends the customer back to /shop?order=… — show the outcome once,
+  // then strip the query so a refresh or a shared link doesn't replay it.
+  useEffect(() => {
+    const order = new URLSearchParams(window.location.search).get("order");
+    if (order !== "success" && order !== "canceled") return;
+    if (order === "success") clear();
+    setOrderStatus(order);
+    window.history.replaceState(null, "", window.location.pathname);
+  }, [clear]);
+
+  useEffect(() => () => clearTimeout(addedTimer.current), []);
+
+  const handleAdd = useCallback(
+    (id) => {
+      add(id);
+      setJustAdded(id);
+      clearTimeout(addedTimer.current);
+      addedTimer.current = setTimeout(() => setJustAdded(null), 1600);
+    },
+    [add],
+  );
+
+  const closeCart = useCallback(() => setCartOpen(false), []);
+
+  const handleCheckout = useCallback(async () => {
+    setCheckout({ status: "loading", message: "" });
+    try {
+      window.location.href = await requestCheckoutUrl(items);
+    } catch (error) {
+      setCheckout({
+        status: "error",
+        message:
+          error.code === "not_configured"
+            ? "Card checkout is still being set up. Use the message-us link below — it comes pre-filled with your order and we'll confirm your total by hand."
+            : error.message,
+      });
+    }
+  }, [items]);
+
+  const visiblePolicies = SHOP_POLICIES.filter((policy) => policy.body);
+
+  const productGroups = [
+    {
+      id: "cookie-packs",
+      label: "Sourdough Cookie Packs",
+      title: "Cookies, boxed by the pack.",
+      note: DAMAGE_NOTE,
+      products: COOKIE_PACKS,
+      className: "section border-y-2 border-tomato/25 bg-cream",
+    },
+    {
+      id: "dough-kits",
+      label: "Dry Dough Kits",
+      title: "Our dough, your oven.",
+      note: "Every kit ships with dough balls and stretch-and-bake instructions.",
+      products: DOUGH_KITS,
+      className: "section bg-blush border-b-2 border-tomato/25",
+    },
+  ];
+
+  return (
+    <div className="standalone-page">
+      <section className="events-hero">
+        <div className="absolute inset-0 grain opacity-60" />
+        <div className="events-hero-inner">
+          <div className="events-hero-copy">
+            <SectionLabel>Order Online</SectionLabel>
+            <h1 className="section-title section-title--small">Sourdough cookies and dough kits, shipped from Austin.</h1>
+            <p className="copy mt-6">
+              The same 72-hour sourdough and small-batch baking we bring to events, boxed up for your kitchen. Check out with a card and we'll ship it — or arrange local pickup and delivery with us directly.
+            </p>
+            <div className="event-links">
+              <a href="#cookie-packs">Shop Cookie Packs →</a>
+              <a href="#dough-kits">Shop Dough Kits →</a>
+            </div>
+          </div>
+          <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-frame photo-contain contained-image-zoom events-hero-photo">
+            <div className="ph-media">
+              <img
+                src={chocolateChipCupClose}
+                alt="Disco Dough chocolate chip sourdough cookie with sea salt in a kraft cup"
+                loading="eager"
+                decoding="async"
+              />
+            </div>
+          </figure>
+        </div>
+      </section>
+
+      <TextMarquee phrases={shopMarqueePhrases} durationSec={46} rounded />
+
+      <section className="section">
+        {orderStatus === "success" ? (
+          <div className="shop-banner shop-banner--success" role="status">
+            <strong>Order placed — thank you.</strong>
+            <span>A confirmation is on its way to your email. {SHIP_WINDOW_NOTE}</span>
+          </div>
+        ) : null}
+        {orderStatus === "canceled" ? (
+          <div className="shop-banner" role="status">
+            <strong>Checkout canceled.</strong>
+            <span>Your cart is still here whenever you're ready.</span>
+          </div>
+        ) : null}
+
+        <div className="shop-notes">
+          <p className="shop-note">
+            <Star />
+            {SHIP_WINDOW_NOTE}
+          </p>
+          <p className="shop-note">
+            <Star />
+            {FRESHNESS_NOTE}
+          </p>
+          <p className="shop-note">
+            <Star />
+            {PRICING_NOTE}
+          </p>
+        </div>
+      </section>
+
+      {productGroups.map((group) => (
+        <section key={group.id} id={group.id} className={group.className}>
+          <SectionLabel>{group.label}</SectionLabel>
+          <h2 className="section-title section-title--small">{group.title}</h2>
+          <p className="shop-group-note">{group.note}</p>
+          <div className="shop-grid">
+            {group.products.map((product) => (
+              <ShopProductCard
+                key={product.id}
+                product={product}
+                bestValue={bestValueIds.has(product.id)}
+                justAdded={justAdded === product.id}
+                onAdd={handleAdd}
+              />
+            ))}
+          </div>
+          <p className="shop-group-footnote">
+            {ALLERGEN_POINTER} <a href={EMAIL}>{EMAIL_ADDRESS}</a>
+          </p>
+        </section>
+      ))}
+
+      <section className="section">
+        <div className="text-center">
+          <SectionLabel>How to order</SectionLabel>
+          <h2 className="section-title section-title--small mx-auto">Two ways to pay.</h2>
+        </div>
+        <div className="shop-pay-grid">
+          <div className="interactive-lift interactive-box-zoom unified-premium-glow shop-pay-card shop-pay-card--primary">
+            <div className="occasion-card__rule" aria-hidden="true">
+              <Star />
+              <span />
+            </div>
+            <p className="shop-pay-tag">Ships nationwide</p>
+            <h3>Pay by card</h3>
+            <p>
+              Add what you want to the cart and check out securely with Stripe. You'll enter your shipping address, see shipping added to your total before you pay, and get an order confirmation by email.
+            </p>
+            <button type="button" className="shop-pay-cta" onClick={() => setCartOpen(true)}>
+              {itemCount ? `Review cart (${itemCount})` : "Start an order"}
+            </button>
+          </div>
+
+          <div className="interactive-lift interactive-box-zoom unified-premium-glow shop-pay-card">
+            <div className="occasion-card__rule" aria-hidden="true">
+              <Star />
+              <span />
+            </div>
+            <p className="shop-pay-tag">Local pickup or delivery</p>
+            <h3>Zelle or Venmo</h3>
+            <p>
+              Message us to arrange. Zelle and Venmo are for local pickup and delivery only — we confirm your total by hand, so they sit outside the automated shipping checkout.
+            </p>
+            {ZELLE_HANDLE || VENMO_HANDLE ? (
+              <dl className="shop-handles">
+                {ZELLE_HANDLE ? (
+                  <>
+                    <dt>Zelle</dt>
+                    <dd>{ZELLE_HANDLE}</dd>
+                  </>
+                ) : null}
+                {VENMO_HANDLE ? (
+                  <>
+                    <dt>Venmo</dt>
+                    <dd>{VENMO_HANDLE}</dd>
+                  </>
+                ) : null}
+              </dl>
+            ) : null}
+            <a className="shop-pay-cta shop-pay-cta--outline" href={manualOrderMailto(items, subtotalCents)}>
+              Message us to arrange →
+            </a>
+            <a className="section-more-link" href={INSTAGRAM} target="_blank" rel="noreferrer">
+              Or DM @discodoughpizzaco →
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {visiblePolicies.length ? (
+        <section className="section border-t-2 border-tomato/25">
+          <div className="text-center">
+            <SectionLabel>Good to know</SectionLabel>
+            <h2 className="section-title section-title--small mx-auto">Before you order.</h2>
+          </div>
+          <div className="occasion-grid">
+            {visiblePolicies.map((policy) => (
+              <div
+                key={policy.title}
+                className="interactive-lift interactive-box-zoom unified-premium-glow occasion-card"
+              >
+                <div className="occasion-card__rule" aria-hidden="true">
+                  <Star />
+                  <span />
+                </div>
+                <h3>{policy.title}</h3>
+                <p>{policy.body}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      <p className="sr-only" role="status">
+        {itemCount === 1 ? "1 item in your cart" : `${itemCount} items in your cart`}
+      </p>
+
+      <button
+        type="button"
+        className="shop-cart-button"
+        onClick={() => setCartOpen(true)}
+        aria-label={`Open cart, ${itemCount === 1 ? "1 item" : `${itemCount} items`}`}
+      >
+        <span aria-hidden="true">✦</span>
+        Cart
+        <span className="shop-cart-count" aria-hidden="true">
+          {itemCount}
+        </span>
+      </button>
+
+      {cartOpen ? (
+        <CartDrawer
+          items={items}
+          subtotalCents={subtotalCents}
+          checkout={checkout}
+          onClose={closeCart}
+          onSetQuantity={setQuantity}
+          onCheckout={handleCheckout}
+        />
+      ) : null}
     </div>
   );
 }
