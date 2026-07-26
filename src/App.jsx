@@ -296,7 +296,13 @@ const SHOP_ALLERGENS = {
 };
 
 const SHIP_WINDOW_NOTE = "Orders ship Monday–Thursday to avoid weekend transit.";
-const FRESHNESS_NOTE = "Best enjoyed within 7 days of delivery.";
+// Storage advice is per product line, not site-wide. Cookies are perishable;
+// the dry kits are shelf-stable, so one blanket "eat within 7 days" would be
+// wrong for half the catalog.
+const COOKIE_FRESHNESS_NOTE = "Best enjoyed within 7 days of delivery.";
+const KIT_STORAGE_NOTE = "Shelf-stable — no refrigeration needed. Store in a cool, dry place.";
+const COMBINED_STORAGE_NOTE =
+  "Cookies are best within 7 days of delivery. Dough kits are shelf-stable — store them in a cool, dry place.";
 const DAMAGE_NOTE = "Arrived damaged? Message us and we'll make it right.";
 const PRICING_NOTE = "Prices are before shipping. Shipping is added at checkout and shown before you pay.";
 const ALLERGEN_POINTER = "Questions about ingredients or allergens? Email us before you order.";
@@ -1829,7 +1835,9 @@ function CartDrawer({ items, subtotalCents, checkout, onClose, onSetQuantity, on
                 Local pickup or delivery? Message us to arrange →
               </a>
               <p className="shop-drawer-note">
-                {SHIP_WINDOW_NOTE} {FRESHNESS_NOTE}
+                {SHIP_WINDOW_NOTE}
+                {items.some((item) => item.category === "cookies") ? ` ${COOKIE_FRESHNESS_NOTE}` : ""}
+                {items.some((item) => item.category === "dough-kits") ? ` ${KIT_STORAGE_NOTE}` : ""}
               </p>
             </div>
           </>
@@ -1894,15 +1902,15 @@ function ShopPage() {
       id: "cookie-packs",
       label: "Sourdough Cookie Packs",
       title: "Cookies, boxed by the pack.",
-      note: DAMAGE_NOTE,
+      note: `${COOKIE_FRESHNESS_NOTE} ${DAMAGE_NOTE}`,
       products: COOKIE_PACKS,
       className: "section border-y-2 border-tomato/25 bg-cream",
     },
     {
       id: "dough-kits",
       label: "Dry Dough Kits",
-      title: "Our dough, your oven.",
-      note: "Every kit ships with dough balls and stretch-and-bake instructions.",
+      title: "Our flour blend, your oven.",
+      note: `A pre-measured dry blend and instructions — you bring the water and the time. ${KIT_STORAGE_NOTE}`,
       products: DOUGH_KITS,
       className: "section bg-blush border-b-2 border-tomato/25",
     },
@@ -1917,7 +1925,7 @@ function ShopPage() {
             <SectionLabel>Order Online</SectionLabel>
             <h1 className="section-title section-title--small">Sourdough cookies and dough kits, shipped from Austin.</h1>
             <p className="copy mt-6">
-              The same 72-hour sourdough and small-batch baking we bring to events, boxed up for your kitchen. Check out with a card and we'll ship it — or arrange local pickup and delivery with us directly.
+              Small-batch cookies baked in our Austin kitchen, plus dry dough kits so you can bake at home. Check out with a card and we'll ship it — or arrange local pickup and delivery with us directly.
             </p>
             <div className="event-links">
               <a href="#cookie-packs">Shop Cookie Packs →</a>
@@ -1960,7 +1968,7 @@ function ShopPage() {
           </p>
           <p className="shop-note">
             <Star />
-            {FRESHNESS_NOTE}
+            {COMBINED_STORAGE_NOTE}
           </p>
           <p className="shop-note">
             <Star />

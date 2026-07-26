@@ -55,48 +55,108 @@ pressure.
 - `[CARRIER]` and `[TRANSIT]` — fill in after you've priced a few real boxes.
 - `[AREA]` — the code currently restricts checkout to **US addresses only**.
   If you want Texas-only or a shorter radius to start, say so and I'll narrow
-  it. Shipping perishables cross-country in July is a different problem than
-  shipping them to Dallas.
+  it. Shipping cookies cross-country in July is a different problem than
+  shipping them to Dallas; the dry kits travel fine anywhere.
 
 **Why it matters:** the two shipping lines you gave me are already on the page.
 This section is the fuller version for people who want detail before ordering.
+
+### Packed weights (Branden, 26 Jul — estimates)
+
+Cookies are ~90 g each, shipped in a cardboard box with no cooling material.
+
+| SKU | Cookies | Packed weight |
+|---|---|---|
+| 4-pack | ~360 g | ~1 lb |
+| 6-pack | ~540 g | ~1.5 lb |
+| 12-pack | ~1,080 g | ~2.75–3 lb |
+| Kit, 5 ball | — | pending |
+| Kit, 10 ball | — | pending |
+| Kit, 20 ball | — | pending |
+
+Box dimensions pending — Branden is sourcing the actual boxes. Kits will be
+heavier than the cookies (it's flour) and are likely the larger shipping cost
+of the two, so they probably want their own rate rather than sharing one with
+cookies.
+
+**Suggested rate structure**, once dimensions land — three flat rates in the
+Stripe dashboard, not live carrier rates:
+
+1. Cookies only — priced off the 12-pack, so the light packs subsidise nothing
+2. Kits only — priced off the 20-ball kit
+3. Mixed order — cookies + kits
+
+Round each one up. Under-charging shipping is the most common way a small food
+business quietly loses money on every order.
 
 ---
 
 ## 3. Ingredients & allergens
 
-This is the one I can't draft for you at all — it depends on your recipes and
-your kitchen. What I've done instead is pre-fill what your menu already implies,
-so you're confirming rather than starting blank. **Check every line.**
+This is the one I can't draft for you — it depends on your recipes and your
+kitchen. Below is a checklist, not a claim. **Nothing here goes on the site
+until Branden signs off line by line.**
 
 The nine allergens US labelling treats as major: **milk, eggs, fish,
 shellfish, tree nuts, peanuts, wheat, soybeans, sesame.**
 
-### Cookie packs — likely allergens to confirm
+### First: which flavours actually ship?
 
-| Allergen | Likely present because | Confirm |
+Branden flagged that the shipped cookie is chocolate chip, and he's right to —
+the pistachio and coconut in my earlier draft came from the **events menu** in
+`src/App.jsx`, not from anything about the shop:
+
+- "Dubai Chocolate Chip Mini Cookie Pie" — pistachio
+- "German Chocolate Mini Cookie Pie" — coconut, which the FDA classes as a tree nut
+- "Classic Chocolate Chip Cookie Pie"
+
+I carried those across to the shop packs. That was an assumption, and if the
+packs are chocolate chip only, it's the wrong one — listing a tree nut that
+isn't in the product is its own kind of inaccurate.
+
+**This needs resolving either way, because the product photos have the same
+problem.** The 4-pack and 6-pack cards currently use `cookie5.jpg` and
+`cookie3.jpg`, and both visibly show pistachio-topped and chocolate-slab
+cookies. So one of two things is true:
+
+- **Packs are chocolate chip only** → the photos are wrong and need swapping,
+  and the allergen list drops tree nuts
+- **Packs are an assortment** → the photos are right, and tree nuts belong on
+  the list after all
+
+Answering that question fixes the copy and the photography together.
+
+### Cookie packs — to confirm
+
+| Allergen | Present? | Why it's on the list |
 |---|---|---|
-| Wheat | flour | ☐ |
-| Milk | butter, milk chocolate | ☐ |
-| Eggs | standard cookie dough | ☐ |
-| Soy | soy lecithin in most chocolate | ☐ |
-| Tree nuts | pistachio in the Dubai cookie; coconut in the German chocolate (the FDA classes coconut as a tree nut) | ☐ |
-| Peanuts | only if you use them or share equipment | ☐ |
-| Sesame | only if you use it | ☐ |
+| Wheat | ☐ | flour |
+| Milk | ☐ | butter, milk chocolate |
+| Eggs | ☐ | standard cookie dough |
+| Soy | ☐ | soy lecithin is in most chocolate — worth checking the bag |
+| Tree nuts | ☐ | **only if** the packs include Dubai or German chocolate |
+| Peanuts | ☐ | only if used, or shared equipment |
+| Sesame | ☐ | only if used |
 
 > **Draft statement, once confirmed:** Contains `[LIST]`. Baked in a kitchen
 > that also handles `[SHARED]`.
 
-### Dough kits — likely allergens to confirm
+### Dry dough kits — to confirm
 
-| Allergen | Likely present because | Confirm |
+| Allergen | Present? | Why it's on the list |
 |---|---|---|
-| Wheat | 00 flour, bolted flour, whole wheat | ☐ |
-| Milk | only if anything dairy is in the kit | ☐ |
-| Soy | only if oil or additions include it | ☐ |
+| Wheat | ☐ | flour blend |
+| Milk | ☐ | only if anything dairy is in the blend |
+| Soy | ☐ | only if the blend includes it |
 
-> **Draft statement, once confirmed:** Contains `[LIST]`. Made in a kitchen
+> **Draft statement, once confirmed:** Contains `[LIST]`. Packed in a kitchen
 > that also handles `[SHARED]`.
+
+**Open question on the kits:** does the kit include a starter, or does the
+customer need their own? The page currently says "pre-measured dry flour blend
+and instructions" and stops there, which is safe either way — but it changes
+whether we can call the kits sourdough, and it's the first thing a customer
+will ask.
 
 **Decisions needed:**
 

@@ -47,36 +47,39 @@ export const COOKIE_PACKS = [
   },
 ];
 
+// Shelf-stable dry kits — a pre-measured flour blend plus instructions, not
+// fermented dough. Ball counts are what a kit *makes*, which is also how it's
+// priced. Nothing here is perishable, so it ships ground with no cold chain.
 export const DOUGH_KITS = [
   {
     id: "dough-kit-5",
     category: "dough-kits",
-    name: "Dry Dough Kit — 5 Balls",
+    name: "Dry Dough Kit — makes 5 dough balls",
     shortName: "5 Balls",
     unitCount: 5,
     unitNoun: "ball",
     priceCents: 2200,
-    description: "Five of our 72-hour sourdough dough balls, with stretch-and-bake instructions.",
+    description: "Pre-measured dry flour blend and instructions — enough for five dough balls.",
   },
   {
     id: "dough-kit-10",
     category: "dough-kits",
-    name: "Dry Dough Kit — 10 Balls",
+    name: "Dry Dough Kit — makes 10 dough balls",
     shortName: "10 Balls",
     unitCount: 10,
     unitNoun: "ball",
     priceCents: 3800,
-    description: "Ten of our 72-hour sourdough dough balls, with stretch-and-bake instructions.",
+    description: "Pre-measured dry flour blend and instructions — enough for ten dough balls.",
   },
   {
     id: "dough-kit-20",
     category: "dough-kits",
-    name: "Dry Dough Kit — 20 Balls",
+    name: "Dry Dough Kit — makes 20 dough balls",
     shortName: "20 Balls",
     unitCount: 20,
     unitNoun: "ball",
     priceCents: 6500,
-    description: "Twenty of our 72-hour sourdough dough balls, with stretch-and-bake instructions.",
+    description: "Pre-measured dry flour blend and instructions — enough for twenty dough balls.",
   },
 ];
 
