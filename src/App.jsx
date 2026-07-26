@@ -1498,9 +1498,9 @@ const doughPhrases = [
 
 // NY-style dough ball weights by finished pie size
 const sizePresets = [
+  { label: '12″', sub: "Personal", weight: 265 },
   { label: '14″', sub: "Bar pie", weight: 360 },
   { label: '16″', sub: "House NY", weight: 470 },
-  { label: '17″', sub: "Full stretch", weight: 530 },
 ];
 
 // Suggested three-flour blend split (share of the added flour)
