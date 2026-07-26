@@ -69,6 +69,7 @@ const MENU_ROUTE = "/menu";
 const OUR_PIES_ROUTE = "/our-pies";
 const GALLERY_ROUTE = "/gallery";
 const CONTACT_ROUTE = "/contact";
+const DOUGH_CALC_ROUTE = "/dough-calculator";
 
 // Real path + a plain URL fragment, e.g. "/events#book" — not a nested route.
 const eventSectionHref = (section) => `${EVENTS_ROUTE}#${section}`;
@@ -81,6 +82,7 @@ const navItems = [
   { label: "About", href: ABOUT_ROUTE },
   { label: "Menu", href: MENU_ROUTE },
   { label: "Our Pies", href: OUR_PIES_ROUTE },
+  { label: "Dough Calc", href: DOUGH_CALC_ROUTE },
   { label: "Events", href: EVENTS_ROUTE },
   { label: "Gallery", href: GALLERY_ROUTE },
   { label: "Contact", href: CONTACT_ROUTE },
@@ -517,6 +519,7 @@ const ROUTE_TABLE = [
   ["about", ABOUT_ROUTE],
   ["menu", MENU_ROUTE],
   ["our-pies", OUR_PIES_ROUTE],
+  ["dough-calculator", DOUGH_CALC_ROUTE],
   ["gallery", GALLERY_ROUTE],
   ["contact", CONTACT_ROUTE],
 ];
@@ -606,6 +609,10 @@ const ROUTE_META = {
   "our-pies": {
     title: `Our Pies | ${SITE_TITLE}`,
     description: "Naturally leavened 72-hour sourdough, hand-stretched into a deep golden, foldable New York pie — premium ingredients, made to order.",
+  },
+  "dough-calculator": {
+    title: `Dough Calculator | ${SITE_TITLE}`,
+    description: "Mix Disco Dough-style sourdough NY pizza at home — baker's percentages, a three-flour blend, and a full 72-hour cold ferment schedule, computed for your batch.",
   },
   gallery: {
     title: `Gallery | ${SITE_TITLE}`,
@@ -732,6 +739,12 @@ function App() {
       <>
         <Header />
         <OurPiesPage />
+      </>
+    ),
+    "dough-calculator": (
+      <>
+        <Header />
+        <DoughCalculatorPage />
       </>
     ),
     gallery: (
@@ -1420,7 +1433,7 @@ function OurPiesPage() {
             </p>
             <div className="event-links">
               <a href={MENU_ROUTE}>See the Menu →</a>
-              <a href={CALENDLY} target="_blank" rel="noreferrer">Schedule a Consultation</a>
+              <a href={DOUGH_CALC_ROUTE}>Try the Dough Calculator</a>
             </div>
           </div>
           <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-frame photo-contain contained-image-zoom events-hero-photo">
@@ -1465,6 +1478,420 @@ function OurPiesPage() {
             <p>
               Hand-stretched to 14–17", thin and foldable, fired to a deep golden crackle. San Marzano tomatoes, mozzarella, Pecorino Romano, Parmesan, and Sicilian extra virgin olive oil — every single time.
             </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ---------- Dough Calculator page ----------
+
+const doughPhrases = [
+  "Baker's Percentages",
+  "72-Hour Cold Ferment",
+  "Naturally Leavened",
+  "Three-Flour Blend",
+  "No Commercial Yeast",
+  "Folds Clean — No Flop",
+];
+
+// NY-style dough ball weights by finished pie size
+const sizePresets = [
+  { label: '14″', sub: "Bar pie", weight: 360 },
+  { label: '16″', sub: "House NY", weight: 470 },
+  { label: '17″', sub: "Full stretch", weight: 530 },
+];
+
+// Suggested three-flour blend split (share of the added flour)
+const FLOUR_BLEND = [
+  { name: "00 Flour", share: 0.6, note: "Finely milled — chew and structure" },
+  { name: "Bolted Flour", share: 0.25, note: "Sifted stone-ground — flavor and browning" },
+  { name: "Whole Wheat Flour", share: 0.15, note: "Depth, aroma, and a little rustic color" },
+];
+
+function hydrationFeel(h) {
+  if (h < 62) return "Tight & sturdy — the easiest dough to handle.";
+  if (h < 65) return "Classic NY — a firm fold and a crisp base.";
+  if (h < 70) return "Our house zone — supple, blistered, open crumb.";
+  return "Slack & airy — for confident hands and wet benches.";
+}
+
+function formatGrams(n) {
+  return `${Math.round(n).toLocaleString()} g`;
+}
+
+function toLocalInputValue(date) {
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+// Default bake time: next Saturday at 6pm (never "today")
+function defaultBakeAt() {
+  const d = new Date();
+  d.setDate(d.getDate() + (((6 - d.getDay() + 7) % 7) || 7));
+  d.setHours(18, 0, 0, 0);
+  return toLocalInputValue(d);
+}
+
+function formatWhen(date) {
+  return date.toLocaleString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+function CalcSlider({ id, label, value, min, max, step = 1, onChange, display, caption }) {
+  const fill = ((value - min) / (max - min)) * 100;
+  return (
+    <div className="calc-slider-row">
+      <div className="calc-slider-head">
+        <label htmlFor={id}>{label}</label>
+        <strong>{display}</strong>
+      </div>
+      <input
+        id={id}
+        className="calc-slider"
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        style={{ "--fill": `${fill}%` }}
+        onChange={(e) => onChange(Number(e.target.value))}
+      />
+      {caption ? <p className="calc-feel">{caption}</p> : null}
+    </div>
+  );
+}
+
+function DoughCalculatorPage() {
+  useScrollTopOnRoute();
+  const [balls, setBalls] = useState(4);
+  const [ballWeight, setBallWeight] = useState(470);
+  const [hydration, setHydration] = useState(65);
+  const [levainPct, setLevainPct] = useState(20);
+  const [saltPct, setSaltPct] = useState(2.5);
+  const [oilPct, setOilPct] = useState(2);
+  const [bakeAt, setBakeAt] = useState(defaultBakeAt);
+  const [copied, setCopied] = useState(false);
+  const copyResetRef = useRef(null);
+
+  useEffect(() => () => clearTimeout(copyResetRef.current), []);
+
+  // Baker's math — percentages are of total flour, and the levain (kept at
+  // 100% hydration) contributes half flour, half water to those totals.
+  const totalDough = balls * ballWeight;
+  const h = hydration / 100;
+  const s = saltPct / 100;
+  const o = oilPct / 100;
+  const st = levainPct / 100;
+  const flourTotal = totalDough / (1 + h + s + o);
+  const levain = flourTotal * st;
+  const addedFlour = flourTotal - levain / 2;
+  const addedWater = flourTotal * h - levain / 2;
+  const salt = flourTotal * s;
+  const oil = flourTotal * o;
+
+  const flourRows = FLOUR_BLEND.map((f, i) => ({
+    ...f,
+    grams:
+      i === FLOUR_BLEND.length - 1
+        ? addedFlour - FLOUR_BLEND.slice(0, -1).reduce((sum, g) => sum + Math.round(addedFlour * g.share), 0)
+        : Math.round(addedFlour * f.share),
+  }));
+
+  const recipeRows = [
+    ...flourRows.map((f) => ({ name: f.name, detail: f.note, grams: f.grams })),
+    { name: "Water", detail: `${hydration}% hydration — cool, around 60°F`, grams: addedWater },
+    { name: "Sourdough Levain", detail: `${levainPct}% — ripe, 100% hydration`, grams: levain },
+    { name: "Fine Sea Salt", detail: `${saltPct}%`, grams: salt },
+    ...(oilPct > 0 ? [{ name: "Olive Oil", detail: `${oilPct}% — Sicilian EVOO if you have it`, grams: oil }] : []),
+  ];
+
+  const bakeDate = bakeAt ? new Date(bakeAt) : null;
+  const validBake = bakeDate && !Number.isNaN(bakeDate.getTime());
+  const stepTime = (hoursBefore) =>
+    validBake ? formatWhen(new Date(bakeDate.getTime() - hoursBefore * 3600 * 1000)) : "—";
+
+  const scheduleSteps = [
+    {
+      title: "Mix the dough",
+      time: stepTime(78),
+      copy: "Dissolve the levain into the water, add the flours, and rest 30 minutes. Work in the salt and oil, then mix until smooth and strong.",
+    },
+    {
+      title: "Bulk ferment",
+      time: `${stepTime(78)} → ${stepTime(74)}`,
+      copy: "Four hours at room temperature with a stretch-and-fold every hour, until the dough turns billowy and alive.",
+    },
+    {
+      title: "Ball it up",
+      time: stepTime(74),
+      copy: `Divide into ${ballWeight} g balls, shape them tight, and tuck each into a lightly oiled, covered container.`,
+    },
+    {
+      title: "Cold ferment — 72 hours",
+      time: `${stepTime(74)} → ${stepTime(2)}`,
+      copy: "Into the fridge. Three slow days are where the flavor, blister, and mature chew come from. Don't rush it.",
+    },
+    {
+      title: "Bench proof",
+      time: stepTime(2),
+      copy: "Pull the balls two hours before baking and leave them covered until relaxed and back to room temperature.",
+    },
+    {
+      title: "Bake",
+      time: stepTime(0),
+      copy: "Stretch thin, top it your way, and bake as hot as your oven goes — deep golden and well-done, so every slice folds clean. No flop.",
+    },
+  ];
+
+  const activePreset = sizePresets.find((p) => p.weight === ballWeight) ?? null;
+
+  const copyRecipe = async () => {
+    const lines = [
+      "DISCO DOUGH PIZZA CO. — HOME DOUGH",
+      `${balls} ball${balls === 1 ? "" : "s"} × ${ballWeight} g${activePreset ? ` (${activePreset.label} pies)` : ""} — ${formatGrams(totalDough)} total`,
+      "",
+      ...recipeRows.map((row) => `${row.name}: ${formatGrams(row.grams)}`),
+      "",
+      `Hydration ${hydration}% · Levain ${levainPct}% · Salt ${saltPct}%${oilPct > 0 ? ` · Oil ${oilPct}%` : ""}`,
+      "",
+      `Schedule${validBake ? ` (bake ${formatWhen(bakeDate)})` : ""}:`,
+      ...scheduleSteps.map((step) => `- ${step.title} — ${step.time}`),
+    ];
+    try {
+      await navigator.clipboard.writeText(lines.join("\n"));
+      setCopied(true);
+      clearTimeout(copyResetRef.current);
+      copyResetRef.current = setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard unavailable (e.g. insecure context) — button just stays put */
+    }
+  };
+
+  return (
+    <div className="standalone-page">
+      <section className="events-hero">
+        <div className="absolute inset-0 grain opacity-60" />
+        <div className="events-hero-inner">
+          <div className="events-hero-copy">
+            <SectionLabel>The Dough Calculator</SectionLabel>
+            <h1 className="section-title section-title--small">Our dough, your kitchen.</h1>
+            <p className="copy mt-6">
+              The same math we use before every event — baker's percentages, a three-flour blend, and a 72-hour cold sourdough ferment. Dial in your batch and we'll do the arithmetic.
+            </p>
+            <div className="event-links">
+              <a href="#calculator">Start Mixing ↓</a>
+              <a href={OUR_PIES_ROUTE}>More on Our Dough</a>
+            </div>
+          </div>
+          <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-frame photo-contain contained-image-zoom events-hero-photo">
+            <div className="ph-media"><img src={img6318} alt="Freshly baked Disco Dough pizza with crisp edges" loading="eager" decoding="async" /></div>
+          </figure>
+        </div>
+      </section>
+
+      <TextMarquee phrases={doughPhrases} durationSec={46} />
+
+      <section id="calculator" className="section">
+        <SectionLabel>Build your batch</SectionLabel>
+        <h2 className="section-title section-title--editorial">Six dials. One very good dough.</h2>
+        <div className="calc-layout">
+          <div className="calc-panel">
+            <div className="community-card__rule" aria-hidden="true"><Star /><span /><Star /></div>
+
+            <div className="calc-group">
+              <p className="calc-group-label">How many pies?</p>
+              <div className="calc-count-row">
+                <button
+                  type="button"
+                  className="calc-count-btn"
+                  onClick={() => setBalls((n) => Math.max(1, n - 1))}
+                  disabled={balls <= 1}
+                  aria-label="Fewer pies"
+                >
+                  −
+                </button>
+                <span className="calc-count-value" aria-live="polite">{balls}</span>
+                <button
+                  type="button"
+                  className="calc-count-btn"
+                  onClick={() => setBalls((n) => Math.min(24, n + 1))}
+                  disabled={balls >= 24}
+                  aria-label="More pies"
+                >
+                  +
+                </button>
+              </div>
+              <div className="calc-dough-dots" aria-hidden="true">
+                {Array.from({ length: balls }, (_, i) => (
+                  <span key={i} className="calc-dough-dot" />
+                ))}
+              </div>
+            </div>
+
+            <div className="calc-group">
+              <p className="calc-group-label">Pie size</p>
+              <div className="calc-presets" role="group" aria-label="Pie size presets">
+                {sizePresets.map((preset) => (
+                  <button
+                    key={preset.label}
+                    type="button"
+                    className={`calc-preset ${preset.weight === ballWeight ? "is-active" : ""}`}
+                    onClick={() => setBallWeight(preset.weight)}
+                    aria-pressed={preset.weight === ballWeight}
+                  >
+                    <strong>{preset.label}</strong>
+                    <span>{preset.sub}</span>
+                  </button>
+                ))}
+              </div>
+              <CalcSlider
+                id="calc-ball-weight"
+                label="Ball weight"
+                value={ballWeight}
+                min={240}
+                max={620}
+                step={5}
+                onChange={setBallWeight}
+                display={`${ballWeight} g`}
+              />
+            </div>
+
+            <div className="calc-group">
+              <p className="calc-group-label">The dough itself</p>
+              <CalcSlider
+                id="calc-hydration"
+                label="Hydration"
+                value={hydration}
+                min={58}
+                max={75}
+                onChange={setHydration}
+                display={`${hydration}%`}
+                caption={hydrationFeel(hydration)}
+              />
+              <CalcSlider
+                id="calc-levain"
+                label="Sourdough levain"
+                value={levainPct}
+                min={10}
+                max={30}
+                onChange={setLevainPct}
+                display={`${levainPct}%`}
+              />
+              <CalcSlider
+                id="calc-salt"
+                label="Salt"
+                value={saltPct}
+                min={1.5}
+                max={3.5}
+                step={0.1}
+                onChange={setSaltPct}
+                display={`${saltPct.toFixed(1)}%`}
+              />
+              <CalcSlider
+                id="calc-oil"
+                label="Olive oil"
+                value={oilPct}
+                min={0}
+                max={4}
+                step={0.5}
+                onChange={setOilPct}
+                display={oilPct === 0 ? "None" : `${oilPct % 1 === 0 ? oilPct : oilPct.toFixed(1)}%`}
+              />
+              <p className="calc-note">
+                Percentages are baker's percentages — measured against total flour, with the levain's own flour and water already accounted for.
+              </p>
+            </div>
+          </div>
+
+          <div className="calc-recipe-wrap">
+            <div className="menu-card calc-recipe">
+              <div className="menu-header">
+                <p><span className="menu-kicker-star" aria-hidden="true">✦</span> Disco Dough Pizza Co. <span className="menu-kicker-star" aria-hidden="true">✦</span></p>
+                <h2>The Recipe</h2>
+                <span>
+                  {balls} ball{balls === 1 ? "" : "s"} · {ballWeight} g each{activePreset ? ` · ${activePreset.label} pies` : ""}
+                </span>
+              </div>
+              <div className="menu-sections">
+                <div className="menu-section">
+                  <h3>
+                    <img src={mirrorBall} alt="" aria-hidden="true" loading="lazy" decoding="async" className="menu-section-icon" />
+                    Ingredients
+                  </h3>
+                  <div className="menu-list">
+                    {recipeRows.map((row) => (
+                      <div className="menu-item" key={row.name}>
+                        <div className="menu-row calc-recipe-row">
+                          <span>{row.name}</span>
+                          <i aria-hidden="true" />
+                          <strong><span>{formatGrams(row.grams)}</span></strong>
+                        </div>
+                        <p className="menu-item-description">{row.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="menu-footer">
+                <p>{formatGrams(totalDough)} of dough</p>
+                <span>
+                  Assumes a ripe sourdough starter kept at 100% hydration. Weigh everything — cups lie, grams don't.
+                </span>
+              </div>
+              <div className="calc-copy-row">
+                <button type="button" className="calc-copy-btn" onClick={copyRecipe}>
+                  {copied ? "Copied ✦" : "Copy Recipe"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section border-t-2 border-tomato/25 bg-blush">
+        <div className="text-center">
+          <SectionLabel>The 72-hour schedule</SectionLabel>
+          <h2 className="section-title section-title--small mx-auto">Great dough takes three days.</h2>
+        </div>
+        <div className="calc-when">
+          <label htmlFor="calc-bake-at">When do you want to bake?</label>
+          <input
+            id="calc-bake-at"
+            type="datetime-local"
+            value={bakeAt}
+            onChange={(e) => setBakeAt(e.target.value)}
+          />
+        </div>
+        <ol className="calc-timeline">
+          {scheduleSteps.map((step) => (
+            <li className="calc-step" key={step.title}>
+              <span className="calc-step-node" aria-hidden="true">✦</span>
+              <div className="calc-step-body">
+                <p className="calc-step-time">{step.time}</p>
+                <h3>{step.title}</h3>
+                <p className="calc-step-copy">{step.copy}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <div className="calc-cta">
+          <p className="copy mx-auto text-center">
+            Rather have us do all of this for you, oven-side at your next gathering?
+          </p>
+          <div className="book-cta-actions">
+            <a href={CALENDLY} target="_blank" rel="noreferrer" className="rounded-full bg-tomato px-7 py-4 font-serif text-lg font-semibold text-cream shadow-soft transition hover:bg-ink">
+              Book an Event
+            </a>
+            <a href={EVENTS_ROUTE} className="rounded-full border-2 border-tomato px-7 py-4 font-serif text-lg font-semibold text-tomato transition hover:bg-tomato hover:text-cream">
+              Explore Events
+            </a>
           </div>
         </div>
       </section>
