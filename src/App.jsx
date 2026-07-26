@@ -673,8 +673,37 @@ function useHomeAnchorScroll() {
   }, []);
 }
 
+// Scrolls to the current hash section on mount/popstate, or to the top when
+// there is none — for standalone pages with in-page anchor targets. Hash-only
+// navigation also fires popstate, so a plain scroll-to-top handler would
+// immediately undo the browser's own jump to the anchor.
+function useSectionScrollOnRoute() {
+  useEffect(() => {
+    const scrollFromRoute = () => {
+      const section = window.location.hash.slice(1);
+      if (!section) {
+        // "instant", not "auto" — the page sets `scroll-behavior: smooth`
+        // globally, so "auto" would animate this instead of jumping.
+        window.scrollTo({ top: 0, behavior: "instant" });
+        return;
+      }
+
+      window.requestAnimationFrame(() => {
+        document.getElementById(section)?.scrollIntoView({
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+          block: "start",
+        });
+      });
+    };
+
+    scrollFromRoute();
+    window.addEventListener("popstate", scrollFromRoute);
+    return () => window.removeEventListener("popstate", scrollFromRoute);
+  }, []);
+}
+
 // Scrolls a standalone page to its top on mount/popstate — mirrors the
-// section-aware version EventsPage uses, but these pages have no sub-sections.
+// section-aware version above, but these pages have no sub-sections.
 function useScrollTopOnRoute() {
   useEffect(() => {
     // "instant", not "auto" — the page sets `scroll-behavior: smooth`
@@ -1139,28 +1168,7 @@ function EventsHeader() {
 }
 
 function EventsPage() {
-  useEffect(() => {
-    const scrollFromRoute = () => {
-      const section = window.location.hash.slice(1);
-      if (!section) {
-        // "instant", not "auto" — the page sets `scroll-behavior: smooth`
-        // globally, so "auto" would animate this instead of jumping.
-        window.scrollTo({ top: 0, behavior: "instant" });
-        return;
-      }
-
-      window.requestAnimationFrame(() => {
-        document.getElementById(section)?.scrollIntoView({
-          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
-          block: "start",
-        });
-      });
-    };
-
-    scrollFromRoute();
-    window.addEventListener("popstate", scrollFromRoute);
-    return () => window.removeEventListener("popstate", scrollFromRoute);
-  }, []);
+  useSectionScrollOnRoute();
 
   return (
     <div className="events-page">
@@ -1569,7 +1577,7 @@ function CalcSlider({ id, label, value, min, max, step = 1, onChange, display, c
 }
 
 function DoughCalculatorPage() {
-  useScrollTopOnRoute();
+  useSectionScrollOnRoute();
   const [balls, setBalls] = useState(4);
   const [ballWeight, setBallWeight] = useState(470);
   const [hydration, setHydration] = useState(65);

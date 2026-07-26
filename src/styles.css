@@ -2497,7 +2497,8 @@ body.show-floating-cta .floating-cta:hover {
 
 #occasions,
 #event-gallery,
-#book {
+#book,
+#calculator {
   scroll-margin-top: 6.5rem;
 }
 
