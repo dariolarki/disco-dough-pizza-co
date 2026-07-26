@@ -47,9 +47,10 @@ export const COOKIE_PACKS = [
   },
 ];
 
-// Shelf-stable dry kits — a pre-measured flour blend plus instructions, not
-// fermented dough. Ball counts are what a kit *makes*, which is also how it's
-// priced. Nothing here is perishable, so it ships ground with no cold chain.
+// Shelf-stable dry kits — a pre-measured flour blend and instant dry yeast,
+// not fermented dough and not sourdough: there's no starter in the box. Ball
+// counts are what a kit *makes*, which is also how it's priced. Nothing here
+// is perishable, so it ships ground with no cold chain.
 export const DOUGH_KITS = [
   {
     id: "dough-kit-5",
@@ -59,7 +60,7 @@ export const DOUGH_KITS = [
     unitCount: 5,
     unitNoun: "ball",
     priceCents: 2200,
-    description: "Pre-measured dry flour blend and instructions — enough for five dough balls.",
+    description: "Pre-measured flour blend and instant dry yeast, with instructions — enough for five dough balls.",
   },
   {
     id: "dough-kit-10",
@@ -69,7 +70,7 @@ export const DOUGH_KITS = [
     unitCount: 10,
     unitNoun: "ball",
     priceCents: 3800,
-    description: "Pre-measured dry flour blend and instructions — enough for ten dough balls.",
+    description: "Pre-measured flour blend and instant dry yeast, with instructions — enough for ten dough balls.",
   },
   {
     id: "dough-kit-20",
@@ -79,7 +80,7 @@ export const DOUGH_KITS = [
     unitCount: 20,
     unitNoun: "ball",
     priceCents: 6500,
-    description: "Pre-measured dry flour blend and instructions — enough for twenty dough balls.",
+    description: "Pre-measured flour blend and instant dry yeast, with instructions — enough for twenty dough balls.",
   },
 ];
 

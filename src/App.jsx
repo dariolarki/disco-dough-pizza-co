@@ -1910,7 +1910,7 @@ function ShopPage() {
       id: "dough-kits",
       label: "Dry Dough Kits",
       title: "Our flour blend, your oven.",
-      note: `A pre-measured dry blend and instructions — you bring the water and the time. ${KIT_STORAGE_NOTE}`,
+      note: `Flour blend, instant dry yeast, and instructions in the box — you bring the water. ${KIT_STORAGE_NOTE}`,
       products: DOUGH_KITS,
       className: "section bg-blush border-b-2 border-tomato/25",
     },
@@ -1923,7 +1923,9 @@ function ShopPage() {
         <div className="events-hero-inner">
           <div className="events-hero-copy">
             <SectionLabel>Order Online</SectionLabel>
-            <h1 className="section-title section-title--small">Sourdough cookies and dough kits, shipped from Austin.</h1>
+            {/* "dry dough kits", not "dough kits" — otherwise "sourdough" reads
+                as modifying both nouns, and the kits are yeast-leavened. */}
+            <h1 className="section-title section-title--small">Sourdough cookies and dry dough kits, shipped from Austin.</h1>
             <p className="copy mt-6">
               Small-batch cookies baked in our Austin kitchen, plus dry dough kits so you can bake at home. Check out with a card and we'll ship it — or arrange local pickup and delivery with us directly.
             </p>

@@ -152,11 +152,31 @@ Answering that question fixes the copy and the photography together.
 > **Draft statement, once confirmed:** Contains `[LIST]`. Packed in a kitchen
 > that also handles `[SHARED]`.
 
-**Open question on the kits:** does the kit include a starter, or does the
-customer need their own? The page currently says "pre-measured dry flour blend
-and instructions" and stops there, which is safe either way — but it changes
-whether we can call the kits sourdough, and it's the first thing a customer
-will ask.
+**Answered (Branden, 26 Jul):** no starter — the kits ship with instant dry
+yeast. So the kits are **not sourdough**, and no copy anywhere should imply
+they are. The product descriptions now name the yeast outright.
+
+Yeast isn't a major allergen, so this doesn't change the table above.
+
+### ⚠️ Brand claim that now conflicts
+
+`src/App.jsx:1661`, on the Our Pies page, currently reads:
+
+> Naturally leavened, cold fermented for 72 hours — **no commercial yeast, ever.**
+
+That's an absolute, site-wide claim, and instant dry yeast is commercial yeast.
+A customer who reads that page and then buys a kit has been told two different
+things. Worth deciding deliberately rather than discovering later:
+
+1. **Scope the claim to the pies** — "no commercial yeast in our pies, ever."
+   One-word fix, keeps the story intact, and is still true.
+2. **Lean into the difference on the shop page** — the kit is a home-baker
+   product designed to work in a normal kitchen on a normal timeline. That's a
+   feature, not a compromise, and saying so plainly is better than hoping
+   nobody cross-references.
+
+I'd do both. This is a brand call, not a code one, so I haven't touched the
+Our Pies copy.
 
 **Decisions needed:**
 
