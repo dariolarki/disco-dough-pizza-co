@@ -2498,7 +2498,8 @@ body.show-floating-cta .floating-cta:hover {
 #occasions,
 #event-gallery,
 #book,
-#calculator {
+#calculator,
+#equipment {
   scroll-margin-top: 6.5rem;
 }
 
@@ -2995,6 +2996,15 @@ body.show-floating-cta .floating-cta:hover {
   line-height: 1.5;
 }
 
+/* Leavening caption when neither levain nor yeast is set */
+.calc-feel--warn {
+  display: inline-block;
+  border-radius: 0.6rem;
+  background: rgb(194 43 26 / 0.08);
+  padding: 0.3rem 0.7rem;
+  box-shadow: inset 0 0 0 1px rgb(194 43 26 / 0.2);
+}
+
 .calc-note {
   margin: 1.4rem 0 0;
   color: #4f2d1c;
@@ -3186,10 +3196,154 @@ body.show-floating-cta .floating-cta:hover {
   margin-top: 1.5rem;
 }
 
+/* ─── Getting Started at Home — equipment ──────────────────────────────────── */
+
+.equip-oven-card {
+  margin: clamp(2rem, 4vw, 3rem) auto 0;
+  max-width: 62rem;
+  border: 1px solid rgb(194 43 26 / 0.2);
+  border-radius: 2rem;
+  background: #fffaf0;
+  padding: clamp(1.5rem, 3.5vw, 2.5rem);
+  box-shadow: var(--premium-resting-glow);
+}
+
+.equip-oven-kicker {
+  margin: 1rem 0 0;
+  color: var(--brand-red);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.equip-oven-card h3 {
+  margin: 0.5rem 0 0;
+  color: var(--brand-red);
+  font-family: "Fraunces", Georgia, serif;
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 60, "WONK" 1;
+  font-size: clamp(2rem, 4.4vw, 3rem);
+  font-weight: 900;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.equip-oven-copy {
+  margin: 0.85rem 0 0;
+  max-width: 42rem;
+  color: #4f2d1c;
+  font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+  font-weight: 450;
+  line-height: 1.7;
+}
+
+.equip-oven-options {
+  margin-top: 1.6rem;
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .equip-oven-options {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Cream against the card's warm white, so the options read as their own tier */
+.equip-oven-options .equip-item {
+  background: var(--cream);
+  border-color: rgb(194 43 26 / 0.3);
+}
+
+.equip-rest-label {
+  margin: clamp(2.25rem, 4.5vw, 3rem) 0 1.15rem;
+  text-align: center;
+  color: var(--brand-red);
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.equip-grid {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: 1fr;
+  max-width: 62rem;
+  margin-inline: auto;
+}
+
+@media (min-width: 640px) {
+  .equip-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .equip-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.equip-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  min-width: 0;
+  border: 1px solid var(--hairline);
+  border-radius: 1.25rem;
+  background: #fffaf0;
+  padding: 1.05rem 1.15rem;
+  text-decoration: none;
+  box-shadow: var(--premium-resting-glow);
+}
+
+.equip-item-star {
+  flex: none;
+  color: var(--brand-red);
+  font-size: 0.7rem;
+  line-height: 1.6;
+}
+
+.equip-item-body {
+  min-width: 0;
+}
+
+.equip-item-body strong {
+  display: block;
+  color: var(--brand-red);
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.12rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.equip-item-body span {
+  display: block;
+  margin-top: 0.38rem;
+  color: #4f2d1c;
+  font-size: 0.9rem;
+  font-weight: 450;
+  line-height: 1.55;
+}
+
+.equip-item-arrow {
+  flex: none;
+  align-self: center;
+  margin-left: auto;
+  color: var(--brand-red);
+  font-size: 1rem;
+}
+
 @supports (animation-timeline: view()) {
   .calc-panel,
   .calc-recipe,
-  .calc-step {
+  .calc-step,
+  .equip-oven-card,
+  .equip-item {
     animation: image-reveal both ease-out;
     animation-timeline: view();
     animation-range: entry 0% entry 50%;
