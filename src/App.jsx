@@ -91,14 +91,16 @@ const navItems = [
 // Prices ordered most expensive → least within each section
 const pizzaMenu = {
   title: "Pies",
-  note: "Every pie is built on our 72-hour sourdough with San Marzano tomatoes, mozzarella, Pecorino Romano, Parmesan, and Sicilian extra virgin olive oil. Baked well-done for a sturdy crust that folds clean — no flop.",
+  note: "Every pie is built on our 72-hour sourdough, baked well-done for a sturdy crust that folds clean — no flop. Most pies feature San Marzano tomatoes, mozzarella, Pecorino Romano, Parmesan, and Sicilian extra virgin olive oil.",
   icon: pizzaAsset,
   items: [
-    { name: "Spicy Vodka Pie", prices: ["$28"], description: "Handmade vodka sauce, Calabrian chili, parsley-lemon-pistachio pesto." },
-    { name: "Soppressata Rosemary Pie", prices: ["$25"], description: "Soppressata, pepperoni, rosemary, fresh basil." },
-    { name: "Hot Honey Pepperoni", prices: ["$24"], description: "Pepperoni, ricotta dollops, hot honey." },
-    { name: "Classic Pepperoni", prices: ["$22"], description: "Pepperoni." },
-    { name: "Classic Cheese", prices: ["$20"], description: "The essentials, done right." },
+    { name: "Nduja Crème Fraîche", prices: ["$28"], description: "Spicy Calabrian nduja sausage, mozzarella, and the full house build, finished with a crème fraîche swirl. Rich, spicy, cooling all at once." },
+    { name: "Rosemary Soppressata", prices: ["$26"], description: "Soppressata, pepperoni, rosemary, fresh basil." },
+    { name: "Seasonal Vanilla Honey Peach Pie", prices: ["$25"], description: "A sweet pie — sweetened crème fraîche base, vanilla, seasonal peaches, finished with honey and toasted coconut on top. No mozzarella, parmesan, or pecorino." },
+    { name: "Garlic Confit White Pie", prices: ["$24"], description: "No red sauce here — garlic confit oil on the base and crust, ricotta and mozzarella, finished with fresh thyme and a garlic oil drizzle." },
+    { name: "Hot Honey Pepperoni Ricotta", prices: ["$24"], description: "Pepperoni, ricotta dollops, hot honey." },
+    { name: "Pepperoni", prices: ["$22"], description: "Pepperoni. Simple, done right." },
+    { name: "Plain", prices: ["$20"], description: "The essentials, done right." },
   ],
 };
 
