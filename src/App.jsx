@@ -21,6 +21,7 @@ import dubaiPistachioMarble from "../images/cookie4.jpg";
 import cookieFourMarble from "../images/cookie5.jpg";
 import hotHoneyPepFour from "../images/Hot Honey Pep 4.0.jpeg";
 import img6318 from "../images/IMG_6318.jpeg";
+import calcHero from "../images/dough-calculator-hero.jpeg";
 import grandmaCheesePie from "../images/Disco Dough Grandma Cheese Pie.jpeg";
 import brandAsset from "../images/disco-logo.png";
 import pizzaAsset from "../images/Disco Dough Pizza Asset.png";
@@ -1520,6 +1521,33 @@ const FLOUR_BLEND = [
   { name: "Whole Wheat Flour", share: 0.15, note: "Depth, aroma, and a little rustic color" },
 ];
 
+// Hero photo for this page — swap this one import to change the header image.
+const calcHeroPhoto = {
+  src: calcHero,
+  alt: "A Disco Dough cheese pie on an aluminum tray, one slice flipped up to show its spotted char undercarriage",
+};
+
+// Home-baking gear. `href` is null until product/affiliate URLs are chosen —
+// fill one in and that item renders as a link automatically (see EquipmentItem).
+const OVEN_OPTIONS = [
+  { name: "Electric pizza oven", note: "Indoor countertop, 750°F and up. The easiest path to a real bake.", href: null },
+  { name: "Pizza steel", note: "For the home oven you already own. Cheapest way to a crisp base.", href: null },
+  { name: "Ooni", note: "Outdoor, gas or wood. Fastest bakes and the most char.", href: null },
+];
+
+const EQUIPMENT = [
+  { name: "Temperature gun", note: "Infrared — read the stone or steel before every launch.", href: null },
+  { name: "Temperature probe", note: "For dough and water temps. Fermentation is temperature.", href: null },
+  { name: "Turning peel", note: "Ooni — spin the pie mid-bake so the char comes out even.", href: null },
+  { name: "Launching peel", note: "Ooni 12-inch perforated — the holes shed excess flour on the way in.", href: null },
+  { name: "Proofing dough box", note: "Ooni — stackable, and keeps the balls covered for three days.", href: null },
+  { name: "Dough scraper", note: "Divide the batch, then clean the bench with the same tool.", href: null },
+  { name: "Microplane grater", note: "Pecorino and Parm shredded fine enough to melt straight in.", href: null },
+  { name: "Pizza cutter", note: "Wheel or rocker — whichever you'll actually reach for.", href: null },
+  { name: "Wire cooling rack", note: "Rest the pie off the tray so the base never steams itself soft.", href: null },
+  { name: "Aluminum pizza tray", note: "Serve on it, the way a pie hits the table at a shop.", href: null },
+];
+
 function hydrationFeel(h) {
   if (h < 62) return "Tight & sturdy — the easiest dough to handle.";
   if (h < 65) return "Classic NY — a firm fold and a crisp base.";
@@ -1527,8 +1555,23 @@ function hydrationFeel(h) {
   return "Slack & airy — for confident hands and wet benches.";
 }
 
+// Reads the levain + yeast pair as one decision, since either can raise the dough
+function leaveningFeel(levain, idy) {
+  if (levain === 0 && idy === 0) return "Nothing to raise this dough yet — add levain, yeast, or both.";
+  if (levain > 0 && idy > 0) return "Hybrid rise — sourdough flavor with a yeast safety net.";
+  if (idy > 0) return "Straight yeast — faster, and more predictable.";
+  return "Naturally leavened — the way we do it.";
+}
+
+// Small quantities (yeast, especially) round to nothing useful as whole grams
 function formatGrams(n) {
-  return `${Math.round(n).toLocaleString()} g`;
+  const value = n < 10 ? Number(n.toFixed(1)) : Math.round(n);
+  return `${value.toLocaleString()} g`;
+}
+
+// Trims trailing zeros so 0.05 / 0.1 / 0.5 all read cleanly
+function formatPct(v) {
+  return String(Number(v.toFixed(2)));
 }
 
 function toLocalInputValue(date) {
@@ -1554,7 +1597,30 @@ function formatWhen(date) {
   });
 }
 
-function CalcSlider({ id, label, value, min, max, step = 1, onChange, display, caption }) {
+function EquipmentItem({ item }) {
+  const inner = (
+    <>
+      <span className="equip-item-star" aria-hidden="true">✦</span>
+      <span className="equip-item-body">
+        <strong>{item.name}</strong>
+        <span>{item.note}</span>
+      </span>
+      {item.href ? <span className="equip-item-arrow" aria-hidden="true">→</span> : null}
+    </>
+  );
+  const className = "interactive-lift interactive-box-zoom unified-premium-glow equip-item";
+
+  // Renders as a plain card until a URL exists, so the section works link-free
+  return item.href ? (
+    <a className={className} href={item.href} target="_blank" rel="noreferrer nofollow sponsored">
+      {inner}
+    </a>
+  ) : (
+    <div className={className}>{inner}</div>
+  );
+}
+
+function CalcSlider({ id, label, value, min, max, step = 1, onChange, display, caption, captionWarn = false }) {
   const fill = ((value - min) / (max - min)) * 100;
   return (
     <div className="calc-slider-row">
@@ -1573,7 +1639,7 @@ function CalcSlider({ id, label, value, min, max, step = 1, onChange, display, c
         style={{ "--fill": `${fill}%` }}
         onChange={(e) => onChange(Number(e.target.value))}
       />
-      {caption ? <p className="calc-feel">{caption}</p> : null}
+      {caption ? <p className={`calc-feel ${captionWarn ? "calc-feel--warn" : ""}`}>{caption}</p> : null}
     </div>
   );
 }
@@ -1584,6 +1650,7 @@ function DoughCalculatorPage() {
   const [ballWeight, setBallWeight] = useState(470);
   const [hydration, setHydration] = useState(65);
   const [levainPct, setLevainPct] = useState(20);
+  const [idyPct, setIdyPct] = useState(0);
   const [saltPct, setSaltPct] = useState(2.5);
   const [oilPct, setOilPct] = useState(2);
   const [bakeAt, setBakeAt] = useState(defaultBakeAt);
@@ -1599,12 +1666,14 @@ function DoughCalculatorPage() {
   const s = saltPct / 100;
   const o = oilPct / 100;
   const st = levainPct / 100;
-  const flourTotal = totalDough / (1 + h + s + o);
+  const y = idyPct / 100;
+  const flourTotal = totalDough / (1 + h + s + o + y);
   const levain = flourTotal * st;
   const addedFlour = flourTotal - levain / 2;
   const addedWater = flourTotal * h - levain / 2;
   const salt = flourTotal * s;
   const oil = flourTotal * o;
+  const idy = flourTotal * y;
 
   const flourRows = FLOUR_BLEND.map((f, i) => ({
     ...f,
@@ -1617,7 +1686,8 @@ function DoughCalculatorPage() {
   const recipeRows = [
     ...flourRows.map((f) => ({ name: f.name, detail: f.note, grams: f.grams })),
     { name: "Water", detail: `${hydration}% hydration — cool, around 60°F`, grams: addedWater },
-    { name: "Sourdough Levain", detail: `${levainPct}% — ripe, 100% hydration`, grams: levain },
+    ...(levainPct > 0 ? [{ name: "Sourdough Levain", detail: `${levainPct}% — ripe, 100% hydration`, grams: levain }] : []),
+    ...(idyPct > 0 ? [{ name: "Instant Dry Yeast", detail: `${formatPct(idyPct)}% — whisk it into the flour dry`, grams: idy }] : []),
     { name: "Fine Sea Salt", detail: `${saltPct}%`, grams: salt },
     ...(oilPct > 0 ? [{ name: "Olive Oil", detail: `${oilPct}% — Sicilian EVOO if you have it`, grams: oil }] : []),
   ];
@@ -1627,11 +1697,21 @@ function DoughCalculatorPage() {
   const stepTime = (hoursBefore) =>
     validBake ? formatWhen(new Date(bakeDate.getTime() - hoursBefore * 3600 * 1000)) : "—";
 
+  // The first move depends on what's raising the dough
+  const mixOpening =
+    levainPct > 0 && idyPct > 0
+      ? "Dissolve the levain into the water and whisk the yeast through the flours"
+      : idyPct > 0
+        ? "Whisk the yeast through the flours and add the water"
+        : levainPct > 0
+          ? "Dissolve the levain into the water, then add the flours"
+          : "Combine the water and flours";
+
   const scheduleSteps = [
     {
       title: "Mix the dough",
       time: stepTime(78),
-      copy: "Dissolve the levain into the water, add the flours, and rest 30 minutes. Work in the salt and oil, then mix until smooth and strong.",
+      copy: `${mixOpening}. Rest 30 minutes, then work in the salt and oil and mix until smooth and strong.`,
     },
     {
       title: "Bulk ferment",
@@ -1669,7 +1749,15 @@ function DoughCalculatorPage() {
       "",
       ...recipeRows.map((row) => `${row.name}: ${formatGrams(row.grams)}`),
       "",
-      `Hydration ${hydration}% · Levain ${levainPct}% · Salt ${saltPct}%${oilPct > 0 ? ` · Oil ${oilPct}%` : ""}`,
+      [
+        `Hydration ${hydration}%`,
+        levainPct > 0 ? `Levain ${levainPct}%` : null,
+        idyPct > 0 ? `IDY ${formatPct(idyPct)}%` : null,
+        `Salt ${saltPct}%`,
+        oilPct > 0 ? `Oil ${oilPct}%` : null,
+      ]
+        .filter(Boolean)
+        .join(" · "),
       "",
       `Schedule${validBake ? ` (bake ${formatWhen(bakeDate)})` : ""}:`,
       ...scheduleSteps.map((step) => `- ${step.title} — ${step.time}`),
@@ -1701,7 +1789,7 @@ function DoughCalculatorPage() {
             </div>
           </div>
           <figure className="interactive-lift interactive-box-zoom unified-premium-glow unified-photo-frame photo-frame photo-contain contained-image-zoom events-hero-photo">
-            <div className="ph-media"><img src={img6318} alt="Freshly baked Disco Dough pizza with crisp edges" loading="eager" decoding="async" /></div>
+            <div className="ph-media"><img src={calcHeroPhoto.src} alt={calcHeroPhoto.alt} loading="eager" decoding="async" /></div>
           </figure>
         </div>
       </section>
@@ -1710,7 +1798,7 @@ function DoughCalculatorPage() {
 
       <section id="calculator" className="section">
         <SectionLabel>Build your batch</SectionLabel>
-        <h2 className="section-title section-title--editorial">Six dials. One very good dough.</h2>
+        <h2 className="section-title section-title--editorial">Seven dials. One very good dough.</h2>
         <div className="calc-layout">
           <div className="calc-panel">
             <div className="community-card__rule" aria-hidden="true"><Star /><span /><Star /></div>
@@ -1789,10 +1877,22 @@ function DoughCalculatorPage() {
                 id="calc-levain"
                 label="Sourdough levain"
                 value={levainPct}
-                min={10}
+                min={0}
                 max={30}
                 onChange={setLevainPct}
-                display={`${levainPct}%`}
+                display={levainPct === 0 ? "None" : `${levainPct}%`}
+              />
+              <CalcSlider
+                id="calc-idy"
+                label="Instant dry yeast"
+                value={idyPct}
+                min={0}
+                max={1}
+                step={0.05}
+                onChange={setIdyPct}
+                display={idyPct === 0 ? "None" : `${formatPct(idyPct)}%`}
+                caption={leaveningFeel(levainPct, idyPct)}
+                captionWarn={levainPct === 0 && idyPct === 0}
               />
               <CalcSlider
                 id="calc-salt"
@@ -1852,7 +1952,8 @@ function DoughCalculatorPage() {
               <div className="menu-footer">
                 <p>{formatGrams(totalDough)} of dough</p>
                 <span>
-                  Assumes a ripe sourdough starter kept at 100% hydration. Weigh everything — cups lie, grams don't.
+                  {levainPct > 0 ? "Assumes a ripe sourdough starter kept at 100% hydration. " : ""}
+                  Weigh everything — cups lie, grams don't.
                 </span>
               </div>
               <div className="calc-copy-row">
@@ -1891,9 +1992,41 @@ function DoughCalculatorPage() {
             </li>
           ))}
         </ol>
+      </section>
+
+      <section id="equipment" className="section border-t-2 border-tomato/25">
+        <div className="text-center">
+          <SectionLabel>Getting Started at Home</SectionLabel>
+          <h2 className="section-title section-title--small mx-auto">Equipment recommendations.</h2>
+          <p className="copy mx-auto mt-6 text-center">
+            You've got the dough figured out. Here's the short list of gear we'd buy again — starting with the one choice that actually changes how your pizza comes out.
+          </p>
+        </div>
+
+        <div className="interactive-lift unified-premium-glow equip-oven-card">
+          <div className="community-card__rule" aria-hidden="true"><Star /><span /><Star /></div>
+          <p className="equip-oven-kicker">Start here — pick one</p>
+          <h3>Your oven</h3>
+          <p className="equip-oven-copy">
+            These three are alternatives, not a shopping list. Pick the one that fits your kitchen, your patio, and your budget — everything below is an accessory to it.
+          </p>
+          <div className="equip-oven-options">
+            {OVEN_OPTIONS.map((option) => (
+              <EquipmentItem key={option.name} item={option} />
+            ))}
+          </div>
+        </div>
+
+        <p className="equip-rest-label">Then the rest</p>
+        <div className="equip-grid">
+          {EQUIPMENT.map((item) => (
+            <EquipmentItem key={item.name} item={item} />
+          ))}
+        </div>
+
         <div className="calc-cta">
           <p className="copy mx-auto text-center">
-            Rather have us do all of this for you, oven-side at your next gathering?
+            Rather skip the gear entirely and have us do all of this for you, oven-side at your next gathering?
           </p>
           <div className="book-cta-actions">
             <a href={CALENDLY} target="_blank" rel="noreferrer" className="rounded-full bg-tomato px-7 py-4 font-serif text-lg font-semibold text-cream shadow-soft transition hover:bg-ink">
