@@ -21,6 +21,7 @@ import dubaiPistachioMarble from "../images/cookie4.jpg";
 import cookieFourMarble from "../images/cookie5.jpg";
 import hotHoneyPepFour from "../images/Hot Honey Pep 4.0.jpeg";
 import img6318 from "../images/IMG_6318.jpeg";
+import calcHero from "../images/dough-calculator-hero.jpeg";
 import grandmaCheesePie from "../images/Disco Dough Grandma Cheese Pie.jpeg";
 import brandAsset from "../images/disco-logo.png";
 import pizzaAsset from "../images/Disco Dough Pizza Asset.png";
@@ -1520,8 +1521,8 @@ const FLOUR_BLEND = [
 
 // Hero photo for this page — swap this one import to change the header image.
 const calcHeroPhoto = {
-  src: img6318,
-  alt: "Freshly baked Disco Dough pizza with crisp edges",
+  src: calcHero,
+  alt: "A Disco Dough cheese pie on an aluminum tray, one slice flipped up to show its spotted char undercarriage",
 };
 
 // Home-baking gear. `href` is null until product/affiliate URLs are chosen —
