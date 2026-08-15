@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import heroPizza from "../images/Capital skyline facing pizza shot  copy.JPG";
 import caylaPizza from "../images/Cayla Capital Solo Tomato Stracciatella Pie copy.JPG";
 import brandenPizza from "../images/Branden Captial Solo Hot Honey Pep.JPG";
@@ -744,6 +745,7 @@ function App() {
       <main className="min-h-screen overflow-hidden bg-cream text-ink">
         <CheckerBanner />
         <HomePage />
+        <Analytics />
       </main>
     );
   }
@@ -800,6 +802,7 @@ function App() {
       <LogoBanner />
       <Contact />
       <FloatingCTA />
+      <Analytics />
     </main>
   );
 }
