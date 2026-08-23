@@ -90,32 +90,28 @@ const navItems = [
   { label: "Contact", href: CONTACT_ROUTE },
 ];
 
+// Toggle off to hide the peach pie once peaches are out of season
+const PEACH_PIE_IN_SEASON = true;
+
 // Prices ordered most expensive → least within each section
 const pizzaMenu = {
   title: "Pies",
-  note: "Every pie is built on our 72-hour sourdough, baked well-done for a sturdy crust that folds clean — no flop. Most pies feature San Marzano tomatoes, mozzarella, Pecorino Romano, Parmesan, and Sicilian extra virgin olive oil.",
+  note: "Every pie is built on our 72–120 hour naturally leavened 5-flour organic sourdough, with organic Bianco DiNapoli tomato sauce, Grande whole-milk low-moisture mozzarella, Sicilian extra virgin olive oil, fresh-shaved Pecorino, fresh-shaved Parmesan, and fresh basil. (Except where noted.)",
   icon: pizzaAsset,
   items: [
-    { name: "Nduja Crème Fraîche", prices: ["$28"], description: "Spicy Calabrian nduja sausage, mozzarella, and the full house build, finished with a crème fraîche swirl. Rich, spicy, cooling all at once." },
-    { name: "Rosemary Soppressata", prices: ["$26"], description: "Soppressata, pepperoni, rosemary, fresh basil." },
-    { name: "Seasonal Vanilla Honey Peach Pie", prices: ["$25"], description: "A sweet pie — sweetened crème fraîche base, vanilla, seasonal peaches, finished with honey and toasted coconut on top. No mozzarella, parmesan, or pecorino." },
-    { name: "Garlic Confit White Pie", prices: ["$24"], description: "No red sauce here — garlic confit oil on the base and crust, ricotta and mozzarella, finished with fresh thyme and a garlic oil drizzle." },
-    { name: "Hot Honey Pepperoni Ricotta", prices: ["$24"], description: "Pepperoni, ricotta dollops, hot honey." },
-    { name: "Pepperoni", prices: ["$22"], description: "Pepperoni. Simple, done right." },
+    { name: "Nduja Crème Fraîche", prices: ["$28"], description: "Spicy Calabrian nduja sausage and a crème fraîche finish." },
+    { name: "Burrata Calabrian", prices: ["$27"], description: "Fresh burrata and fresh Calabrian chili." },
+    { name: "Rosemary Soppressata", prices: ["$26"], description: "Molinari soppressata and fresh rosemary." },
+    ...(PEACH_PIE_IN_SEASON
+      ? [{ name: "Seasonal Vanilla Honey Peach", prices: ["$25"], description: "A sweet pie: sweetened crème fraîche base, vanilla, seasonal peaches, finished with honey. No mozzarella, Pecorino, or Parmesan." }]
+      : []),
+    { name: "Hot Honey Pepperoni Ricotta", prices: ["$24"], description: "Ezzo thick-cut pepperoni, Grande ricotta dollops, and Mike's Hot Honey." },
+    { name: "Pepperoni", prices: ["$22"], description: "Ezzo thick-cut cup-and-char pepperoni." },
     { name: "Plain", prices: ["$20"], description: "The essentials, done right." },
   ],
 };
 
 const menuSections = [
-  {
-    title: "Mini Cookie Pies",
-    icon: mirrorBall,
-    items: [
-      { name: "Dubai Chocolate Chip Mini Cookie Pie", prices: ["$6"] },
-      { name: "German Chocolate Mini Cookie Pie", prices: ["$5"] },
-      { name: "Classic Chocolate Chip Cookie Pie", prices: ["$4"] },
-    ],
-  },
   {
     title: "Add-Ons",
     icon: pizzaBox,
@@ -127,11 +123,25 @@ const menuSections = [
       { name: "Ricotta", prices: ["+$2"] },
       { name: "Stracciatella", prices: ["+$2"] },
       { name: "Jalapeño", prices: ["+$0.50"] },
-      { name: "Basil", prices: ["+$0.50"] },
       { name: "Arugula", prices: ["+$0.50"] },
       { name: "Bell Pepper", prices: ["+$0.50"] },
       { name: "Red Onion", prices: ["+$0.50"] },
       { name: "Mushrooms", prices: ["+$0.50"] },
+    ],
+  },
+  {
+    title: "Bread",
+    icon: illDough,
+    items: [
+      { name: "Sourdough Butter Bread", prices: ["$13"], description: "A sliced sourdough loaf, choice of honey butter or spicy Calabrian butter." },
+    ],
+  },
+  {
+    title: "Cookies",
+    icon: mirrorBall,
+    items: [
+      { name: "Bakery-Style Sourdough Chocolate Chip Cookie", prices: ["$4"] },
+      { name: "Light Sourdough Cake Batter Cookie", prices: ["$4"] },
     ],
   },
 ];
@@ -350,7 +360,7 @@ const tickerPhrases = [
   "Premium Pizza Catering",
   "Weddings · Celebrations · Pop-Ups",
   "Handmade in Austin",
-  "72-Hour Cold Ferment",
+  "72–120 Hour Naturally Leavened Cold Ferment",
   "Live Oven-Side Service",
   "Leopard-Spotted Char",
 ];
@@ -604,19 +614,19 @@ const ROUTE_META = {
   },
   about: {
     title: `About Us | ${SITE_TITLE}`,
-    description: "Built from family nights and a hot pizza on the table — the story behind Disco Dough Pizza Co., NY inspired and Austin made.",
+    description: "Built from family nights and a hot pizza on the table — the story behind Disco Dough Pizza Co., Neo-New York inspired and Austin made.",
   },
   menu: {
     title: `Menu | ${SITE_TITLE}`,
-    description: "New York style sourdough pizzas, mini cookie pies, and add-ons — the full Disco Dough Pizza Co. menu for Austin catering and events.",
+    description: "Sourdough Neo-New York style pies, bread, and cookies — the full Disco Dough Pizza Co. menu for Austin catering and events.",
   },
   "our-pies": {
     title: `Our Pies | ${SITE_TITLE}`,
-    description: "Naturally leavened 72-hour sourdough, hand-stretched into a deep golden, foldable New York pie — premium ingredients, made to order.",
+    description: "Naturally leavened 72–120 hour sourdough, hand-stretched into a deep golden, foldable Neo-New York pie — premium ingredients, made to order.",
   },
   "dough-calculator": {
     title: `Dough Calculator | ${SITE_TITLE}`,
-    description: "Mix Disco Dough-style sourdough NY pizza at home — baker's percentages, a three-flour blend, and a full 72-hour cold ferment schedule, computed for your batch.",
+    description: "Mix Disco Dough-style sourdough Neo-New York pizza at home — baker's percentages, a five-flour blend, and a full 72-hour cold ferment schedule, computed for your batch.",
   },
   gallery: {
     title: `Gallery | ${SITE_TITLE}`,
@@ -924,7 +934,7 @@ function Hero() {
             <img className="hero-logo-ball" src={logoOBall} alt="" aria-hidden="true" />
           </div>
           <div className="hero-intro-copy mx-auto max-w-2xl text-center">
-            <p className="hero-lede">NY Inspired.<br />Austin Made.</p>
+            <p className="hero-lede">Neo-New York Inspired.<br />Austin Made.</p>
             <p className="hero-subcopy">Premium sourdough pizza catering &amp; pop-ups — handmade in Austin for weddings, celebrations, and gatherings.</p>
           </div>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -1044,7 +1054,7 @@ function MenuCard() {
         ))}
       </div>
       <div className="menu-footer">
-        <p>72 hour cold sourdough ferment</p>
+        <p>72–120 hour naturally leavened cold sourdough ferment</p>
         <span>Hand tossed and stretched after a two hour bench proof for an ideal crumb, mature chew, and light airy structure.</span>
       </div>
     </div>
@@ -1068,9 +1078,9 @@ function Menu() {
 const pieDetails = [
   { title: "Hand tossed and folded dough", icon: illDough },
   { title: "Well done and spotted char undercarriage", icon: illChar },
-  { title: "Hand milled San Marzano tomatoes", icon: illTomato },
+  { title: "Organic Bianco DiNapoli tomatoes", icon: illTomato },
   { title: "Charred crust with mature chew and crisp", icon: illSlice },
-  { title: "72 hour cold sourdough ferment", icon: illFerment },
+  { title: "72–120 hour naturally leavened cold sourdough ferment", icon: illFerment },
   { title: "Blistered perimeter and light crumb", icon: illCrumb },
 ];
 
@@ -1080,9 +1090,9 @@ function OurPies() {
       <SectionLabel>Our pies</SectionLabel>
       <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         <div>
-          <h2 className="section-title section-title--small">72-hour sourdough, hand-stretched into a deep golden, foldable New York pie.</h2>
+          <h2 className="section-title section-title--small">72–120 hour naturally leavened sourdough, hand-stretched into a deep golden, foldable Neo-New York pie.</h2>
           <p className="copy copy-lead mt-6">
-            Every dough batch starts with a three-flour blend built for crispness, chew, and structure.
+            Every dough batch starts with a five-flour blend built for crispness, chew, and structure.
           </p>
           <p className="copy mt-5">
             It folds when you want it to, holds when you need it to, and eats like something made by hand.
@@ -1097,8 +1107,8 @@ function OurPies() {
             </div>
           ))}
           <div className="interactive-lift interactive-card-lift interactive-box-zoom unified-premium-glow motion-box ferment-card sm:col-span-2">
-            <p>3 flour blend</p>
-            <span>00 flour, bolted flour, and whole wheat come together for deeper flavor, stronger structure, better browning, and crisp edges with airy chew.</span>
+            <p>5 flour blend</p>
+            <span>Whole wheat, local rye, local 00, central milling 00, and King Arthur AP flour come together for deeper flavor, stronger structure, better browning, and crisp edges with airy chew.</span>
           </div>
         </div>
       </div>
@@ -1329,13 +1339,13 @@ function AboutPage() {
 
       <section className="section">
         <SectionLabel>How we got here</SectionLabel>
-        <h2 className="section-title section-title--small">NY inspired, Austin made.</h2>
+        <h2 className="section-title section-title--small">Neo-New York inspired, Austin made.</h2>
         <div className="grid gap-6 lg:grid-cols-2 lg:items-start mt-8">
           <p className="copy copy-lead">
             Disco Dough started small — a home oven, a stack of takeout boxes, and a habit of feeding anyone who walked through the door. That habit turned into an obsession with fermentation and dough craft that neither of them could put down.
           </p>
           <p className="copy">
-            Every pie still starts the same way it did back then: a three-flour sourdough blend, a 72-hour cold ferment, hand tossed and stretched to order. Now it travels — live, oven-side, to weddings, celebrations, and gatherings all over Austin.
+            Every pie still starts the same way it did back then: a five-flour sourdough blend, a 72–120 hour naturally leavened cold ferment, hand tossed and stretched to order. Now it travels — live, oven-side, to weddings, celebrations, and gatherings all over Austin.
           </p>
         </div>
         <div className="about-photos mt-12" aria-label="Cayla and Branden with Disco Dough pizzas in Austin">
@@ -1375,7 +1385,7 @@ function AboutPage() {
             <div className="community-card__rule" aria-hidden="true"><Star /><span /><Star /></div>
             <h3>Made By Hand</h3>
             <p>
-              Every pie is hand tossed and stretched to order after a 72 hour cold ferment — no shortcuts, no par-baked crusts. Just a three-flour blend, real fire, and a pizzaiolo who's there in person, every time.
+              Every pie is hand tossed and stretched to order after a 72–120 hour naturally leavened cold ferment — no shortcuts, no par-baked crusts. Just a five-flour blend, real fire, and a pizzaiolo who's there in person, every time.
             </p>
           </div>
         </div>
@@ -1393,9 +1403,9 @@ function MenuPage() {
         <div className="events-hero-inner">
           <div className="events-hero-copy">
             <SectionLabel>Menu</SectionLabel>
-            <h1 className="section-title section-title--small">New York style, made to order.</h1>
+            <h1 className="section-title section-title--small">Sourdough Neo-New York Style Pies, made to order.</h1>
             <p className="copy mt-6">
-              Hand tossed and topped your way, finished with a mini cookie pie. Custom menus are available for weddings, private events, and pop-ups — just tell us the headcount and occasion.
+              Hand tossed and topped your way. Custom menus are available for weddings, private events, and pop-ups — just tell us the headcount and occasion.
             </p>
             <div className="event-links">
               <a href={EVENTS_ROUTE}>Explore Events →</a>
@@ -1441,9 +1451,9 @@ function OurPiesPage() {
         <div className="events-hero-inner">
           <div className="events-hero-copy">
             <SectionLabel>Our pies</SectionLabel>
-            <h1 className="section-title section-title--small">72-hour sourdough, hand-stretched into a deep golden, foldable New York pie.</h1>
+            <h1 className="section-title section-title--small">72–120 hour naturally leavened sourdough, hand-stretched into a deep golden, foldable Neo-New York pie.</h1>
             <p className="copy mt-6">
-              Every dough batch starts with a three-flour blend built for crispness, chew, and structure. It folds when you want it to, holds when you need it to, and eats like something made by hand.
+              Every dough batch starts with a five-flour blend built for crispness, chew, and structure. It folds when you want it to, holds when you need it to, and eats like something made by hand.
             </p>
             <div className="event-links">
               <a href={MENU_ROUTE}>See the Menu →</a>
@@ -1467,8 +1477,8 @@ function OurPiesPage() {
             </div>
           ))}
           <div className="interactive-lift interactive-card-lift interactive-box-zoom unified-premium-glow motion-box ferment-card sm:col-span-2 lg:col-span-3">
-            <p>3 flour blend</p>
-            <span>00 flour, bolted flour, and whole wheat come together for deeper flavor, stronger structure, better browning, and crisp edges with airy chew.</span>
+            <p>5 flour blend</p>
+            <span>Whole wheat, local rye, local 00, central milling 00, and King Arthur AP flour come together for deeper flavor, stronger structure, better browning, and crisp edges with airy chew.</span>
           </div>
         </div>
       </section>
@@ -1476,21 +1486,21 @@ function OurPiesPage() {
       <section className="section border-t-2 border-tomato/25 bg-blush">
         <div className="text-center">
           <SectionLabel>The sourdough difference</SectionLabel>
-          <h2 className="section-title section-title--small mx-auto">Craft NY, done right.</h2>
+          <h2 className="section-title section-title--small mx-auto">Craft Neo-New York, done right.</h2>
         </div>
         <div className="grid gap-6 sm:grid-cols-2 max-w-4xl mx-auto mt-10">
           <div className="interactive-lift interactive-box-zoom unified-premium-glow community-card">
             <div className="community-card__rule" aria-hidden="true"><Star /><span /><Star /></div>
-            <h3>72-Hour Sourdough</h3>
+            <h3>72–120 Hour Sourdough</h3>
             <p>
-              Naturally leavened, cold fermented for 72 hours — no commercial yeast, ever. It's what gives the crust its depth, its chew, and a crumb you can't rush.
+              Naturally leavened, cold fermented for 72–120 hours — no commercial yeast, ever. It's what gives the crust its depth, its chew, and a crumb you can't rush.
             </p>
           </div>
           <div className="interactive-lift interactive-box-zoom unified-premium-glow community-card">
             <div className="community-card__rule" aria-hidden="true"><Star /><span /><Star /></div>
-            <h3>New York, Done Right</h3>
+            <h3>Neo-New York, Done Right</h3>
             <p>
-              Hand-stretched to 14–17", thin and foldable, fired to a deep golden crackle. San Marzano tomatoes, mozzarella, Pecorino Romano, Parmesan, and Sicilian extra virgin olive oil — every single time.
+              Hand-stretched to 14–17", thin and foldable, fired to a deep golden crackle. Organic Bianco DiNapoli tomatoes, mozzarella, Pecorino Romano, Parmesan, and Sicilian extra virgin olive oil — every single time.
             </p>
           </div>
         </div>
@@ -1505,7 +1515,7 @@ const doughPhrases = [
   "Baker's Percentages",
   "72-Hour Cold Ferment",
   "Naturally Leavened",
-  "Three-Flour Blend",
+  "Five-Flour Blend",
   "No Commercial Yeast",
   "Folds Clean — No Flop",
 ];
@@ -1517,11 +1527,12 @@ const sizePresets = [
   { label: '16″', sub: "House NY", weight: 470 },
 ];
 
-// Suggested three-flour blend split (share of the added flour)
+// Flour added at the final mix (share of addedFlour). The starter itself is
+// fed separately with local 00, local rye, and whole wheat — see the
+// Sourdough Levain row below — which is where the other 3 of our 5 flours live.
 const FLOUR_BLEND = [
-  { name: "00 Flour", share: 0.6, note: "Finely milled — chew and structure" },
-  { name: "Bolted Flour", share: 0.25, note: "Sifted stone-ground — flavor and browning" },
-  { name: "Whole Wheat Flour", share: 0.15, note: "Depth, aroma, and a little rustic color" },
+  { name: "Central Milling 00 Flour", share: 0.91, note: "Finely milled — chew and structure" },
+  { name: "King Arthur AP Flour", share: 0.09, note: "Reliable strength and structure" },
 ];
 
 // Hero photo for this page — swap this one import to change the header image.
@@ -1689,7 +1700,7 @@ function DoughCalculatorPage() {
   const recipeRows = [
     ...flourRows.map((f) => ({ name: f.name, detail: f.note, grams: f.grams })),
     { name: "Water", detail: `${hydration}% hydration — cool, around 60°F`, grams: addedWater },
-    ...(levainPct > 0 ? [{ name: "Sourdough Levain", detail: `${levainPct}% — ripe, 100% hydration`, grams: levain }] : []),
+    ...(levainPct > 0 ? [{ name: "Sourdough Levain", detail: `${levainPct}% — ripe, 100% hydration, fed with local 00, local rye & whole wheat`, grams: levain }] : []),
     ...(idyPct > 0 ? [{ name: "Instant Dry Yeast", detail: `${formatPct(idyPct)}% — whisk it into the flour dry`, grams: idy }] : []),
     { name: "Fine Sea Salt", detail: `${saltPct}%`, grams: salt },
     ...(oilPct > 0 ? [{ name: "Olive Oil", detail: `${oilPct}% — Sicilian EVOO if you have it`, grams: oil }] : []),
@@ -1784,7 +1795,7 @@ function DoughCalculatorPage() {
             <SectionLabel>The Dough Calculator</SectionLabel>
             <h1 className="section-title section-title--small">Our dough, your kitchen.</h1>
             <p className="copy mt-6">
-              The same math we use before every event — baker's percentages, a three-flour blend, and a 72-hour cold sourdough ferment. Dial in your batch and we'll do the arithmetic.
+              The same math we use before every event — baker's percentages, a five-flour blend, and a 72-hour cold sourdough ferment. Dial in your batch and we'll do the arithmetic.
             </p>
             <div className="event-links">
               <a href="#calculator">Start Mixing ↓</a>
